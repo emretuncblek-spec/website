@@ -71,7 +71,7 @@
 
     <!-- KONTROL PANELİ -->
     <div class="navbar">
-        <label for="pdf-file" class="btn">Dosya Seç</label>
+        <label for="pdf-file" class="btn">Choose File</label>
         <input type="file" id="pdf-file" accept="application/pdf">
 
         <button id="prev-page" class="btn btn-nav" disabled>Geri</button>
@@ -83,7 +83,7 @@
             / <span id="total-pages">--</span>
         </div>
 
-        <button id="next-page" class="btn btn-nav" disabled>İleri</button>
+        <button id="next-page" class="btn btn-nav" disabled>Next</button>
     </div>
 
     <!-- PDF SAYFASI -->
@@ -147,7 +147,7 @@
                 if (targetPage >= 1 && targetPage <= pdfDoc.numPages) {
                     changePage(targetPage);
                 } else {
-                    alert(`Lütfen 1 ile ${pdfDoc.numPages} arasında bir sayfa girin.`);
+                    alert(`Lütfen 1 ile ${pdfDoc.numPages} type page number.`);
                     pageInput.value = pageNum;
                 }
             }
