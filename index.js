@@ -1,7 +1,27 @@
 // Aurelia Games - UI Test ve Etkileşim Scripti
 document.addEventListener('DOMContentLoaded', () => {
     console.log('Aurelia Games UI yüklendi. Test modunda.');
+    // Discord SDK'sını başlatıyoruz
+    // BURAYA GİZLİ TOKEN DEĞİL, SADECE DEVELOPER PORTAL'DAKİ APPLICATION (BOT) ID YAZILIR
+    const discordSdk = new Discord.DiscordSDK("1480052700652634144");
+
+    async function setupDiscordActivity() {
+        try {
+            // Discord istemcisine uygulamanın hazır olduğunu bildiriyoruz
+            await discordSdk.ready();
+            console.log("Discord Aktivitesi başarıyla başlatıldı!");
+            
+            // Aktivite başarıyla açıldıktan sonra kullanıcı bilgilerini alabilirsin
+            // Örn: const auth = await discordSdk.commands.authorize({ ... });
+        } catch (error) {
+            console.error("Discord SDK başlatılırken hata oluştu:", error);
+        }
+    }
+
+    // Fonksiyonu tetikle
+    setupDiscordActivity();
     // ==========================================
+    
 // 1. BUTON TIKLAMA VE UI TEST SİSTEMİ
 // index.js dosyanın en üstündeki buton tıklama alanını bununla güncelle:
 const allButtons = document.querySelectorAll('button, .nav-link, .read-more, .icon-btn');
