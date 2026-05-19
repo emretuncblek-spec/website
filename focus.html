@@ -546,9 +546,9 @@
                             <span id="time-total">0:00</span>
                         </div>
                         <div class="buttons-row">
-                            <button class="player-btn" id="btn-prev" title="Önceki"><i class="fa-solid fa-backward-step"></i></button>
-                            <button class="player-btn play-toggle" id="btn-play" title="Oynat/Durdur"><i class="fa-solid fa-play"></i></button>
-                            <button class="player-btn" id="btn-next" title="Sonraki"><i class="fa-solid fa-forward-step"></i></button>
+                            <button class="player-btn" id="btn-prev" title="Back"><i class="fa-solid fa-backward-step"></i></button>
+                            <button class="player-btn play-toggle" id="btn-play" title="Play/Stop"><i class="fa-solid fa-play"></i></button>
+                            <button class="player-btn" id="btn-next" title="Next"><i class="fa-solid fa-forward-step"></i></button>
                         </div>
                     </div>
                 </div>
@@ -557,19 +557,12 @@
                     <div class="messages-display" id="chat-messages-container">
                         <div class="msg-bubble">
                             <div class="msg-avatar"><i class="fa-solid fa-robot"></i></div>
-                            <div class="msg-body">Merhaba bugün nasıl yardımcı olabilirim sana?</div>
-                        </div>
-                        <div class="msg-bubble user-bubble">
-                            <div class="msg-body">Birkaç sorun vardı da sonra sorarım saoll</div>
-                        </div>
-                        <div class="msg-bubble">
-                            <div class="msg-avatar"><i class="fa-solid fa-robot"></i></div>
-                            <div class="msg-body">Tamamdır görüşürüz!</div>
+                            <div class="msg-body">Hi im Aurelia how can i help you today?</div>
                         </div>
                     </div>
 
                     <div class="notes-input-container">
-                        <input type="text" class="notes-text-input" id="notes-msg-input" placeholder="Yazın veya resim yükleyin...">
+                        <input type="text" class="notes-text-input" id="notes-msg-input" placeholder="Type or upload photo...">
                         <label for="file-upload-input">
                             <i class="fa-solid fa-plus notes-action-icon"></i>
                         </label>
@@ -581,18 +574,18 @@
 
             <div class="right-panel">
                 <div class="pdf-top-bar">
-                    <label for="pdf-file-loader" class="pdf-btn pdf-btn-upload">Dosya Seç</label>
+                    <label for="pdf-file-loader" class="pdf-btn pdf-btn-upload">Choose pdf</label>
                     <input type="file" id="pdf-file-loader" accept="application/pdf" style="display:none;">
 
-                    <button id="pdf-prev-page-btn" class="pdf-btn pdf-btn-nav" disabled>Geri</button>
+                    <button id="pdf-prev-page-btn" class="pdf-btn pdf-btn-nav" disabled>Back</button>
                     
                     <div style="font-size: 13px; font-weight: bold; color: #ffffff;">
-                        Sayfa: 
+                        Page: 
                         <input type="number" id="pdf-page-num-input" class="pdf-search-box" value="1" min="1" disabled> 
                         / <span id="pdf-total-pages-span">--</span>
                     </div>
 
-                    <button id="pdf-next-page-btn" class="pdf-btn pdf-btn-nav" disabled>İleri</button>
+                    <button id="pdf-next-page-btn" class="pdf-btn pdf-btn-nav" disabled>Next</button>
                 </div>
 
                 <div class="pdf-scroll-box">
@@ -889,7 +882,7 @@
             // Robot düşünme aşaması efekti
             const typingBubble = document.createElement('div');
             typingBubble.className = 'msg-bubble';
-            typingBubble.innerHTML = '<div class="msg-avatar"><i class="fa-solid fa-robot"></i></div><div class="msg-body">Düşünüyor...</div>';
+            typingBubble.innerHTML = '<div class="msg-avatar"><i class="fa-solid fa-robot"></i></div><div class="msg-body">Thinking...</div>';
             messagesContainer.appendChild(typingBubble);
             messagesContainer.scrollTop = messagesContainer.scrollHeight;
 
