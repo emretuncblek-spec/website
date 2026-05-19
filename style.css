@@ -1,0 +1,629 @@
+:root {
+  color-scheme: dark;
+}
+  
+* {
+  box-sizing: border-box;
+}
+
+/* ========================================== */
+/* ANA SAYFA (HOME) VARSAYILAN STİLLERİ       */
+/* ========================================== */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  
+  /* İlk sayfa için görseldeki gibi düz, açık gri arka plan */
+  background-color: #f3f4f6;
+  background-image: none;
+  
+  color: #000000;
+  min-height: 100vh;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+/* NAVBAR DÜZENİ */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.nav-left {
+  display: flex;
+  gap: 12px;
+}
+
+/* Sol üstteki İkon Butonları (Profil ve Bildirim) */
+.icon-btn {
+  background-color: #1a15cc;
+  color: #ffffff;
+  border: none;
+  border-radius: 12px;
+  width: 45px;
+  height: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.1s ease, opacity 0.2s;
+}
+
+.icon-btn svg {
+  width: 24px;
+  height: 24px;
+}
+
+.icon-btn:hover {
+  opacity: 0.9;
+}
+
+/* Menü Linkleri (Profile, Home, Games) */
+.nav-links {
+  display: flex;
+  gap: 32px;
+}
+
+.nav-link {
+  color: #000000;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 18px;
+  padding-bottom: 6px;
+  position: relative;
+  display: inline-block;
+  transition: color 0.2s ease;
+}
+
+/* ─── AKTİF LİNKİN ALTINDAKİ SİYAH ÇİZGİ ─── */
+.nav-link.active::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 2px;
+  background-color: #000000 !important;
+  border-radius: 2px;
+}
+
+.nav-right {
+  display: flex;
+  gap: 16px;
+}
+
+/* Sağ Üst Giriş/Çıkış Butonları */
+.auth-btn {
+  border-radius: 20px;
+  padding: 10px 24px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  border: none;
+  transition: transform 0.1s ease;
+}
+
+.auth-btn.log-in {
+  background-color: transparent;
+  color: #000000;
+  border: 2px solid #000000;
+}
+
+.auth-btn.sign-up {
+  background-color: #1a15cc;
+  color: #ffffff;
+}
+
+
+/* ========================================== */
+/* BOYDAN BOYA SÜREKLİ DÖNEN MAIN BANNER      */
+/* ========================================== */
+.main-banner {
+  border-radius: 24px;
+  padding: 0; 
+  position: relative;
+  color: #ffffff;
+  margin-bottom: 24px;
+  min-height: 260px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow: hidden; 
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.banner-slides {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.slide {
+  display: none;
+  opacity: 0;
+  padding: 40px; 
+  min-height: 260px;
+  box-sizing: border-box;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  animation: fadeIn 0.5s ease-in-out forwards;
+}
+
+.slide.active {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  opacity: 1;
+}
+
+/* Slider İçeriği */
+.badge-new {
+  color: #ff3333;
+  font-weight: 900;
+  font-size: 24px;
+  font-style: italic;
+  display: inline-block;
+  margin-bottom: 8px;
+}
+
+.main-banner h1 {
+  font-size: 36px;
+  margin: 0 0 12px 0;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.main-banner p {
+  font-size: 16px;
+  margin: 0 0 20px 0;
+  line-height: 1.4;
+  opacity: 0.9;
+  color: #ffffff;
+}
+
+.read-more {
+  color: #ffffff;
+  text-decoration: underline;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+/* Slayt Görselleri */
+.slide-1 {
+  background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), 
+                    url("https://media.discordapp.net/attachments/1480011788232822836/1505836877553336441/hhhhhhh.jpg?ex=6a0c1360&is=6a0ac1e0&hm=d487fbef39c8abe3ae2f1e34d6ffa73388cb8554258bbafa55a021ac9423620e&=&format=webp&width=918&height=550");
+}
+
+.slide-2 {
+  background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), 
+                    url("https://media.discordapp.net/attachments/1480011788232822836/1505837622931488788/f5a3fb1066cfad77f3ddba5c4334a775.jpg?ex=6a0c1412&is=6a0ac292&hm=99bb4e18352ad05e61114820199ab5451c411c45a35b7dc5fbef2eb61a538eb8&=&format=webp&width=919&height=525");
+}
+
+.slide-3 {
+  background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), 
+                    url("https://media.discordapp.net/attachments/1480011788232822836/1505837783967862784/Cute_rosa_Heart_Background.jpg?ex=6a0c1438&is=6a0ac2b8&hm=22858f12b3014bf52ea4e77944153e32056988b139327910f05d99ffa6b17ef4&=&format=webp&width=920&height=518");
+}
+
+/* Slider Alt Çizgileri */
+.slider-dots {
+  position: absolute;
+  bottom: 20px;
+  left: 40px;
+  display: flex;
+  gap: 8px;
+  z-index: 10;
+}
+
+.dot {
+  width: 40px;
+  height: 4px;
+  background-color: rgba(255, 255, 255, 0.3);
+  border-radius: 2px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.dot.active {
+  background-color: #ffffff;
+}
+
+
+/* ========================================== */
+/* DASHBOARD 4 SÜTUNLU YAN YANA GRID YAPISI   */
+/* ========================================== */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 2.5fr 2fr 1.2fr 2.5fr;
+  gap: 20px;
+}
+
+/* KARTLARIN ORTAK GÖRÜNÜMÜ */
+.card {
+  background-color: #ffffff;
+  border-radius: 16px;
+  padding: 20px;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
+}
+
+.card h2 {
+  font-size: 18px;
+  margin-top: 0;
+  margin-bottom: 16px;
+  font-weight: 700;
+  color: #000000;
+}
+
+/* 1. SÜTUN: DAILY TASKS */
+.daily-tasks-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.task-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 20px 0;
+}
+
+.task-list li {
+  display: flex;
+  align-items: center;
+  margin-bottom: 14px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.task-icon {
+  width: 24px;
+  font-size: 16px;
+  margin-right: 8px;
+}
+
+.task-text {
+  flex-grow: 1;
+  color: #333333;
+}
+
+.task-xp {
+  color: #ffaa44;
+  margin-left: 8px;
+  white-space: nowrap;
+}
+
+.support-btn {
+  width: 100%;
+  background-color: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  padding: 12px;
+  font-size: 16px;
+  font-weight: 700;
+  color: #000000;
+  cursor: pointer;
+  text-align: center;
+  transition: transform 0.1s ease;
+}
+
+/* 2. SÜTUN: EXPLORE BUTTONS */
+.explore-section h2 {
+  font-size: 18px;
+  margin-top: 0;
+  margin-bottom: 16px;
+  color: #000000;
+}
+
+.explore-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.explore-btn {
+  background-color: #1a15cc;
+  color: #ffffff;
+  border: none;
+  border-radius: 12px;
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
+  transition: transform 0.1s ease;
+}
+
+.explore-btn .btn-icon {
+  font-size: 16px;
+}
+
+.explore-btn .btn-text {
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.5px;
+}
+
+/* 3. SÜTUN: STATS COLUMN (RANK VE TIMER) */
+.stats-column {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.rank-card, .timer-card {
+  text-align: center;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 50%;
+  background-color: #ffffff;
+}
+
+.rank-card h3, .timer-card h3 {
+  margin: 0 0 8px 0;
+  font-size: 14px;
+  color: #7c7c7c;
+  font-weight: 700;
+}
+
+.rank-value {
+  font-size: 48px;
+  font-weight: 800;
+  color: #000000;
+}
+
+.timer-value {
+  font-size: 32px;
+  font-weight: 800;
+  color: #000000;
+  line-height: 1.1;
+}
+
+/* 4. SÜTUN: MONTHLY BOARD (LEADERBOARD) */
+.leaderboard-card {
+  background-color: #ffffff;
+}
+
+.leaderboard-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.leaderboard-item {
+  background-size: cover;
+  background-position: center;
+  border-radius: 8px;
+  padding: 10px 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 12px;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+
+/* ========================================== */
+/* ⚠️ PROFİL SAYFASI ÖZEL TASARIM STİLLERİ    */
+/* ⚠️ (KARTIN SOLA YASLANMASI, RESİM KIRPMA) */
+/* ========================================== */
+
+/* Profil Sayfasına Geçildiğinde Body'i Ezerek Elden Ring Teması Yapar */
+.profile-body {
+  background-color: transparent !important;
+  background-image: url("https://media.discordapp.net/attachments/1480011788232822836/1506053625406029853/43387667-elden-ring-wallpaper.jpg?ex=6a0cdd3d&is=6a0b8bbd&hm=495f692a1c453e5c70ff75812a3b2b38ff4197d3b37c5b9fd47ea8cab57ddb3d&=&format=webp&width=1423&height=800") !important;
+  background-size: cover !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+  background-attachment: fixed !important;
+}
+
+/* Profil Menüsündeki Butonların ve Yazıların Beyaz Olma Kuralları */
+.profile-body .nav-link,
+.profile-body .icon-btn {
+  color: #ffffff !important;
+}
+
+.profile-body .nav-link.active::after {
+  background-color: #ffffff !important;
+}
+
+.profile-body .auth-btn.log-in {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+}
+
+.profile-container {
+  min-height: 93vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* Kartı ve altındaki butonları SOLA tam sıfırlayan düzen */
+.profile-central-layout {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;  
+  justify-content: center;
+  gap: 24px;
+  margin-top: auto;
+  margin-bottom: auto;
+  width: 100%;
+  padding-left: 0 !important; 
+  box-sizing: border-box;
+}
+
+/* Kahverengi Büyük Profil Kartı */
+.profile-sidebar-card {
+  background-color: rgba(121, 102, 79, 0.9) !important;
+  border-radius: 32px !important;
+  padding: 30px 24px !important;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  width: 320px !important;
+}
+
+.profile-username {
+  color: #ffffff !important;
+  font-size: 32px;
+  font-weight: 800;
+  margin: 0 0 20px 0;
+}
+
+/* Yuvarlak Profil Resim Alanı */
+.profile-avatar-container {
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  overflow: hidden;   
+  border: 4px solid #3d2f21; 
+  margin-bottom: 20px;
+}
+
+/* Kedili avatar resmini bozmadan/esnetmeden kırpan alan */
+.profile-avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;        
+  object-position: center;   
+  display: block;
+}
+
+.profile-uid {
+  color: #ffffff !important;
+  font-size: 16px;
+  font-weight: 700;
+  opacity: 0.9;
+  margin-bottom: 16px;
+}
+
+/* XP Alanı */
+.profile-xp-section {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.profile-xp-bar-container {
+  width: 100%;
+  height: 14px;
+  background-color: #ffffff;
+  border-radius: 7px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.profile-xp-progress {
+  height: 100%;
+  background-color: #5cdb5c; 
+  border-radius: 7px;
+}
+
+.profile-level-row {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+/* Rozetler */
+.profile-badges-row {
+  display: flex;
+  gap: 16px;
+  font-size: 24px;
+}
+
+.p-badge {
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+  transition: transform 0.2s;
+  cursor: pointer;
+}
+
+.p-badge:hover {
+  transform: scale(1.2);
+}
+
+/* Alt kısımdaki 4'lü buton grubu (Achievements, Statistics vb.) */
+.profile-bottom-actions {
+  display: flex;
+  justify-content: flex-start; 
+  gap: 16px;
+  width: auto;
+  margin-left: 0 !important;  
+  padding-left: 0 !important; 
+}
+
+.action-tab-btn {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+  border: none !important;
+  border-radius: 20px !important;
+  padding: 12px 28px !important;
+  font-size: 16px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  transition: transform 0.2s, background-color 0.2s;
+}
+
+.action-tab-btn:hover {
+  background-color: #f0f0f0 !important;
+}
+
+.action-tab-btn .tab-icon {
+  font-size: 18px;
+}
+
+
+/* RESPONSIVE AYARLARI */
+@media (max-width: 1024px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .navbar {
+    flex-direction: column;
+    gap: 15px;
+  }
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+  .profile-central-layout {
+    align-items: center;       
+  }
+  .profile-bottom-actions {
+    flex-wrap: wrap;
+    justify-content: center;   
+  }
+}

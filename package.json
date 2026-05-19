@@ -1,0 +1,21 @@
+{
+  "name": "discord-chess-activity",
+  "version": "1.0.0",
+  "description": "Discord Embedded App chess activity with local assets and Stockfish worker.",
+  "main": "src/activity.js",
+  "type": "commonjs",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "@discord/embedded-app-sdk": "^2.5.0",
+    "chess.js": "^1.4.0",
+    "stockfish": "^17.1.0",
+    "vite": "^7.1.10"
+  }
+}

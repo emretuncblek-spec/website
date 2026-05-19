@@ -1,0 +1,1059 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Focus Mode</title>
+    <link rel="stylesheet" href="style3.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <style>
+        /* Specific Styles for Focus Page mimicking the provided image layouts */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f3f4f6;
+            color: #000000;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 16px;
+        }
+
+        /* Top Navbar Custom styling to match white/black theme */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .nav-left {
+            display: flex;
+            gap: 12px;
+        }
+
+        .icon-btn {
+            background-color: #1a15cc;
+            color: #ffffff;
+            border: none;
+            border-radius: 12px;
+            width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 32px;
+        }
+
+        .nav-link {
+            color: #000000;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 18px;
+            padding-bottom: 6px;
+            position: relative;
+        }
+
+        .nav-link.active::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            height: 2px;
+            background-color: #000000;
+            border-radius: 2px;
+        }
+
+        .auth-btn {
+            border-radius: 20px;
+            padding: 10px 24px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            border: none;
+        }
+
+        .auth-btn.settings-btn {
+            background-color: transparent;
+            color: #000000;
+            border: 2px solid #000000;
+            margin-right: 12px;
+        }
+
+        .auth-btn.logout-btn {
+            background-color: #1a15cc;
+            color: #ffffff;
+        }
+
+        /* Two main columns layout based on user snapshot */
+        .focus-layout {
+            display: grid;
+            grid-template-columns: 360px 1fr;
+            gap: 24px;
+            align-items: start;
+        }
+
+        /* Left column controls */
+        .left-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        /* 1. Pomodoro Widget */
+        .pomodoro-card {
+            background-color: #b85c5c;
+            border-radius: 24px;
+            padding: 20px;
+            color: #ffffff;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        .pomo-modes {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .pomo-mode-btn {
+            background: transparent;
+            border: none;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 11px;
+            font-weight: 700;
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 12px;
+        }
+
+        .pomo-mode-btn.active {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: #ffffff;
+        }
+
+        .pomo-timer {
+            font-size: 54px;
+            font-weight: 800;
+            margin: 10px 0;
+            letter-spacing: 1px;
+        }
+
+        .pomo-action-btn {
+            background-color: #ffffff;
+            color: #b85c5c;
+            border: none;
+            border-radius: 10px;
+            padding: 10px 30px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            text-transform: uppercase;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+        }
+
+        /* 2. Music Player Widget */
+        .music-card {
+            background-color: #616e60;
+            border-radius: 24px;
+            padding: 16px;
+            color: #ffffff;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            position: relative;
+        }
+
+        /* Hidden YouTube embed area */
+        #youtube-player-container {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            opacity: 0;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .track-info-container {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 12px;
+        }
+
+        .track-cover {
+            width: 70px;
+            height: 70px;
+            border-radius: 14px;
+            object-fit: cover;
+            background-color: #333;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .track-details {
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .track-title {
+            font-size: 15px;
+            font-weight: 700;
+            margin: 0 0 4px 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .track-artist {
+            font-size: 13px;
+            opacity: 0.8;
+            margin: 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .player-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .progress-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 10px;
+            opacity: 0.9;
+        }
+
+        .progress-bar-container {
+            flex: 1;
+            height: 4px;
+            background-color: rgba(255,255,255,0.3);
+            border-radius: 2px;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .progress-current {
+            height: 100%;
+            width: 0%;
+            background-color: #ffffff;
+            border-radius: 2px;
+        }
+
+        .buttons-row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            font-size: 16px;
+        }
+
+        .player-btn {
+            background: transparent;
+            border: none;
+            color: #ffffff;
+            cursor: pointer;
+            opacity: 0.8;
+            transition: opacity 0.2s, transform 0.1s;
+        }
+
+        .player-btn:hover {
+            opacity: 1;
+            transform: scale(1.1);
+        }
+
+        .player-btn.play-toggle {
+            font-size: 22px;
+        }
+
+        /* 3. Messaging / Workspace Notes Box */
+        .notes-card {
+            background-color: #383a3e;
+            border-radius: 24px;
+            padding: 16px;
+            color: #ffffff;
+            height: 320px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        .messages-display {
+            flex: 1;
+            overflow-y: auto;
+            margin-bottom: 12px;
+            padding-right: 4px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        /* Custom scrollbar to keep it sleek */
+        .messages-display::-webkit-scrollbar {
+            width: 5px;
+        }
+        .messages-display::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .messages-display::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.2);
+            border-radius: 3px;
+        }
+
+        .msg-bubble {
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+            max-width: 100%;
+            word-wrap: break-word;
+            word-break: break-word;
+        }
+
+        .msg-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background-color: #555;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .msg-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .msg-body {
+            background-color: rgba(255,255,255,0.06);
+            padding: 8px 12px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 600;
+            max-width: calc(100% - 42px);
+        }
+
+        .msg-bubble.user-bubble {
+            flex-direction: row-reverse;
+        }
+
+        .msg-bubble.user-bubble .msg-body {
+            background-color: transparent;
+            color: #f1c40f;
+            text-align: right;
+            padding: 4px 0;
+        }
+
+        .uploaded-msg-img {
+            max-width: 100%;
+            border-radius: 8px;
+            margin-top: 5px;
+            display: block;
+        }
+
+        /* Note/Msg input row */
+        .notes-input-container {
+            background-color: #e0e0e0;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            padding: 4px 12px;
+            gap: 8px;
+        }
+
+        .notes-text-input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            padding: 8px 4px;
+            font-size: 13px;
+            color: #000000;
+            font-weight: 600;
+            outline: none;
+        }
+
+        .notes-text-input::placeholder {
+            color: #777777;
+        }
+
+        .notes-action-icon {
+            color: #000000;
+            cursor: pointer;
+            font-size: 18px;
+            transition: transform 0.1s;
+        }
+
+        .notes-action-icon:hover {
+            transform: scale(1.1);
+        }
+
+        #file-upload-input {
+            display: none;
+        }
+
+        /* Right column - Embedded PDF Reader to stay scale-fitted */
+        .right-panel {
+            background-color: #2b3e50;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            display: flex;
+            flex-direction: column;
+            height: calc(100vh - 120px);
+            min-height: 680px;
+        }
+
+        /* Scale-fitted navbar mimicking user's code */
+        .pdf-top-bar {
+            background-color: #2b3e50;
+            color: white;
+            padding: 12px 16px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            flex-shrink: 0;
+        }
+
+        .pdf-btn {
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 13px;
+            font-weight: bold;
+        }
+        
+        .pdf-btn-upload { background-color: #2ecc71; }
+        .pdf-btn-nav { background-color: #3498db; }
+        .pdf-btn:disabled { background-color: #7f8c8d; cursor: not-allowed; }
+
+        .pdf-search-box {
+            width: 45px;
+            padding: 4px;
+            text-align: center;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 13px;
+        }
+
+        .pdf-scroll-box {
+            flex: 1;
+            background-color: #e5e7eb;
+            overflow: auto;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+            align-items: start;
+        }
+
+        .pdf-container-view {
+            background: white;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            padding: 4px;
+            display: none;
+        }
+
+        #pdf-render-canvas {
+            display: block;
+            max-width: 100%;
+            height: auto;
+        }
+
+        @media (max-width: 1024px) {
+            .focus-layout {
+                grid-template-columns: 1fr;
+            }
+            .right-panel {
+                height: 700px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="navbar">
+            <div class="nav-left">
+                <button class="icon-btn"><i class="fa-solid fa-user"></i></button>
+                <button class="icon-btn"><i class="fa-solid fa-bell"></i></button>
+            </div>
+            <div class="nav-links">
+                <a href="#" class="nav-link">Profile</a>
+                <a href="#" class="nav-link">Home</a>
+                <a href="#" class="nav-link active">Focus</a>
+            </div>
+            <div class="nav-right">
+                <button class="auth-btn settings-btn">Settings</button>
+                <button class="auth-btn logout-btn">Log out</button>
+            </div>
+        </div>
+
+        <div class="focus-layout">
+            
+            <div class="left-panel">
+                
+                <div class="pomodoro-card">
+                    <div class="pomo-modes">
+                        <button class="pomo-mode-btn active" id="mode-pomo">Pomodoro</button>
+                        <button class="pomo-mode-btn" id="mode-short">Short Break</button>
+                        <button class="pomo-mode-btn" id="mode-long">Long Break</button>
+                    </div>
+                    <div class="pomo-timer" id="timer-display">25:00</div>
+                    <button class="pomo-action-btn" id="timer-toggle-btn">Start</button>
+                </div>
+
+                <div class="music-card">
+                    <div id="youtube-player-container">
+                        <div id="yt-hidden-player"></div>
+                    </div>
+
+                    <div class="track-info-container">
+                        <img src="https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?q=80&w=200&auto=format&fit=crop" class="track-cover" id="player-cover" alt="Cover">
+                        <div class="track-details">
+                            <p class="track-title" id="player-title">Yükleniyor...</p>
+                            <p class="track-artist" id="player-artist">YouTube Playlist</p>
+                        </div>
+                    </div>
+
+                    <div class="player-controls">
+                        <div class="progress-row">
+                            <span id="time-current">0:00</span>
+                            <div class="progress-bar-container" id="track-progress-bg">
+                                <div class="progress-current" id="track-progress-fill"></div>
+                            </div>
+                            <span id="time-total">0:00</span>
+                        </div>
+                        <div class="buttons-row">
+                            <button class="player-btn" id="btn-prev" title="Önceki"><i class="fa-solid fa-backward-step"></i></button>
+                            <button class="player-btn play-toggle" id="btn-play" title="Oynat/Durdur"><i class="fa-solid fa-play"></i></button>
+                            <button class="player-btn" id="btn-next" title="Sonraki"><i class="fa-solid fa-forward-step"></i></button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="notes-card">
+                    <div class="messages-display" id="chat-messages-container">
+                        <div class="msg-bubble">
+                            <div class="msg-avatar"><i class="fa-solid fa-robot"></i></div>
+                            <div class="msg-body">Merhaba bugün nasıl yardımcı olabilirim sana?</div>
+                        </div>
+                        <div class="msg-bubble user-bubble">
+                            <div class="msg-body">Birkaç sorun vardı da sonra sorarım saoll</div>
+                        </div>
+                        <div class="msg-bubble">
+                            <div class="msg-avatar"><i class="fa-solid fa-robot"></i></div>
+                            <div class="msg-body">Tamamdır görüşürüz!</div>
+                        </div>
+                    </div>
+
+                    <div class="notes-input-container">
+                        <input type="text" class="notes-text-input" id="notes-msg-input" placeholder="Yazın veya resim yükleyin...">
+                        <label for="file-upload-input">
+                            <i class="fa-solid fa-plus notes-action-icon"></i>
+                        </label>
+                        <input type="file" id="file-upload-input" accept="image/*">
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="right-panel">
+                <div class="pdf-top-bar">
+                    <label for="pdf-file-loader" class="pdf-btn pdf-btn-upload">Dosya Seç</label>
+                    <input type="file" id="pdf-file-loader" accept="application/pdf" style="display:none;">
+
+                    <button id="pdf-prev-page-btn" class="pdf-btn pdf-btn-nav" disabled>Geri</button>
+                    
+                    <div style="font-size: 13px; font-weight: bold; color: #ffffff;">
+                        Sayfa: 
+                        <input type="number" id="pdf-page-num-input" class="pdf-search-box" value="1" min="1" disabled> 
+                        / <span id="pdf-total-pages-span">--</span>
+                    </div>
+
+                    <button id="pdf-next-page-btn" class="pdf-btn pdf-btn-nav" disabled>İleri</button>
+                </div>
+
+                <div class="pdf-scroll-box">
+                    <div class="pdf-container-view" id="pdf-canvas-wrapper">
+                        <canvas id="pdf-render-canvas"></canvas>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="https://www.youtube.com/iframe_api"></script>
+
+    <script>
+        /* ==========================================================================
+           GROQ YAPAY ZEKA VE RESİM / METİN SORGULAMA AYARLARI
+           ========================================================================== */
+        // BURAYA KENDİ GROQ API ANAHTARINI YAPIŞTIRMALISIN
+        const GROQ_API_KEY = "BURAYA_GROQ_API_KEYINIZI_YAZIN"; 
+        
+        let lastUploadedBase64Json = null; // Yüklenen son resmin base64 bilgisini tutar
+
+        /* ==========================================================================
+           BEEP / DING SES ÜRETECİ (AUDIO CONTEXT API)
+           ========================================================================== */
+        function playDingSound(frequency) {
+            try {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                if (!AudioContext) return;
+                const ctx = new AudioContext();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(frequency, ctx.currentTime); // Ders için 880 (İnce), Mola için 440 (Kalın)
+                
+                gain.gain.setValueAtTime(0.3, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.00001, ctx.currentTime + 0.6);
+                
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                
+                osc.start(ctx.currentTime);
+                osc.stop(ctx.currentTime + 0.6);
+            } catch (e) {
+                console.error("Ses çalınamadı:", e);
+            }
+        }
+
+        /* ==========================================================================
+           YOUTUBE PLAYLIST & PLAYER INTERACTION SCRIPT
+           ========================================================================== */
+        let ytPlayer;
+        const targetPlaylistId = 'PLMC9KNkIncKseYxDN2niH6glGRWKsLtde'; 
+        let playlistTracks = [];
+        let currentTrackIndex = 0;
+        let progressUpdateInterval;
+
+        const fallbackCovers = [
+            "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?q=80&w=200&auto=format&fit=crop",
+            "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?q=80&w=200&auto=format&fit=crop",
+            "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=200&auto=format&fit=crop"
+        ];
+
+        function onYouTubeIframeAPIReady() {
+            ytPlayer = new YT.Player('yt-hidden-player', {
+                height: '100',
+                width: '100',
+                playerVars: {
+                    listType: 'playlist',
+                    list: targetPlaylistId,
+                    autoplay: 0,
+                    controls: 0,
+                    disablekb: 1,
+                    fs: 0
+                },
+                events: {
+                    'onReady': onPlayerReady,
+                    'onStateChange': onPlayerStateChange
+                }
+            });
+        }
+
+        function onPlayerReady(event) {
+            document.getElementById('player-title').textContent = "Çalma listesi yüklendi";
+            document.getElementById('player-artist').textContent = "Oynatmaya hazır";
+            updateTrackMeta();
+        }
+
+        function onPlayerStateChange(event) {
+            const playBtnIcon = document.getElementById('btn-play').querySelector('i');
+            if (event.data == YT.PlayerState.PLAYING) {
+                playBtnIcon.className = "fa-solid fa-pause";
+                startProgressTimer();
+                updateTrackMeta();
+            } else {
+                playBtnIcon.className = "fa-solid fa-play";
+                clearInterval(progressUpdateInterval);
+            }
+        }
+
+        function updateTrackMeta() {
+            if (!ytPlayer || typeof ytPlayer.getPlaylist !== 'function') return;
+            
+            const videoData = ytPlayer.getVideoData();
+            if (videoData && videoData.title) {
+                document.getElementById('player-title').textContent = videoData.title;
+                document.getElementById('player-artist').textContent = videoData.author || "YouTube Artist";
+            }
+            
+            const coverIdx = (ytPlayer.getPlaylistIndex ? ytPlayer.getPlaylistIndex() : 0) % fallbackCovers.length;
+            document.getElementById('player-cover').src = fallbackCovers[coverIdx];
+        }
+
+        function startProgressTimer() {
+            clearInterval(progressUpdateInterval);
+            progressUpdateInterval = setInterval(() => {
+                if (ytPlayer && ytPlayer.getCurrentTime) {
+                    const current = ytPlayer.getCurrentTime();
+                    const total = ytPlayer.getDuration();
+                    if (total > 0) {
+                        const pct = (current / total) * 100;
+                        document.getElementById('track-progress-fill').style.width = pct + '%';
+                        document.getElementById('time-current').textContent = formatTime(current);
+                        document.getElementById('time-total').textContent = formatTime(total);
+                    }
+                }
+            }, 1000);
+        }
+
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return mins + ":" + (secs < 10 ? "0" : "") + secs;
+        }
+
+        document.getElementById('btn-play').addEventListener('click', () => {
+            if (!ytPlayer) return;
+            const state = ytPlayer.getPlayerState();
+            if (state == YT.PlayerState.PLAYING) {
+                ytPlayer.pauseVideo();
+            } else {
+                ytPlayer.playVideo();
+            }
+        });
+
+        document.getElementById('btn-next').addEventListener('click', () => {
+            if (ytPlayer && typeof ytPlayer.nextVideo === 'function') {
+                ytPlayer.nextVideo();
+                setTimeout(updateTrackMeta, 600);
+            }
+        });
+
+        document.getElementById('btn-prev').addEventListener('click', () => {
+            if (ytPlayer && typeof ytPlayer.previousVideo === 'function') {
+                ytPlayer.previousVideo();
+                setTimeout(updateTrackMeta, 600);
+            }
+        });
+
+        document.getElementById('track-progress-bg').addEventListener('click', function(e) {
+            if (!ytPlayer || !ytPlayer.getDuration) return;
+            const rect = this.getBoundingClientRect();
+            const clickX = e.clientX - rect.left;
+            const width = rect.width;
+            const percentage = clickX / width;
+            const duration = ytPlayer.getDuration();
+            if (duration > 0) {
+                ytPlayer.seekTo(duration * percentage, true);
+            }
+        });
+
+
+        /* ==========================================================================
+           POMODORO TIMER IMPLEMENTATION WITH DISTINCT DING SOUNDS
+           ========================================================================== */
+        let pomoInterval;
+        let isPomoRunning = false;
+        let currentModeTime = 25 * 60; 
+        let selectedMode = 'pomo'; 
+
+        const timerDisplay = document.getElementById('timer-display');
+        const timerToggleBtn = document.getElementById('timer-toggle-btn');
+
+        function updateTimerUI() {
+            const minutes = Math.floor(currentModeTime / 60);
+            const seconds = currentModeTime % 60;
+            timerDisplay.textContent = `${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+        }
+
+        function setMode(mode) {
+            clearInterval(pomoInterval);
+            isPomoRunning = false;
+            timerToggleBtn.textContent = "Start";
+            selectedMode = mode;
+
+            document.querySelectorAll('.pomo-mode-btn').forEach(btn => btn.classList.remove('active'));
+
+            if (mode === 'pomo') {
+                currentModeTime = 25 * 60;
+                document.getElementById('mode-pomo').classList.add('active');
+            } else if (mode === 'short') {
+                currentModeTime = 5 * 60;
+                document.getElementById('mode-short').classList.add('active');
+            } else if (mode === 'long') {
+                currentModeTime = 15 * 60;
+                document.getElementById('mode-long').classList.add('active');
+            }
+            updateTimerUI();
+        }
+
+        document.getElementById('mode-pomo').addEventListener('click', () => setMode('pomo'));
+        document.getElementById('mode-short').addEventListener('click', () => setMode('short'));
+        document.getElementById('mode-long').addEventListener('click', () => setMode('long'));
+
+        timerToggleBtn.addEventListener('click', () => {
+            if (isPomoRunning) {
+                clearInterval(pomoInterval);
+                isPomoRunning = false;
+                timerToggleBtn.textContent = "Start";
+            } else {
+                isPomoRunning = true;
+                timerToggleBtn.textContent = "Stop";
+                pomoInterval = setInterval(() => {
+                    if (currentModeTime > 0) {
+                        currentModeTime--;
+                        updateTimerUI();
+                    } else {
+                        clearInterval(pomoInterval);
+                        isPomoRunning = false;
+                        timerToggleBtn.textContent = "Start";
+                        
+                        // Uyarı sesleri tetikleniyor:
+                        if (selectedMode === 'pomo') {
+                            playDingSound(880); // İnce Ding sesi - Pomodoro tamamlama
+                            alert("Ders bitti! Mola zamanı.");
+                            setMode('short');
+                        } else {
+                            playDingSound(440); // Kalın Ding sesi - Mola tamamlama
+                            alert("Mola bitti! Ders zamanı.");
+                            setMode('pomo');
+                        }
+                    }
+                }, 1000);
+            }
+        });
+
+
+        /* ==========================================================================
+           TEXT WORKSPACE & GROQ AI CHAT SYSTEMS
+           ========================================================================== */
+        const notesInput = document.getElementById('notes-msg-input');
+        const messagesContainer = document.getElementById('chat-messages-container');
+        const fileLoader = document.getElementById('file-upload-input');
+
+        function appendMessage(text, isUser = true, imgSrc = null) {
+            const bubble = document.createElement('div');
+            bubble.className = `msg-bubble ${isUser ? 'user-bubble' : ''}`;
+
+            if (!isUser) {
+                const avatar = document.createElement('div');
+                avatar.className = 'msg-avatar';
+                avatar.innerHTML = '<i class="fa-solid fa-robot"></i>';
+                bubble.appendChild(avatar);
+            }
+
+            const body = document.createElement('div');
+            body.className = 'msg-body';
+            
+            if (text) {
+                body.textContent = text;
+            }
+
+            if (imgSrc) {
+                const img = document.createElement('img');
+                img.src = imgSrc;
+                img.className = 'uploaded-msg-img';
+                body.appendChild(img);
+            }
+
+            bubble.appendChild(body);
+            messagesContainer.appendChild(bubble);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        // Groq API Üzerinden Yanıt Getiren Fonksiyon
+        async function fetchGroqAIResponse(userPrompt) {
+            if (!GROQ_API_KEY || GROQ_API_KEY.includes("BURAYA_GROQ")) {
+                appendMessage("Lütfen kodun içerisindeki 'GROQ_API_KEY' değişkenine geçerli bir Groq API anahtarı ekleyin.", false);
+                return;
+            }
+
+            // Robot düşünme aşaması efekti
+            const typingBubble = document.createElement('div');
+            typingBubble.className = 'msg-bubble';
+            typingBubble.innerHTML = '<div class="msg-avatar"><i class="fa-solid fa-robot"></i></div><div class="msg-body">Düşünüyor...</div>';
+            messagesContainer.appendChild(typingBubble);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+            try {
+                let messagesPayload = [];
+                
+                // Eğer bir resim yüklenmişse Vision uyumlu mesaj yapısı kuruyoruz
+                if (lastUploadedBase64Json) {
+                    messagesPayload = [
+                        {
+                            role: "user",
+                            content: [
+                                { type: "text", text: userPrompt || "Bu resmi analiz et." },
+                                { type: "image_url", image_url: { url: lastUploadedBase64Json } }
+                            ]
+                        }
+                    ];
+                    lastUploadedBase64Json = null; // Resim tek seferlik tüketilir
+                } else {
+                    messagesPayload = [
+                        { role: "user", content: userPrompt }
+                    ];
+                }
+
+                const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+                    method: "POST",
+                    headers: {
+                        "Authorization": `Bearer ${GROQ_API_KEY}`,
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        model: "llama-3.2-11b-vision-preview", // Ücretsiz resim destekleyen vizyon modeli
+                        messages: messagesPayload,
+                        temperature: 0.7
+                    })
+                });
+
+                const data = await response.json();
+                typingBubble.remove(); // Düşünüyor balonunu sil
+
+                if (data.choices && data.choices[0].message) {
+                    appendMessage(data.choices[0].message.content, false);
+                } else {
+                    appendMessage("Groq API'den geçersiz veri döndü.", false);
+                }
+
+            } catch (error) {
+                typingBubble.remove();
+                console.error("Groq Bağlantı Hatası:", error);
+                appendMessage("Groq API sistemine bağlanırken bir sorun oluştu.", false);
+            }
+        }
+
+        notesInput.addEventListener('keyup', (e) => {
+            if (e.key === 'Enter' && notesInput.value.trim() !== '') {
+                const promptText = notesInput.value;
+                appendMessage(promptText, true);
+                notesInput.value = '';
+                
+                // Groq Yapay Zekasını tetikle
+                fetchGroqAIResponse(promptText);
+            }
+        });
+
+        fileLoader.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file && file.type.startsWith('image/')) {
+                const reader = new FileReader();
+                reader.onload = function(evt) {
+                    appendMessage("", true, evt.target.result);
+                    lastUploadedBase64Json = evt.target.result; // Resmi API sorgusu için hafızaya al
+                    
+                    // Resim geldiğinde doğrudan tetikleme başlatılabilir
+                    fetchGroqAIResponse("Sana bir görsel yükledim, bu görseli inceleyip yardımcı olur musun?");
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+
+        /* ==========================================================================
+           INTEGRATED & SCALE-FITTED MOZILLA PDF.JS IMPLEMENTATION
+           ========================================================================== */
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+        let loadedPdfDoc = null,
+            pdfPageNum = 1,
+            pdfIsRendering = false;
+
+        const pdfRenderCanvas = document.getElementById('pdf-render-canvas'),
+              pdfCtx = pdfRenderCanvas.getContext('2d'),
+              pdfPageInput = document.getElementById('pdf-page-num-input'),
+              pdfCanvasWrapper = document.getElementById('pdf-canvas-wrapper');
+
+        function drawPdfPage(num) {
+            pdfIsRendering = true;
+            loadedPdfDoc.getPage(num).then(page => {
+                const desiredWidth = 680; 
+                const initialViewport = page.getViewport({ scale: 1.0 });
+                const calculatedScale = desiredWidth / initialViewport.width;
+                
+                const viewport = page.getViewport({ scale: calculatedScale });
+                pdfRenderCanvas.height = viewport.height;
+                pdfRenderCanvas.width = viewport.width;
+
+                const renderCtxObj = { canvasContext: pdfCtx, viewport: viewport };
+                
+                page.render(renderCtxObj).promise.then(() => {
+                    pdfIsRendering = false;
+                });
+            });
+
+            pdfPageInput.value = num;
+        }
+
+        function navigateToPdfPage(num) {
+            if (num < 1 || num > loadedPdfDoc.numPages || pdfIsRendering) return;
+            pdfPageNum = num;
+            drawPdfPage(pdfPageNum);
+        }
+
+        document.getElementById('pdf-prev-page-btn').addEventListener('click', () => {
+            if (pdfPageNum > 1) navigateToPdfPage(pdfPageNum - 1);
+        });
+
+        document.getElementById('pdf-next-page-btn').addEventListener('click', () => {
+            if (pdfPageNum < loadedPdfDoc.numPages) navigateToPdfPage(pdfPageNum + 1);
+        });
+
+        pdfPageInput.addEventListener('keyup', (e) => {
+            if (e.key === 'Enter') {
+                const requestedPage = parseInt(pdfPageInput.value);
+                if (requestedPage >= 1 && requestedPage <= loadedPdfDoc.numPages) {
+                    navigateToPdfPage(requestedPage);
+                } else {
+                    alert(`Lütfen 1 ile ${loadedPdfDoc.numPages} arasında geçerli bir sayfa numarası girin.`);
+                    pdfPageInput.value = pdfPageNum;
+                }
+            }
+        });
+
+        document.getElementById('pdf-file-loader').addEventListener('change', (e) => {
+            const selectedFile = e.target.files[0];
+            if (selectedFile && selectedFile.type === "application/pdf") {
+                const pdfFileReader = new FileReader();
+                
+                pdfFileReader.onload = function() {
+                    const typedBufferArray = new Uint8Array(this.result);
+                    
+                    pdfjsLib.getDocument(typedBufferArray).promise.then(pdfInstance => {
+                        loadedPdfDoc = pdfInstance;
+                        pdfPageNum = 1;
+                        
+                        document.getElementById('pdf-total-pages-span').textContent = pdfInstance.numPages;
+                        document.getElementById('pdf-prev-page-btn').disabled = false;
+                        document.getElementById('pdf-next-page-btn').disabled = false;
+                        pdfPageInput.disabled = false;
+                        pdfPageInput.max = pdfInstance.numPages;
+                        pdfCanvasWrapper.style.display = 'block';
+                        
+                        drawPdfPage(pdfPageNum);
+                    });
+                };
+                pdfFileReader.readAsArrayBuffer(selectedFile);
+            }
+        });
+    </script>
+</body>
+</html>
