@@ -3,19 +3,20 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log('Aurelia Games UI yüklendi. Test modunda.');
     // ==========================================
 // 1. BUTON TIKLAMA VE UI TEST SİSTEMİ
-// ==========================================
+// index.js dosyanın en üstündeki buton tıklama alanını bununla güncelle:
 const allButtons = document.querySelectorAll('button, .nav-link, .read-more, .icon-btn');
 
 allButtons.forEach(button => {
     button.addEventListener('click', (e) => {
-        // Eğer eleman gerçek bir sayfaya gitmek istiyorsa (href'i boş değilse ve # içermiyorsa) blocklama
-        const href = button.getAttribute('href');
+        // Hem kendi href'ine hem de eğer a etiketi ise normal href'ine bakıyoruz
+        const href = button.getAttribute('href') || button.closest('a')?.getAttribute('href');
+        
+        // Eğer eleman veya üstündeki a etiketi gerçek bir sayfaya gidiyorsa engelleme!
         if (href && href !== '#' && !button.classList.contains('dot')) {
-            // Tarayıcı normal şekilde sayfayı değiştirebilir, preventDefault yapmıyoruz.
-            return;
+            return; // Tarayıcı normal şekilde sayfayı değiştirir.
         }
         
-        // Sadece içi boş olan veya slider dot'ı olan butonların sayfa yenilemesini engelle
+        // Sadece içi boş (#) olan veya slider dot'ı olan butonların sayfa yenilemesini engelle
         if (!button.classList.contains('dot')) {
             e.preventDefault(); 
         }
