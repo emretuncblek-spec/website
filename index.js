@@ -1,139 +1,142 @@
-// Aurelia Games - UI Test ve Etkileşim Scripti
+/* ================================================================== */
+/*  AURELIA GAMES — index.js                                          */
+/*  Slider + UI Test + Dinamik Tema Sistemi                           */
+/* ================================================================== */
+
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('Aurelia Games UI yüklendi. Test modunda.');
-    
-// 1. BUTON TIKLAMA VE UI TEST SİSTEMİ
-// index.js dosyanın en üstündeki buton tıklama alanını bununla güncelle:
-const allButtons = document.querySelectorAll('button, .nav-link, .read-more, .icon-btn');
+    console.log('Aurelia Games UI yüklendi.');
 
-allButtons.forEach(button => {
-    button.addEventListener('click', (e) => {
-        // Hem kendi href'ine hem de eğer a etiketi ise normal href'ine bakıyoruz
-        const href = button.getAttribute('href') || button.closest('a')?.getAttribute('href');
-        
-        // Eğer eleman veya üstündeki a etiketi gerçek bir sayfaya gidiyorsa engelleme!
-        if (href && href !== '#' && !button.classList.contains('dot')) {
-            return; // Tarayıcı normal şekilde sayfayı değiştirir.
-        }
-        
-        // Sadece içi boş (#) olan veya slider dot'ı olan butonların sayfa yenilemesini engelle
-        if (!button.classList.contains('dot')) {
-            e.preventDefault(); 
-        }
-        
-        let elementText = button.textContent.trim() || button.getAttribute('title') || 'İkon Butonu';
-        console.log(`UI Test: "${elementText}" butonuna basıldı.`);
-        
-        button.style.transform = 'scale(0.96)';
-        setTimeout(() => {
-            button.style.transform = 'none';
-        }, 100);
-    });
-});
-    // ==========================================
-    // 2. OTOMATİK VE TIKLANABİLİR SLIDER SİSTEMİ
-    // ==========================================
-    const slides = document.querySelectorAll(".slide");
-    const dots = document.querySelectorAll(".dot");
-    let currentSlide = 0;
-    let slideInterval;
+    // ================================================================
+    // 1. BUTON TIKLAMA & UI TEST SİSTEMİ
+    // ================================================================
+    const allButtons = document.querySelectorAll('button, .nav-link, .read-more, .icon-btn');
 
-    // Slaytı değiştiren ana fonksiyon
-    function showSlide(index) {
-        // Eğer sayfada slayt veya nokta yoksa hata vermemesi için kontrol
-        if (slides.length === 0 || dots.length === 0) return;
+    allButtons.forEach(button => {
+        button.addEventListener('click', (e) => {
+            // Kendi veya üst <a> etiketinin href'ine bak
+            const href = button.getAttribute('href')
+                      || button.closest('a')?.getAttribute('href');
 
-        // Aktif sınıflarını temizle
-        slides.forEach(slide => slide.classList.remove("active"));
-        dots.forEach(dot => dot.classList.remove("active"));
+            // Gerçek bir sayfaya gidiyorsa müdahale etme
+            if (href && href !== '#' && !button.classList.contains('dot')) {
+                return;
+            }
 
-        // Yeni aktif slayt ve çizgiyi belirle
-        slides[index].classList.add("active");
-        dots[index].classList.add("active");
-        
-        currentSlide = index;
-    }
+            // Boş (#) veya dot ise sayfa yenilemesini engelle
+            if (!button.classList.contains('dot')) {
+                e.preventDefault();
+            }
 
-    // Bir sonraki slayta geçen fonksiyon
-    function nextSlide() {
-        if (slides.length === 0) return;
-        let next = (currentSlide + 1) % slides.length;
-        showSlide(next);
-    }
+            const elementText =
+                button.textContent.trim() ||
+                button.getAttribute('title') ||
+                'İkon Butonu';
 
-    // 15 saniyelik zamanlayıcıyı başlatan fonksiyon
-    function startInterval() {
-        clearInterval(slideInterval); // Eski zamanlayıcıyı temizle
-        slideInterval = setInterval(nextSlide, 15000); // 15000 ms = 15 saniye
-    }
+            console.log(`UI Test: "${elementText}" butonuna basıldı.`);
 
-    // Çizgilere tıklama olayı ekleme
-    dots.forEach(dot => {
-        dot.addEventListener("click", (e) => {
-            const targetIndex = parseInt(e.target.getAttribute("data-index"));
-            showSlide(targetIndex);
-            startInterval(); // Kullanıcı tıkladığında 15 sn süresini sıfırla
+            // Küçük basım animasyonu
+            button.style.transform = 'scale(0.96)';
+            setTimeout(() => { button.style.transform = ''; }, 100);
         });
     });
 
-    // İlk açılışta zamanlayıcıyı başlat (Eğer sayfada slayt varsa)
-    if (slides.length > 0) {
-        startInterval();
+    // ================================================================
+    // 2. OTOMATİK VE TIKLANABİLİR SLIDER SİSTEMİ
+    // ================================================================
+    const slides = document.querySelectorAll('.slide');
+    const dots   = document.querySelectorAll('.dot');
+
+    if (slides.length === 0 || dots.length === 0) return;
+
+    let currentSlide  = 0;
+    let slideInterval = null;
+
+    /** Belirli index'teki slayta geç */
+    function showSlide(index) {
+        slides.forEach(s => s.classList.remove('active'));
+        dots.forEach(d => d.classList.remove('active'));
+        currentSlide = (index + slides.length) % slides.length;
+        slides[currentSlide].classList.add('active');
+        dots[currentSlide].classList.add('active');
     }
+
+    /** Bir sonraki slayta geç */
+    function nextSlide() {
+        showSlide(currentSlide + 1);
+    }
+
+    /** 15 saniyelik otomatik geçişi (yeniden) başlat */
+    function startInterval() {
+        clearInterval(slideInterval);
+        slideInterval = setInterval(nextSlide, 15000);
+    }
+
+    // Noktalara tıklanınca slayt değiştir ve sayacı sıfırla
+    dots.forEach(dot => {
+        dot.addEventListener('click', e => {
+            const targetIndex = parseInt(e.currentTarget.getAttribute('data-index'), 10);
+            showSlide(targetIndex);
+            startInterval();
+        });
+    });
+
+    // İlk açılışta başlat
+    startInterval();
 });
 
-// ==========================================
-// ARKA PLAN RENK ANALİZİ VE DİNAMİK TEMA SİSTEMİ
-// ==========================================
+// ================================================================
+// 3. ARKA PLAN RENK ANALİZİ & DİNAMİK TEMA SİSTEMİ
+//    (Yalnızca .profile-body sayfasında çalışır)
+// ================================================================
 function analizEtVeTemaBelirle() {
     const body = document.body;
     if (!body.classList.contains('profile-body')) return;
 
     const bgImageStyle = window.getComputedStyle(body).backgroundImage;
-    const urlMatch = bgImageStyle.match(/url\(["']?([^"']*)["']?\)/);
-    
-    if (urlMatch && urlMatch[1]) {
-        const imgUrl = urlMatch[1];
-        const img = new Image();
-        img.crossOrigin = "Anonymous";
-        img.src = imgUrl;
+    const urlMatch     = bgImageStyle.match(/url\(["']?([^"']*)["']?\)/);
 
-        img.onload = function() {
-            const canvas = document.createElement('canvas');
-            const ctx = canvas.getContext('2d');
-            canvas.width = 20;
-            canvas.height = 20;
-            ctx.drawImage(img, 0, 0, 20, 20);
+    if (!urlMatch || !urlMatch[1]) return;
 
-            try {
-                const imgData = ctx.getImageData(0, 0, 20, 20).data;
-                let r = 0, g = 0, b = 0, count = 0;
+    const img      = new Image();
+    img.crossOrigin = 'Anonymous';
+    img.src         = urlMatch[1];
 
-                for (let i = 0; i < imgData.length; i += 4) {
-                    r += imgData[i];
-                    g += imgData[i+1];
-                    b += imgData[i+2];
-                    count++;
-                }
+    img.onload = function () {
+        const canvas = document.createElement('canvas');
+        const ctx    = canvas.getContext('2d');
+        canvas.width  = 20;
+        canvas.height = 20;
+        ctx.drawImage(img, 0, 0, 20, 20);
 
-                r = Math.floor(r / count);
-                g = Math.floor(g / count);
-                b = Math.floor(b / count);
+        try {
+            const data  = ctx.getImageData(0, 0, 20, 20).data;
+            let r = 0, g = 0, b = 0, count = 0;
 
-                const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+            for (let i = 0; i < data.length; i += 4) {
+                r += data[i];
+                g += data[i + 1];
+                b += data[i + 2];
+                count++;
+            }
 
-                if (brightness > 128) {
-                    body.classList.remove('dark-bg-theme');
-                    body.classList.add('light-bg-theme');
-                } else {
-                    body.classList.remove('light-bg-theme');
-                    body.classList.add('dark-bg-theme');
-                }
-            } catch (e) {
+            r = Math.floor(r / count);
+            g = Math.floor(g / count);
+            b = Math.floor(b / count);
+
+            const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+
+            if (brightness > 128) {
+                body.classList.remove('dark-bg-theme');
+                body.classList.add('light-bg-theme');
+            } else {
+                body.classList.remove('light-bg-theme');
                 body.classList.add('dark-bg-theme');
             }
-        };
-    }
+        } catch (err) {
+            // CORS veya canvas güvenlik hatası — güvenli varsayılan
+            body.classList.add('dark-bg-theme');
+        }
+    };
 }
 
 window.addEventListener('load', analizEtVeTemaBelirle);
