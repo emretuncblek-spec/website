@@ -184,7 +184,7 @@ body {
 }
 
 /* ================================================================== */
-/*  MAIN BANNER — TAM CAM EFEKTİ                                      */
+/*  MAIN BANNER — RESİMLİ BANNER + HAFİF CAM OVERLAY                  */
 /* ================================================================== */
 .main-banner {
   border-radius:    24px;
@@ -197,44 +197,41 @@ body {
   justify-content:  center;
   overflow:         hidden;
 
-  /* Şeffaf cam katmanı */
-  background:           var(--banner-glass);
-  backdrop-filter:      blur(22px) saturate(1.6);
-  -webkit-backdrop-filter: blur(22px) saturate(1.6);
-  border:               1px solid var(--banner-border);
-  box-shadow:           var(--banner-glow),
-                        inset 0 0 0 1px rgba(255,255,255,0.08),
-                        inset 0 4px 16px rgba(255, 255, 255, 0.12);
+  /* Çerçeve ve gölge — backdrop-filter KALDIRILDI (resimler şeffaf değil) */
+  background:  #0a0a1e;
+  border:      1px solid var(--banner-border);
+  box-shadow:  var(--banner-glow),
+               inset 0 0 0 1px rgba(255,255,255,0.08);
 }
 
-/* Cam içi üst parlaklık çizgisi */
+/* Üst parlaklık çizgisi (cam kenar efekti) */
 .main-banner::before {
-  content:       "";
-  position:      absolute;
-  top:           0;
-  left:          0;
-  right:         0;
-  height:        1px;
-  background:    linear-gradient(90deg, transparent, rgba(255,255,255,0.55), transparent);
+  content:        "";
+  position:       absolute;
+  top:            0;
+  left:           0;
+  right:          0;
+  height:         1px;
+  background:     linear-gradient(90deg, transparent, rgba(255,255,255,0.55), transparent);
   pointer-events: none;
-  z-index:       2;
+  z-index:        4;
 }
 
-/* Cam içi sol köşe halosu */
+/* Sol köşe halosu */
 .main-banner::after {
-  content:       "";
-  position:      absolute;
-  top:           -60px;
-  left:          -60px;
-  width:         220px;
-  height:        220px;
-  border-radius: 50%;
-  background:    radial-gradient(circle, rgba(100,160,255,0.18) 0%, transparent 70%);
+  content:        "";
+  position:       absolute;
+  top:            -60px;
+  left:           -60px;
+  width:          220px;
+  height:         220px;
+  border-radius:  50%;
+  background:     radial-gradient(circle, rgba(100,160,255,0.14) 0%, transparent 70%);
   pointer-events: none;
-  z-index:       1;
+  z-index:        4;
 }
 
-/* --- Slaytlar --- */
+/* --- Slayt Kapsayıcı --- */
 .banner-slides {
   position: relative;
   width:    100%;
@@ -242,33 +239,55 @@ body {
   z-index:  3;
 }
 
+/* --- Ortak Slayt Stili --- */
 .slide {
-  display:    none;
-  opacity:    0;
-  padding:    40px;
-  min-height: 260px;
-  box-sizing: border-box;
-  animation:  fadeIn 0.55s ease-in-out forwards;
+  display:             none;
+  opacity:             0;
+  padding:             40px;
+  min-height:          260px;
+  box-sizing:          border-box;
+  background-size:     cover;
+  background-position: center;
+  background-repeat:   no-repeat;
+  animation:           fadeIn 0.55s ease-in-out forwards;
+  position:            relative;
 }
 
 .slide.active {
-  display:        flex;
-  flex-direction: column;
+  display:         flex;
+  flex-direction:  column;
   justify-content: center;
-  opacity:        1;
+  opacity:         1;
 }
 
-/* Slayt içi hafif renk tonu — her slayt farklı bir renk havası taşır */
+/*
+  Resim + cam overlay katmanı — her slayt kendi URL'ini taşır.
+  Üstteki yarı-şeffaf gradient, resmi karartan cam etkisi verir,
+  yazıların okunmasını sağlar.
+  ↓ URL'leri buradan kolayca değiştirebilirsin ↓
+*/
 .slide-1 {
-  background: linear-gradient(135deg, rgba(30, 60, 120, 0.35), rgba(80, 10, 40, 0.25));
+  background-image:
+    linear-gradient(135deg,
+      rgba(10, 20, 60, 0.52) 0%,
+      rgba(60, 5,  30, 0.38) 100%),
+    url("https://i.imgur.com/jc9awY1.jpeg");
 }
 
 .slide-2 {
-  background: linear-gradient(135deg, rgba(10, 50, 80, 0.40), rgba(30, 90, 60, 0.25));
+  background-image:
+    linear-gradient(135deg,
+      rgba(5,  30, 60, 0.52) 0%,
+      rgba(10, 70, 45, 0.38) 100%),
+    url("https://i.imgur.com/O3PFx8M.jpeg");
 }
 
 .slide-3 {
-  background: linear-gradient(135deg, rgba(80, 40, 10, 0.40), rgba(50, 10, 80, 0.30));
+  background-image:
+    linear-gradient(135deg,
+      rgba(60, 25, 5,  0.52) 0%,
+      rgba(35, 5,  60, 0.38) 100%),
+    url("https://i.imgur.com/6rgRX0j.jpeg");
 }
 
 /* --- Badge --- */
