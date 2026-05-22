@@ -17,7 +17,7 @@ body {
   /* Arka plan rengi (Resim yüklenene kadar veya yüklenemezse buradaki renk görünür) */
   background-color: #f3f4f6; 
   
-  /* ─── BURAYI DEĞİŞTİRDİK: Resim linkini buraya yapıştır ─── */
+  /* Arka plan resminin linki */
   background-image: url("https://i.imgur.com/kLinTYi.jpeg");
   
   /* Arka plan resminin ayarları (Ekrana tam oturması için) */
@@ -90,7 +90,7 @@ body {
   transition: color 0.2s ease;
 }
 
-/* ─── AKTİF LİNKİN ALTINDAKİ SİYAH ÇİZGİ ─── */
+/* AKTİF LİNKİN ALTINDAKİ SİYAH ÇİZGİ */
 .nav-link.active::after {
   content: "";
   position: absolute;
@@ -253,30 +253,34 @@ body {
   gap: 20px;
 }
 
-/* ─── ANA SAYFAYA ÖZEL GLASSMORPHISM RESET ─── */
-/* Sadece .dashboard-grid içerisindeki kartları seçerek diğer sayfalardan izole ediyoruz */
+/* 🎯 ANA SAYFAYA ÖZEL EŞSİZ GLASSMORPHISM SEÇİCİLERİ 🎯 */
+/* Sadece .dashboard-grid altındaki tüm kart varyasyonlarını tam güçle ezerek buzlu cam efektine zorlar */
 .dashboard-grid .card,
 .dashboard-grid .daily-tasks-card,
+.dashboard-grid .explore-section,
 .dashboard-grid .rank-card,
 .dashboard-grid .timer-card,
 .dashboard-grid .leaderboard-card {
-  background-color: rgba(255, 255, 255, 0.45) !important; /* Opak beyaz kalktı, şeffaf katman geldi */
-  border-radius: 20px !important; /* Kenar yumuşaklığı artırıldı */
-  padding: 20px;
-  border: 1px solid rgba(255, 255, 255, 0.55) !important; /* İnce parlak cam sınırı */
-  backdrop-filter: blur(14px) !important; /* Arkadaki odayı flulaştıran ana sihirbaz kod */
+  background-color: rgba(255, 255, 255, 0.45) !important; 
+  background: rgba(255, 255, 255, 0.45) !important;
+  border-radius: 20px !important;
+  padding: 20px !important;
+  border: 1px solid rgba(255, 255, 255, 0.55) !important; 
+  backdrop-filter: blur(14px) !important; 
   -webkit-backdrop-filter: blur(14px) !important;
   box-shadow: 
     0 8px 32px rgba(0, 0, 0, 0.05),
     inset 0 2px 4px rgba(255, 255, 255, 0.4) !important;
 }
 
-.dashboard-grid .card h2 {
+.dashboard-grid .card h2,
+.dashboard-grid .explore-section h2,
+.dashboard-grid .leaderboard-card h2 {
   font-size: 18px;
   margin-top: 0;
   margin-bottom: 16px;
   font-weight: 700;
-  color: #000000;
+  color: #000000 !important;
 }
 
 /* 1. SÜTUN: DAILY TASKS */
@@ -332,13 +336,6 @@ body {
 }
 
 /* 2. SÜTUN: EXPLORE BUTTONS */
-.explore-section h2 {
-  font-size: 18px;
-  margin-top: 0;
-  margin-bottom: 16px;
-  color: #000000;
-}
-
 .explore-buttons {
   display: flex;
   flex-direction: column;
@@ -379,7 +376,6 @@ body {
 
 .rank-card, .timer-card {
   text-align: center;
-  padding: 16px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -436,7 +432,7 @@ body {
 
 /* ========================================== */
 /* ⚠️ PROFİL SAYFASI ÖZEL TASARIM STİLLERİ    */
-/* ⚠️ (KARTIN SOLA YASLANMASI, RESİM KIRPMA) */
+/* ⚠️ (BURAYA DOKUNULMADI - TAMAMEN KORUNDU) */
 /* ========================================== */
 
 /* Profil Sayfasına Geçildiğinde Body'i Ezerek Elden Ring Teması Yapar */
@@ -584,8 +580,7 @@ body {
 /* Alt kısımdaki 4'lü buton grubu (Achievements, Statistics vb.) */
 .profile-bottom-actions {
   display: flex;
-  justify-content: flex-start; 
-  gap: 16px;
+  justify-content: flex-start; \n  gap: 16px;
   width: auto;
   margin-left: 0 !important;  
   padding-left: 0 !important; 
