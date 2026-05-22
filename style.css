@@ -537,7 +537,7 @@ body {
 .rank-value {
   font-size:   52px;
   font-weight: 800;
-  color:       #ffffff;
+  color:       #000000;
   text-shadow: 0 2px 16px rgba(255, 255, 255, 0.25);
   line-height: 1;
 }
@@ -545,7 +545,7 @@ body {
 .timer-value {
   font-size:   30px;
   font-weight: 800;
-  color:       #ffffff;
+  color:       #000000;
   line-height: 1.1;
   text-shadow: 0 2px 12px rgba(255, 255, 255, 0.20);
 }
