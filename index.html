@@ -4,166 +4,151 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aurelia Games - Home</title>
-    <link rel="stylesheet" href="./style.css"> 
+    <link rel="stylesheet" href="./style4.css"> 
 </head> 
 <body>
     <div class="container">
        <header class="navbar">
     <div class="nav-left">
         <a href="./profile" class="icon-btn profile-btn" title="Profil">
-            <svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+            <svg viewBox=\"0 0 24 24\"><path fill=\"currentColor\" d=\"M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z\"/></svg>
         </a>
         <button class="icon-btn notify-btn" title="Bildirimler">
-            <svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg>
+            <svg viewBox=\"0 0 24 24\"><path fill=\"currentColor\" d=\"M12 22c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32...
         </button>
     </div>
     <nav class="nav-links">
-        <a href="./profile.html" class="nav-link">Profile</a>
-        <a href="./index.html" class="nav-link active">Home</a>
-        <a href="#" class="nav-link">Explore</a>
-        <a href="#" class="nav-link">Games</a>
-        <a href="./focus.html" class="nav-link">Focus</a>
+        <a href="./profile" class="nav-link">Profile</a>
+        <a href="./home" class="nav-link active">Home</a>
+        <a href="./games" class="nav-link">Games</a>
     </nav>
     <div class="nav-right">
-        <button class="auth-btn log-in">Settings</button>
-        <button class="auth-btn sign-up">Log out</button>
+        <button class="auth-btn log-in">Log in</button>
+        <button class="auth-btn sign-up">Sign up</button>
     </div>
 </header>
 
         <section class="main-banner">
-    <div class="banner-slides">
-    <div class="slide slide-1 active">
-        <span class="badge-new">NEW!</span>
-        <h1>Chess update</h1>
-        <p>Added online chess game for, play with your friends!<br>you can earn xp and cups right now.</p>
-        <a href="#" class="read-more">Read More</a>
-    </div>
-    
-    <div class="slide slide-2">
-        <span class="badge-new">NEW!</span>
-        <h1>Quizlee Challenge</h1>
-        <p>Test your knowledge with our brand new quiz system!<br>Solve daily puzzles and climb the ranks.</p>
-        <a href="#" class="read-more">Read More</a>
-    </div>
-
-    <div class="slide slide-3">
-        <span class="badge-new">HOT!</span>
-        <h1>Luxury Boxes</h1>
-        <p>New reward boxes are now available in the shop.<br>Open them to find epic and legendary items!</p>
-        <a href="#" class="read-more">Read More</a>
-    </div>
-</div>
-
-    <div class="slider-dots">
-        <span class="dot active" data-index="0"></span>
-        <span class="dot" data-index="1"></span>
-        <span class="dot" data-index="2"></span>
-    </div>
-</section>
+            <div class="banner-slides">
+                <div class="slide slide-1 active">
+                    <span class=\"badge-new\">NEW!</span>
+                    <h1>AURELIA IN-HOUSE GRAPHICS</h1>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam finibus diam ut tellus interdum, ac mollis massa pretium.</p>
+                    <a href=\"#\" class=\"read-more\">READ MORE</a>
+                </div>
+                <div class="slide slide-2">
+                    <span class=\"badge-new\">UPDATE!</span>
+                    <h1>EXPLORE NEW REALMS</h1>
+                    <p>Discover breathtaking landscapes and challenge fierce enemies in our latest expansion pack.</p>
+                    <a href=\"#\" class=\"read-more\">DISCOVER</a>
+                </div>
+                <div class="slide slide-3">
+                    <span class=\"badge-new\">EVENT!</span>
+                    <h1>WEEKEND TOURNAMENT</h1>
+                    <p>Join the battle this weekend and win exclusive rewards, rare badges, and tons of XP!</p>
+                    <a href=\"#\" class=\"read-more\">REGISTER NOW</a>
+                </div>
+            </div>
+            <div class="slider-dots">
+                <span class="dot active" onclick="currentSlide(1)"></span>
+                <span class="dot" onclick="currentSlide(2)"></span>
+                <span class="dot" onclick="currentSlide(3)"></span>
+            </div>
+        </section>
 
         <div class="dashboard-grid">
-             
-            <div class="card daily-tasks-card">
-                <h2>Daily Tasks &gt;</h2>
+            
+            <div class="daily-tasks-card home-glass-card">
+                <h2>Daily Tasks</h2>
                 <ul class="task-list">
                     <li>
-                        <span class="task-icon">♟️</span>
-                        <span class="task-text">Win one game at online chess</span>
-                        <span class="task-xp">250 xp</span>
+                        <span class="task-icon">👾</span>
+                        <span class="task-text">Play 1 game of Aurelia Chess</span>
+                        <span class="task-xp">+250 XP</span>
                     </li>
                     <li>
-                        <span class="task-icon">Q</span>
-                        <span class="task-text">Solve one quiz at quizlee</span>
-                        <span class="task-xp">75 xp</span>
+                        <span class="task-icon">🏆</span>
+                        <span class="task-text">Win a matchmaking game</span>
+                        <span class="task-xp">+500 XP</span>
                     </li>
                     <li>
-                        <span class="task-icon">📦</span>
-                        <span class="task-text">Open 1 Luxury Box</span>
-                        <span class="task-xp">155 xp</span>
+                        <span class="task-icon">💬</span>
+                        <span class="task-text">Send a message in global chat</span>
+                        <span class="task-xp">+100 XP</span>
                     </li>
                     <li>
-                        <span class="task-icon">🍿</span>
-                        <span class="task-text">Find movie from emoji game</span>
-                        <span class="task-xp">25 xp</span>
+                        <span class="task-icon">🔥</span>
+                        <span class="task-text">Maintain your daily streak</span>
+                        <span class="task-xp">+150 XP</span>
                     </li>
                 </ul>
-                <button class="support-btn">Support</button>
+                <button class="support-btn">Support Us</button>
             </div>
 
-            <div class="explore-section">
+            <div class="explore-section home-glass-card">
                 <h2>Explore</h2>
                 <div class="explore-buttons">
                     <button class="explore-btn">
-                        <span class="btn-icon">🛒</span>
-                        <span class="btn-text">XP SHOP</span>
+                        <span class="btn-icon">🎯</span>
+                        <span class="btn-text">DAILY MISSIONS</span>
                     </button>
                     <button class="explore-btn">
-                        <span class="btn-icon">📦</span>
-                        <span class="btn-text">LUXURY BOX</span>
+                        <span class="btn-icon">⚔️</span>
+                        <span class="btn-text">MATCHMAKING</span>
                     </button>
                     <button class="explore-btn">
-                        <span class="btn-icon">💎</span>
-                        <span class="btn-text">ETERNAL BUNDLE</span>
+                        <span class="btn-icon">💰</span>
+                        <span class="btn-text">COIN MARKET</span>
                     </button>
                     <button class="explore-btn">
-                        <span class="btn-icon">🎒</span>
-                        <span class="btn-text">INVENTORY</span>
-                    </button>
-                    <button class="explore-btn">
-                        <span class="btn-icon">👥</span>
-                        <span class="btn-text">FRIENDS</span>
+                        <span class="btn-icon">🎰</span>
+                        <span class="btn-text">LUCKY SPIN</span>
                     </button>
                 </div>
             </div>
 
             <div class="stats-column">
-                <div class="card rank-card">
+                <div class="rank-card home-glass-card">
                     <h3>Your Rank</h3>
-                    <div class="rank-value">38</div>
+                    <div class="rank-value">1</div>
                 </div>
-                <div class="card timer-card">
+                <div class="timer-card home-glass-card">
                     <h3>Timer</h3>
-                    <div class="timer-value">15d 16h</div>
+                    <div class="timer-value">00:00:00</div>
                 </div>
             </div>
 
-            <div class="card leaderboard-card">
+            <div class="leaderboard-card home-glass-card">
                 <h2>Monthly Board</h2>
                 <div class="leaderboard-list">
-                    <div class="leaderboard-item rank-1" style="background-image: linear-gradient(90deg, rgba(230,150,180,0.6), rgba(0,0,0,0.4));">
-                        <span class="user-meta">#1 minocials</span>
-                        <span class="user-xp">3.7k XP 🌸</span>
+                    <div class="leaderboard-item" style="background-image: linear-gradient(90deg, rgba(212,175,55,0.4), rgba(0,0,0,0.4));">
+                        <span class="user-meta">#1 beymisafir</span>
+                        <span class="user-xp">14.2k XP 👑</span>
                     </div>
-                    <div class="leaderboard-item rank-2" style="background-image: linear-gradient(90deg, rgba(70,140,100,0.6), rgba(0,0,0,0.4));">
-                        <span class="user-meta">#2 moonbreakeryt_07...</span>
-                        <span class="user-xp">6.5k XP 🍃</span>
+                    <div class="leaderboard-item" style="background-image: linear-gradient(90deg, rgba(192,192,192,0.4), rgba(0,0,0,0.4));">
+                        <span class="user-meta">#2 taha</span>
+                        <span class="user-xp">4.5k XP 🛡️</span>
                     </div>
-                    <div class="leaderboard-item rank-3" style="background-image: linear-gradient(90deg, rgba(140,110,70,0.6), rgba(0,0,0,0.4));">
+                    <div class="leaderboard-item" style="background-image: linear-gradient(90deg, rgba(205,127,50,0.4), rgba(0,0,0,0.4));">
                         <span class="user-meta">#3 emrebronz</span>
                         <span class="user-xp">1.6k XP ⚔️</span>
                     </div>
-                    <div class="leaderboard-item" style="background-image: linear-gradient(90deg, rgba(80,100,120,0.5), rgba(0,0,0,0.4));">
+                    <div class="leaderboard-item" style="background-image: linear-gradient(90deg, rgba(80,100,120,0.4), rgba(0,0,0,0.4));">
                         <span class="user-meta">#4 moony.000</span>
                         <span class="user-xp">473 XP 🪶</span>
                     </div>
-                    <div class="leaderboard-item" style="background-image: linear-gradient(90deg, rgba(100,80,120,0.5), rgba(0,0,0,0.4));">
+                    <div class="leaderboard-item" style="background-image: linear-gradient(90deg, rgba(100,80,120,0.4), rgba(0,0,0,0.4));">
                         <span class="user-meta">#5 beawarez</span>
                         <span class="user-xp">149 XP 🌌</span>
                     </div>
-                    <div class="leaderboard-item" style="background-image: linear-gradient(90deg, rgba(120,50,50,0.5), rgba(0,0,0,0.4));">
+                    <div class="leaderboard-item" style="background-image: linear-gradient(90deg, rgba(120,50,50,0.4), rgba(0,0,0,0.4));">
                         <span class="user-meta">#6 amjustrealm</span>
                         <span class="user-xp">123 XP 🧱</span>
-                    </div>
-                    <div class="leaderboard-item" style="background-image: linear-gradient(90deg, rgba(40,60,50,0.5), rgba(0,0,0,0.4));">
-                        <span class="user-meta">#7 thund3rst0rm_1</span>
-                        <span class="user-xp">109 XP ⚜️</span>
                     </div>
                 </div>
             </div>
 
         </div>
     </div>
-
-    <script src="./index.js"></script>
 </body>
 </html>
