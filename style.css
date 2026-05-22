@@ -2,7 +2,7 @@
 /*  AURELIA GAMES – FULL GLASS MORPHISM STYLE                         */
 /*  GitHub Pages uyumlu, tüm bölümler şeffaf cam efektiyle            */
 /* ================================================================== */
-
+ 
 :root {
   color-scheme: dark;
 
@@ -49,7 +49,7 @@
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background-color: #0d1b2a;                        /* Resim yüklenemezse fallback */
-  background-image: url("./images/bg-home.jpeg");
+  background-image: url("./images/bg-home.jpg");
   background-size:      cover;
   background-position:  center;
   background-repeat:    no-repeat;
