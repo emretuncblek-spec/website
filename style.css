@@ -14,9 +14,17 @@ body {
   padding: 0;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   
-  /* İlk sayfa için görseldeki gibi düz, açık gri arka plan */
-  background-color: #f3f4f6;
-  background-image: none;
+  /* Arka plan rengi (Resim yüklenene kadar veya yüklenemezse buradaki renk görünür) */
+  background-color: #f3f4f6; 
+  
+  /* ─── BURAYI DEĞİŞTİRDİK: Resim linkini buraya yapıştır ─── */
+  background-image: url("https://i.imgur.com/kLinTYi.jpeg");
+  
+  /* Arka plan resminin ayarları (Ekrana tam oturması için) */
+  background-size: cover;          /* Resmi esnetmeden tüm ekranı kaplayacak şekilde büyütür */
+  background-position: center;     /* Resmi ekrana tam ortalar */
+  background-repeat: no-repeat;    /* Resim küçükse kendini tekrar etmesini engeller */
+  background-attachment: fixed;    /* Sayfa aşağı kaysa bile arka planın sabit kalmasını sağlar */
   
   color: #000000;
   min-height: 100vh;
