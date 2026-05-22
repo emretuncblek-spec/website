@@ -49,7 +49,7 @@
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background-color: #0d1b2a;                        /* Resim yüklenemezse fallback */
-  background-image: url("https://i.imgur.com/kLinTYi.jpeg");
+  background-image: url("https://i.imgur.com/l00T6hw.jpeg");
   background-size:      cover;
   background-position:  center;
   background-repeat:    no-repeat;
@@ -537,7 +537,7 @@ body {
 .rank-value {
   font-size:   52px;
   font-weight: 800;
-  color:       #000000;
+  color:       #ffffff;
   text-shadow: 0 2px 16px rgba(255, 255, 255, 0.25);
   line-height: 1;
 }
@@ -545,7 +545,7 @@ body {
 .timer-value {
   font-size:   30px;
   font-weight: 800;
-  color:       #000000;
+  color:       #ffffff;
   line-height: 1.1;
   text-shadow: 0 2px 12px rgba(255, 255, 255, 0.20);
 }
