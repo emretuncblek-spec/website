@@ -13,19 +13,12 @@ body {
   margin: 0;
   padding: 0;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  
-  /* Arka plan rengi (Resim yüklenene kadar veya yüklenemezse buradaki renk görünür) */
   background-color: #f3f4f6; 
-  
-  /* Arka plan resminin linki */
   background-image: url("https://i.imgur.com/kLinTYi.jpeg");
-  
-  /* Arka plan resminin ayarları (Ekrana tam oturması için) */
-  background-size: cover;          /* Resmi esnetmeden tüm ekranı kaplayacak şekilde büyütür */
-  background-position: center;     /* Resmi ekrana tam ortalar */
-  background-repeat: no-repeat;    /* Resim küçükse kendini tekrar etmesini engeller */
-  background-attachment: fixed;    /* Sayfa aşağı kaysa bile arka planın sabit kalmasını sağlar */
-  
+  background-size: cover;          
+  background-position: center;     
+  background-repeat: no-repeat;    
+  background-attachment: fixed;    
   color: #000000;
   min-height: 100vh;
 }
@@ -36,7 +29,7 @@ body {
   padding: 24px;
 }
 
-/* NAVBAR DÜZENI */
+/* NAVBAR DÜZENİ */
 .navbar {
   display: flex;
   justify-content: space-between;
@@ -49,7 +42,6 @@ body {
   gap: 12px;
 }
 
-/* Sol üstteki İkon Butonları (Profil ve Bildirim) */
 .icon-btn {
   background-color: #1a15cc;
   color: #ffffff;
@@ -73,7 +65,6 @@ body {
   opacity: 0.9;
 }
 
-/* Menü Linkleri (Profile, Home, Games) */
 .nav-links {
   display: flex;
   gap: 32px;
@@ -90,7 +81,6 @@ body {
   transition: color 0.2s ease;
 }
 
-/* AKTİF LİNKİN ALTINDAKİ SİYAH ÇİZGİ */
 .nav-link.active::after {
   content: "";
   position: absolute;
@@ -107,7 +97,6 @@ body {
   gap: 16px;
 }
 
-/* Sağ Üst Giriş/Çıkış Butonları */
 .auth-btn {
   border-radius: 20px;
   padding: 10px 24px;
@@ -129,10 +118,7 @@ body {
   color: #ffffff;
 }
 
-
-/* ========================================== */
-/* BOYDAN BOYA SÜREKLİ DÖNEN MAIN BANNER      */
-/* ========================================== */
+/* MAIN BANNER */
 .main-banner {
   border-radius: 24px;
   padding: 0; 
@@ -172,7 +158,6 @@ body {
   opacity: 1;
 }
 
-/* Slider İçeriği */
 .badge-new {
   color: #ff3333;
   font-weight: 900;
@@ -204,23 +189,10 @@ body {
   font-size: 14px;
 }
 
-/* Slayt Görselleri */
-.slide-1 {
-  background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), 
-                    url("https://i.imgur.com/jc9awY1.jpeg");
-}
+.slide-1 { background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url("https://i.imgur.com/jc9awY1.jpeg"); }
+.slide-2 { background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url("https://i.imgur.com/O3PFx8M.jpeg"); }
+.slide-3 { background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url("https://i.imgur.com/6rgRX0j.jpeg"); }
 
-.slide-2 {
-  background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), 
-                    url("https://i.imgur.com/O3PFx8M.jpeg");
-}
-
-.slide-3 {
-  background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), 
-                    url("https://i.imgur.com/6rgRX0j.jpeg");
-}
-
-/* Slider Alt Çizgileri */
 .slider-dots {
   position: absolute;
   bottom: 20px;
@@ -243,22 +215,23 @@ body {
   background-color: #ffffff;
 }
 
-
-/* ========================================== */
-/* DASHBOARD 4 SÜTUNLU YAN YANA GRID YAPISI   */
-/* ========================================== */
+/* GRID YAPISI */
 .dashboard-grid {
   display: grid;
   grid-template-columns: 2.5fr 2fr 1.2fr 2.5fr;
   gap: 20px;
 }
 
-/* ========================================== */
-/* 🎯 GITHUB PAGES CAM (GLASSMORPHISM) SİSTEMİ*/
-/* ========================================== */
-/* HTML'deki ortak ".home-glass-card" sınıfını hedef alarak eski katı */
-/* beyaz renkleri iptal eder ve pürüzsüz buzlu cam efekti sunar. */
-.home-glass-card {
+/* ======================================================== */
+/* 🎯 GERÇEK BUZLU CAM (GLASSMORPHISM) ARKA PLAN SİSTEMİ    */
+/* ======================================================== */
+/* Eski beyaz ve katı arka plan kurallarının tamamı ezildi. */
+.home-glass-card,
+.daily-tasks-card.home-glass-card,
+.explore-section.home-glass-card,
+.rank-card.home-glass-card,
+.timer-card.home-glass-card,
+.leaderboard-card.home-glass-card {
   background: rgba(255, 255, 255, 0.42) !important;
   background-color: rgba(255, 255, 255, 0.42) !important;
   border-radius: 20px !important;
@@ -267,11 +240,12 @@ body {
   backdrop-filter: blur(14px) !important;
   -webkit-backdrop-filter: blur(14px) !important;
   box-shadow: 
-    0 8px 32px rgba(0, 0, 0, 0.05), 
+    0 8px 32px rgba(0, 0, 0, 0.05),
     inset 0 2px 4px rgba(255, 255, 255, 0.45) !important;
 }
 
-.home-glass-card h2 {
+.home-glass-card h2,
+.home-glass-card h3 {
   font-size: 18px;
   margin-top: 0;
   margin-bottom: 16px;
@@ -279,7 +253,7 @@ body {
   color: #000000 !important;
 }
 
-/* 1. SÜTUN: DAILY TASKS */
+/* SÜTUN 1: DAILY TASKS EK AYARLARI */
 .daily-tasks-card {
   display: flex;
   flex-direction: column;
@@ -335,7 +309,7 @@ body {
   background-color: rgba(255, 255, 255, 0.85);
 }
 
-/* 2. SÜTUN: EXPLORE BUTTONS */
+/* SÜTUN 2: EXPLORE BUTTONS EK AYARLARI */
 .explore-buttons {
   display: flex;
   flex-direction: column;
@@ -357,17 +331,13 @@ body {
   transition: transform 0.1s ease;
 }
 
-.explore-btn .btn-icon {
-  font-size: 16px;
-}
-
 .explore-btn .btn-text {
   font-weight: 700;
   font-size: 13px;
   letter-spacing: 0.5px;
 }
 
-/* 3. SÜTUN: STATS COLUMN (RANK VE TIMER) */
+/* SÜTUN 3: STATS COLUMN (RANK VE TIMER) EK AYARLARI */
 .stats-column {
   display: flex;
   flex-direction: column;
@@ -403,7 +373,7 @@ body {
   line-height: 1.1;
 }
 
-/* 4. SÜTUN: MONTHLY BOARD (LEADERBOARD) */
+/* SÜTUN 4: MONTHLY BOARD EK AYARLARI */
 .leaderboard-list {
   display: flex;
   flex-direction: column;
@@ -429,13 +399,10 @@ body {
   to { opacity: 1; }
 }
 
-
 /* ========================================== */
 /* ⚠️ PROFİL SAYFASI ÖZEL TASARIM STİLLERİ    */
 /* ⚠️ (BURAYA DOKUNULMADI - TAMAMEN KORUNDU) */
 /* ========================================== */
-
-/* Profil Sayfasına Geçildiğinde Body'i Ezerek Elden Ring Teması Yapar */
 .profile-body {
   background-color: transparent !important;
   background-image: url("https://media.discordapp.net/attachments/1480011788232822836/1506053625406029853/43387667-elden-ring-wallpaper.jpg?ex=6a0cdd3d&is=6a0b8bbd&hm=495f692a1c453e5c70ff75812a3b2b38ff4197d3b37c5b9fd47ea8cab57ddb3d&=&format=webp&width=1423&height=800") !important;
@@ -445,7 +412,6 @@ body {
   background-attachment: fixed !important;
 }
 
-/* Profil Menüsündeki Butonların ve Yazıların Beyaz Olma Kuralları */
 .profile-body .nav-link,
 .profile-body .icon-btn {
   color: #ffffff !important;
@@ -468,7 +434,6 @@ body {
   justify-content: space-between;
 }
 
-/* Kartı ve altındaki butonları SOLA tam sıfırlayan düzen */
 .profile-central-layout {
   display: flex;
   flex-direction: column;
@@ -482,7 +447,6 @@ body {
   box-sizing: border-box;
 }
 
-/* Kahverengi Büyük Profil Kartı */
 .profile-sidebar-card {
   background-color: rgba(121, 102, 79, 0.9) !important;
   border-radius: 32px !important;
@@ -503,7 +467,6 @@ body {
   margin: 0 0 20px 0;
 }
 
-/* Yuvarlak Profil Resim Alanı */
 .profile-avatar-container {
   width: 160px;
   height: 160px;
@@ -513,7 +476,6 @@ body {
   margin-bottom: 20px;
 }
 
-/* Kedili avatar resmini bozmadan/esnetmeden kırpan alan */
 .profile-avatar-img {
   width: 100%;
   height: 100%;
@@ -530,7 +492,6 @@ body {
   margin-bottom: 16px;
 }
 
-/* XP Alanı */
 .profile-xp-section {
   width: 100%;
   margin-bottom: 20px;
@@ -560,7 +521,6 @@ body {
   font-size: 14px;
 }
 
-/* Rozetler */
 .profile-badges-row {
   display: flex;
   gap: 16px;
@@ -577,10 +537,9 @@ body {
   transform: scale(1.2);
 }
 
-/* Alt kısımdaki 4'lü buton grubu (Achievements, Statistics vb.) */
 .profile-bottom-actions {
   display: flex;
-  justify-content: flex-start; 
+  justify-content: flex-start; \
   gap: 16px;
   width: auto;
   margin-left: 0 !important;  
@@ -611,8 +570,7 @@ body {
   font-size: 18px;
 }
 
-
-/* RESPONSIVE AYARLARI */
+/* RESPONSIVE */
 @media (max-width: 1024px) {
   .dashboard-grid {
     grid-template-columns: 1fr 1fr;
