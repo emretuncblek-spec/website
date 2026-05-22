@@ -633,19 +633,21 @@ body {
 
 /* ================================================================== */
 /*  PROFİL SAYFASI ÖZEL STİLLERİ (profile.html için)                 */
+/*  Glass efektli, resimdeki tasarımla tam uyumlu                     */
 /* ================================================================== */
 
+/* --- Profil sayfasında body arka planını Elden Ring temasıyla ez --- */
 .profile-body {
-  background-color: transparent !important;
-  background-image: url("https://media.discordapp.net/attachments/1480011788232822836/1506053625406029853/43387667-elden-ring-wallpaper.jpg?ex=6a0cdd3d&is=6a0b8bbd&hm=495f692a1c453e5c70ff75812a3b2b38ff4197d3b37c5b9fd47ea8cab57ddb3d&=&format=webp&width=1423&height=800") !important;
+  background-color:      #0a0a12 !important;
+  background-image:      url("https://media.discordapp.net/attachments/1480011788232822836/1506053625406029853/43387667-elden-ring-wallpaper.jpg?ex=6a0cdd3d&is=6a0b8bbd&hm=495f692a1c453e5c70ff75812a3b2b38ff4197d3b37c5b9fd47ea8cab57ddb3d&=&format=webp&width=1423&height=800") !important;
   background-size:       cover !important;
-  background-position:   center !important;
+  background-position:   center top !important;
   background-repeat:     no-repeat !important;
   background-attachment: fixed !important;
 }
 
-.profile-body .nav-link,
-.profile-body .icon-btn {
+/* --- Profil navbar: beyaz yazı + aktif çizgi --- */
+.profile-body .nav-link {
   color: #ffffff !important;
 }
 
@@ -653,59 +655,118 @@ body {
   background-color: #ffffff !important;
 }
 
+/* Settings butonu profil sayfasında cam görünüm */
 .profile-body .auth-btn.log-in {
-  background-color: rgba(255, 255, 255, 0.10) !important;
-  color:            #ffffff !important;
-  border:           1px solid rgba(255, 255, 255, 0.30) !important;
+  background:      rgba(255, 255, 255, 0.18) !important;
+  color:           #ffffff !important;
+  border:          1px solid rgba(255, 255, 255, 0.40) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
 }
 
+.profile-body .auth-btn.log-in:hover {
+  background: rgba(255, 255, 255, 0.30) !important;
+}
+
+/* ------------------------------------------------------------------ */
+/*  SAYFA KAPSAYICISI                                                  */
+/* ------------------------------------------------------------------ */
 .profile-container {
-  min-height:     93vh;
-  display:        flex;
-  flex-direction: column;
+  min-height:      94vh;
+  display:         flex;
+  flex-direction:  column;
   justify-content: space-between;
+  padding-bottom:  32px;
 }
 
+/* ------------------------------------------------------------------ */
+/*  ORTA ALAN: Kart + Alt Butonlar                                     */
+/*  Sol hizalı, dikey akış, resimdeki gibi                            */
+/* ------------------------------------------------------------------ */
 .profile-central-layout {
   display:         flex;
   flex-direction:  column;
   align-items:     flex-start;
-  justify-content: center;
-  gap:             24px;
-  margin-top:      auto;
-  margin-bottom:   auto;
+  justify-content: flex-end;
+  gap:             28px;
+  flex:            1;
   width:           100%;
   padding-left:    0 !important;
   box-sizing:      border-box;
+  padding-bottom:  0;
 }
 
+/* ------------------------------------------------------------------ */
+/*  PROFİL KARTI — GLASS EFEKTİ                                       */
+/*  Resimdeki kahverengi-şeffaf cam kart                               */
+/* ------------------------------------------------------------------ */
 .profile-sidebar-card {
-  background-color: rgba(121, 102, 79, 0.90) !important;
+  /* Kahverengi cam tonu — resimdeki ton korundu, şeffaflık artırıldı */
+  background:           rgba(100, 82, 60, 0.72) !important;
+  backdrop-filter:      blur(20px) saturate(1.5) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(1.5) !important;
+
   border-radius:    32px !important;
-  padding:          30px 24px !important;
+  padding:          30px 28px !important;
   display:          flex;
   flex-direction:   column;
   align-items:      center;
   text-align:       center;
-  box-shadow:       0 20px 40px rgba(0, 0, 0, 0.50) !important;
-  border:           1px solid rgba(255, 255, 255, 0.10) !important;
-  width:            320px !important;
+
+  /* İnce parlak cam kenarı */
+  border:           1px solid rgba(255, 255, 255, 0.22) !important;
+
+  /* Derin gölge + içten üst parlaklık */
+  box-shadow:
+    0 24px 56px rgba(0, 0, 0, 0.55),
+    0  8px 24px rgba(0, 0, 0, 0.35),
+    inset 0 2px 6px rgba(255, 255, 255, 0.18) !important;
+
+  width:   300px !important;
+  min-width: 280px;
 }
 
+/* Kart üstündeki ince beyaz çizgi parlaklığı */
+.profile-sidebar-card::before {
+  content:       "";
+  display:       block;
+  position:      absolute;
+  top:           0;
+  left:          15%;
+  width:         70%;
+  height:        1px;
+  background:    linear-gradient(90deg, transparent, rgba(255,255,255,0.50), transparent);
+  border-radius: 1px;
+  pointer-events: none;
+}
+
+/* ------------------------------------------------------------------ */
+/*  KULLANICI ADI                                                       */
+/* ------------------------------------------------------------------ */
 .profile-username {
   color:       #ffffff !important;
-  font-size:   32px;
+  font-size:   30px;
   font-weight: 800;
-  margin:      0 0 20px 0;
+  margin:      0 0 18px 0;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.45);
+  letter-spacing: 0.3px;
 }
 
+/* ------------------------------------------------------------------ */
+/*  YUVARLAK AVATAR                                                     */
+/* ------------------------------------------------------------------ */
 .profile-avatar-container {
-  width:         160px;
-  height:        160px;
+  width:         150px;
+  height:        150px;
   border-radius: 50%;
   overflow:      hidden;
-  border:        4px solid #3d2f21;
-  margin-bottom: 20px;
+  /* Koyu kahverengi halka */
+  border:        4px solid rgba(40, 28, 16, 0.90);
+  /* Dış parlak cam halkası */
+  box-shadow:
+    0 0 0 2px rgba(255, 255, 255, 0.18),
+    0 8px 24px rgba(0, 0, 0, 0.50);
+  margin-bottom: 18px;
 }
 
 .profile-avatar-img {
@@ -716,91 +777,126 @@ body {
   display:         block;
 }
 
+/* ------------------------------------------------------------------ */
+/*  UID YAZISI                                                          */
+/* ------------------------------------------------------------------ */
 .profile-uid {
-  color:         #ffffff !important;
-  font-size:     16px;
+  color:         rgba(255, 255, 255, 0.88) !important;
+  font-size:     15px;
   font-weight:   700;
-  opacity:       0.90;
-  margin-bottom: 16px;
+  margin-bottom: 18px;
+  letter-spacing: 0.5px;
 }
 
+/* ------------------------------------------------------------------ */
+/*  XP BÖLÜMÜ                                                          */
+/* ------------------------------------------------------------------ */
 .profile-xp-section {
   width:         100%;
-  margin-bottom: 20px;
+  margin-bottom: 18px;
 }
 
+/* XP bar arka plan: beyaz değil, yarı-saydam gri */
 .profile-xp-bar-container {
-  width:         100%;
-  height:        14px;
-  background-color: #ffffff;
-  border-radius: 7px;
-  overflow:      hidden;
-  margin-bottom: 8px;
-}
-
-.profile-xp-progress {
-  height:           100%;
-  background-color: #5cdb5c;
+  width:            100%;
+  height:           13px;
+  background-color: rgba(255, 255, 255, 0.25);
   border-radius:    7px;
+  overflow:         hidden;
+  margin-bottom:    8px;
+  box-shadow:       inset 0 1px 3px rgba(0, 0, 0, 0.35);
 }
 
+/* XP doluluk — yeşil gradient */
+.profile-xp-progress {
+  height:     100%;
+  background: linear-gradient(90deg, #3ecf3e 0%, #5ddb5d 60%, #7de87d 100%);
+  border-radius: 7px;
+  box-shadow:  0 0 8px rgba(93, 219, 93, 0.55);
+  transition:  width 0.6s ease;
+}
+
+/* Lvl / XP sayı satırı */
 .profile-level-row {
   display:         flex;
   justify-content: space-between;
   width:           100%;
-  color:           #ffffff;
+  color:           rgba(255, 255, 255, 0.92);
   font-weight:     700;
-  font-size:       14px;
+  font-size:       13px;
+  text-shadow:     0 1px 4px rgba(0, 0, 0, 0.40);
 }
 
+/* ------------------------------------------------------------------ */
+/*  ROZETLER                                                            */
+/* ------------------------------------------------------------------ */
 .profile-badges-row {
   display:   flex;
-  gap:       16px;
-  font-size: 24px;
+  gap:       14px;
+  font-size: 26px;
+  margin-top: 4px;
 }
 
 .p-badge {
-  filter:     drop-shadow(0 2px 4px rgba(0,0,0,0.30));
-  transition: transform 0.2s ease;
+  filter:     drop-shadow(0 2px 6px rgba(0, 0, 0, 0.45));
+  transition: transform 0.2s ease, filter 0.2s ease;
   cursor:     pointer;
 }
 
 .p-badge:hover {
-  transform: scale(1.20);
+  transform: scale(1.22) translateY(-2px);
+  filter:    drop-shadow(0 4px 10px rgba(0, 0, 0, 0.55)) brightness(1.15);
 }
 
+/* ------------------------------------------------------------------ */
+/*  ALT BUTON GRUBU                                                     */
+/*  Following · Followers · Achievements · Statistics · Collection · Comments */
+/* ------------------------------------------------------------------ */
 .profile-bottom-actions {
-  display:         flex;
-  justify-content: flex-start;
-  gap:             16px;
-  width:           auto;
-  margin-left:     0 !important;
-  padding-left:    0 !important;
+  display:     flex;
+  flex-wrap:   wrap;
+  gap:         12px;
+  width:       auto;
+  align-items: center;
+  margin-left: 0 !important;
+  padding-left: 0 !important;
 }
 
+/* Beyaz pill butonlar — resimdeki gibi */
 .action-tab-btn {
-  background-color: #ffffff !important;
-  color:            #000000 !important;
-  border:           none !important;
-  border-radius:    20px !important;
-  padding:          12px 28px !important;
-  font-size:        16px;
-  font-weight:      700;
-  display:          flex;
-  align-items:      center;
-  gap:              8px;
-  cursor:           pointer;
-  box-shadow:       0 4px 12px rgba(0, 0, 0, 0.15);
-  transition:       transform 0.2s ease, background-color 0.2s ease;
+  background:      rgba(255, 255, 255, 0.92) !important;
+  color:           #111111 !important;
+  border:          1px solid rgba(255, 255, 255, 0.70) !important;
+  border-radius:   50px !important;
+  padding:         11px 24px !important;
+  font-size:       15px;
+  font-weight:     700;
+  display:         flex;
+  align-items:     center;
+  gap:             8px;
+  cursor:          pointer;
+  white-space:     nowrap;
+  /* Hafif cam parlaklığı */
+  box-shadow:
+    0 4px 16px rgba(0, 0, 0, 0.22),
+    inset 0 1px 3px rgba(255, 255, 255, 0.80);
+  transition: transform 0.15s ease, background 0.2s ease, box-shadow 0.2s ease;
 }
 
 .action-tab-btn:hover {
-  background-color: #f0f0f0 !important;
-  transform:        translateY(-1px);
+  background:   rgba(255, 255, 255, 1.0) !important;
+  transform:    translateY(-2px);
+  box-shadow:
+    0 8px 24px rgba(0, 0, 0, 0.30),
+    inset 0 1px 3px rgba(255, 255, 255, 0.80) !important;
+}
+
+.action-tab-btn:active {
+  transform: translateY(0px);
 }
 
 .action-tab-btn .tab-icon {
-  font-size: 18px;
+  font-size: 17px;
 }
 
 /* ================================================================== */
