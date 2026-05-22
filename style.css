@@ -1,47 +1,80 @@
+/* ================================================================== */
+/*  AURELIA GAMES – FULL GLASS MORPHISM STYLE                         */
+/*  GitHub Pages uyumlu, tüm bölümler şeffaf cam efektiyle            */
+/* ================================================================== */
+
 :root {
   color-scheme: dark;
+
+  /* === GLASS TOKEN'LARI === */
+  --glass-bg:           rgba(255, 255, 255, 0.18);
+  --glass-bg-hover:     rgba(255, 255, 255, 0.28);
+  --glass-border:       rgba(255, 255, 255, 0.45);
+  --glass-shadow:       0 8px 32px rgba(0, 0, 0, 0.18);
+  --glass-blur:         blur(18px);
+  --glass-highlight:    inset 0 2px 6px rgba(255, 255, 255, 0.5);
+
+  /* === LIQUID BLUE TOKEN'LARI (buton renkleri) === */
+  --blue-grad:          linear-gradient(180deg, #74c9ff 0%, #3ca2f6 45%, #188ae6 100%);
+  --blue-border:        rgba(255, 255, 255, 0.65);
+  --blue-shadow:        0 6px 18px rgba(24, 138, 230, 0.35),
+                        inset 0 3px 6px rgba(255, 255, 255, 0.85),
+                        inset 0 -3px 6px rgba(0, 0, 0, 0.14);
+
+  /* === BANNER CAM RENK PALETİ === */
+  --banner-glass:       rgba(10, 10, 30, 0.45);
+  --banner-border:      rgba(255, 255, 255, 0.30);
+  --banner-glow:        0 0 60px rgba(60, 100, 255, 0.18),
+                        0 12px 48px rgba(0, 0, 0, 0.30);
+
+  /* === LEADERBOARD RENK PALETİ === */
+  --lb-rank1:           rgba(230, 150, 180, 0.50);
+  --lb-rank2:           rgba(70,  140, 100, 0.50);
+  --lb-rank3:           rgba(140, 110,  70, 0.50);
+  --lb-rank4:           rgba(80,  100, 120, 0.45);
+  --lb-rank5:           rgba(100,  80, 120, 0.45);
+  --lb-rank6:           rgba(120,  50,  50, 0.45);
+  --lb-rank7:           rgba( 40,  60,  50, 0.45);
 }
-  
+
 * {
   box-sizing: border-box;
-}
- 
-/* ========================================== */
-/* ANA SAYFA (HOME) VARSAYILAN STİLLERİ       */
-/* ========================================== */
-body {
-  margin: 0;
+  margin:  0;
   padding: 0;
+}
+
+/* ================================================================== */
+/*  BODY – Arka plan resmi + temel yazı tipi                          */
+/* ================================================================== */
+body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  
-  /* Arka plan rengi (Resim yüklenene kadar veya yüklenemezse buradaki renk görünür) */
-  background-color: #f3f4f6; 
-  
-  /* ─── BURAYI DEĞİŞTİRDİK: Resim linkini buraya yapıştır ─── */
+  background-color: #0d1b2a;                        /* Resim yüklenemezse fallback */
   background-image: url("https://i.imgur.com/kLinTYi.jpeg");
-  
-  /* Arka plan resminin ayarları (Ekrana tam oturması için) */
-  background-size: cover;          /* Resmi esnetmeden tüm ekranı kaplayacak şekilde büyütür */
-  background-position: center;     /* Resmi ekrana tam ortalar */
-  background-repeat: no-repeat;    /* Resim küçükse kendini tekrar etmesini engeller */
-  background-attachment: fixed;    /* Sayfa aşağı kaysa bile arka planın sabit kalmasını sağlar */
-  
+  background-size:      cover;
+  background-position:  center;
+  background-repeat:    no-repeat;
+  background-attachment: fixed;
   color: #000000;
   min-height: 100vh;
 }
 
+/* ================================================================== */
+/*  CONTAINER                                                          */
+/* ================================================================== */
 .container {
   max-width: 1200px;
-  margin: 0 auto;
+  margin:  0 auto;
   padding: 24px;
 }
 
-/* NAVBAR DÜZENI */
+/* ================================================================== */
+/*  NAVBAR                                                             */
+/* ================================================================== */
 .navbar {
-  display: flex;
+  display:         flex;
   justify-content: space-between;
-  align-items: center;
-  margin-bottom: 24px;
+  align-items:     center;
+  margin-bottom:   24px;
 }
 
 .nav-left {
@@ -49,440 +82,552 @@ body {
   gap: 12px;
 }
 
-/* ANA SAYFA SOL ÜST İKON BUTONLARI (ŞEFFAF YAPILDI) */
+/* --- İkon Butonlar (Profil & Bildirim) — Liquid Blue --- */
 .icon-btn {
-  background-color: rgba(255, 255, 255, 0.25) !important;
-  color: #000000 !important;
-  border: 1px solid rgba(255, 255, 255, 0.4) !important;
-  backdrop-filter: blur(8px) !important;
-  -webkit-backdrop-filter: blur(8px) !important;
+  background:    var(--blue-grad);
+  color:         #ffffff;
+  border:        1px solid var(--blue-border);
   border-radius: 12px;
-  width: 45px;
+  width:  45px;
   height: 45px;
-  display: flex;
-  align-items: center;
+  display:         flex;
+  align-items:     center;
   justify-content: center;
-  cursor: pointer;
-  transition: transform 0.1s ease, background-color 0.2s;
+  cursor:     pointer;
+  box-shadow: var(--blue-shadow);
+  text-decoration: none;
+  transition: transform 0.15s ease, filter 0.2s ease;
 }
 
 .icon-btn svg {
-  width: 24px;
+  width:  24px;
   height: 24px;
 }
 
 .icon-btn:hover {
-  background-color: rgba(255, 255, 255, 0.45) !important;
+  filter:    brightness(1.10);
+  transform: translateY(-1px);
 }
 
-/* Menü Linkleri (Profile, Home, Games) */
+/* --- Menü Linkleri --- */
 .nav-links {
   display: flex;
   gap: 32px;
 }
 
 .nav-link {
-  color: #000000;
+  color:           #000000;
   text-decoration: none;
-  font-weight: 700;
-  font-size: 18px;
-  padding-bottom: 6px;
-  position: relative;
-  display: inline-block;
-  transition: color 0.2s ease;
+  font-weight:     700;
+  font-size:       18px;
+  padding-bottom:  6px;
+  position:        relative;
+  display:         inline-block;
+  transition:      color 0.2s ease;
 }
 
-/* AKTİF LİNKİN ALTINDAKİ SİYAH ÇİZGİ */
 .nav-link.active::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  width: 100%;
-  height: 2px;
-  background-color: #000000 !important;
-  border-radius: 2px;
+  content:          "";
+  position:         absolute;
+  left:             0;
+  bottom:           0;
+  width:            100%;
+  height:           2px;
+  background-color: #000000;
+  border-radius:    2px;
 }
 
+/* --- Sağ Üst Butonlar --- */
 .nav-right {
   display: flex;
   gap: 16px;
 }
 
-/* SAĞ ÜST GİRİŞ/KAYIT BUTONLARI (ŞEFFAF YAPILDI) */
 .auth-btn {
   border-radius: 20px;
-  padding: 10px 24px;
-  font-size: 16px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: transform 0.1s ease, background-color 0.2s;
+  padding:       10px 24px;
+  font-size:     16px;
+  font-weight:   700;
+  cursor:        pointer;
+  border:        none;
+  transition:    transform 0.15s ease, filter 0.2s ease;
 }
 
+/* Settings — şeffaf cam kapsül */
 .auth-btn.log-in {
-  background-color: rgba(255, 255, 255, 0.2) !important;
-  color: #000000 !important;
-  border: 1px solid rgba(0, 0, 0, 0.3) !important;
-  backdrop-filter: blur(8px) !important;
-  -webkit-backdrop-filter: blur(8px) !important;
+  background:      rgba(255, 255, 255, 0.30);
+  color:           #000000;
+  border:          1px solid rgba(255, 255, 255, 0.70);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  box-shadow:
+    0 4px 14px rgba(0, 0, 0, 0.08),
+    inset 0 2px 5px rgba(255, 255, 255, 0.55);
 }
 
 .auth-btn.log-in:hover {
-  background-color: rgba(255, 255, 255, 0.4) !important;
+  background: rgba(255, 255, 255, 0.48);
 }
 
+/* Log out — liquid blue */
 .auth-btn.sign-up {
-  background-color: rgba(255, 255, 255, 0.3) !important;
-  color: #000000 !important;
-  border: 1px solid rgba(255, 255, 255, 0.5) !important;
-  backdrop-filter: blur(8px) !important;
-  -webkit-backdrop-filter: blur(8px) !important;
+  background:  var(--blue-grad);
+  color:       #ffffff;
+  border:      1px solid var(--blue-border);
+  box-shadow:  var(--blue-shadow);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.18);
 }
 
 .auth-btn.sign-up:hover {
-  background-color: rgba(255, 255, 255, 0.5) !important;
+  filter:    brightness(1.10);
+  transform: translateY(-1px);
 }
 
-
-/* ========================================== */
-/* BOYDAN BOYA SÜREKLİ DÖNEN MAIN BANNER      */
-/* ========================================== */
+/* ================================================================== */
+/*  MAIN BANNER — TAM CAM EFEKTİ                                      */
+/* ================================================================== */
 .main-banner {
-  border-radius: 24px;
-  padding: 0; 
-  position: relative;
-  color: #ffffff;
-  margin-bottom: 24px;
-  min-height: 260px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  overflow: hidden; 
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  border-radius:    24px;
+  position:         relative;
+  color:            #ffffff;
+  margin-bottom:    24px;
+  min-height:       260px;
+  display:          flex;
+  flex-direction:   column;
+  justify-content:  center;
+  overflow:         hidden;
+
+  /* Şeffaf cam katmanı */
+  background:           var(--banner-glass);
+  backdrop-filter:      blur(22px) saturate(1.6);
+  -webkit-backdrop-filter: blur(22px) saturate(1.6);
+  border:               1px solid var(--banner-border);
+  box-shadow:           var(--banner-glow),
+                        inset 0 0 0 1px rgba(255,255,255,0.08),
+                        inset 0 4px 16px rgba(255, 255, 255, 0.12);
 }
 
+/* Cam içi üst parlaklık çizgisi */
+.main-banner::before {
+  content:       "";
+  position:      absolute;
+  top:           0;
+  left:          0;
+  right:         0;
+  height:        1px;
+  background:    linear-gradient(90deg, transparent, rgba(255,255,255,0.55), transparent);
+  pointer-events: none;
+  z-index:       2;
+}
+
+/* Cam içi sol köşe halosu */
+.main-banner::after {
+  content:       "";
+  position:      absolute;
+  top:           -60px;
+  left:          -60px;
+  width:         220px;
+  height:        220px;
+  border-radius: 50%;
+  background:    radial-gradient(circle, rgba(100,160,255,0.18) 0%, transparent 70%);
+  pointer-events: none;
+  z-index:       1;
+}
+
+/* --- Slaytlar --- */
 .banner-slides {
   position: relative;
-  width: 100%;
-  height: 100%;
+  width:    100%;
+  height:   100%;
+  z-index:  3;
 }
 
 .slide {
-  display: none;
-  opacity: 0;
-  padding: 40px; 
+  display:    none;
+  opacity:    0;
+  padding:    40px;
   min-height: 260px;
   box-sizing: border-box;
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  animation: fadeIn 0.5s ease-in-out forwards;
+  animation:  fadeIn 0.55s ease-in-out forwards;
 }
 
 .slide.active {
-  display: flex;
+  display:        flex;
   flex-direction: column;
   justify-content: center;
-  opacity: 1;
+  opacity:        1;
 }
 
-/* Slider İçeriği */
-.badge-new {
-  color: #ff3333;
-  font-weight: 900;
-  font-size: 24px;
-  font-style: italic;
-  display: inline-block;
-  margin-bottom: 8px;
-}
-
-.main-banner h1 {
-  font-size: 36px;
-  margin: 0 0 12px 0;
-  font-weight: 800;
-  color: #ffffff;
-}
-
-.main-banner p {
-  font-size: 16px;
-  margin: 0 0 20px 0;
-  line-height: 1.4;
-  opacity: 0.9;
-  color: #ffffff;
-}
-
-.read-more {
-  color: #ffffff;
-  text-decoration: underline;
-  font-weight: 600;
-  font-size: 14px;
-}
-
-/* Slayt Görselleri */
+/* Slayt içi hafif renk tonu — her slayt farklı bir renk havası taşır */
 .slide-1 {
-  background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), 
-                    url("https://i.imgur.com/jc9awY1.jpeg");
+  background: linear-gradient(135deg, rgba(30, 60, 120, 0.35), rgba(80, 10, 40, 0.25));
 }
 
 .slide-2 {
-  background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), 
-                    url("https://i.imgur.com/O3PFx8M.jpeg");
+  background: linear-gradient(135deg, rgba(10, 50, 80, 0.40), rgba(30, 90, 60, 0.25));
 }
 
 .slide-3 {
-  background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), 
-                    url("https://i.imgur.com/6rgRX0j.jpeg");
+  background: linear-gradient(135deg, rgba(80, 40, 10, 0.40), rgba(50, 10, 80, 0.30));
 }
 
-/* Slider Alt Çizgileri */
+/* --- Badge --- */
+.badge-new {
+  color:        #ff3333;
+  font-weight:  900;
+  font-size:    24px;
+  font-style:   italic;
+  display:      inline-block;
+  margin-bottom: 8px;
+  text-shadow:  0 0 12px rgba(255, 60, 60, 0.55);
+}
+
+.main-banner h1 {
+  font-size:   36px;
+  margin:      0 0 12px 0;
+  font-weight: 800;
+  color:       #ffffff;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.40);
+}
+
+.main-banner p {
+  font-size:   16px;
+  margin:      0 0 20px 0;
+  line-height: 1.5;
+  opacity:     0.92;
+  color:       #ffffff;
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.35);
+}
+
+.read-more {
+  color:           #ffffff;
+  text-decoration: underline;
+  font-weight:     600;
+  font-size:       14px;
+  transition:      opacity 0.2s;
+}
+
+.read-more:hover {
+  opacity: 0.75;
+}
+
+/* --- Slider Dots --- */
 .slider-dots {
   position: absolute;
-  bottom: 20px;
-  left: 40px;
-  display: flex;
-  gap: 8px;
-  z-index: 10;
+  bottom:   20px;
+  left:     40px;
+  display:  flex;
+  gap:      8px;
+  z-index:  10;
 }
 
 .dot {
-  width: 40px;
-  height: 4px;
-  background-color: rgba(255, 255, 255, 0.3);
-  border-radius: 2px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
+  width:            40px;
+  height:           4px;
+  background-color: rgba(255, 255, 255, 0.30);
+  border-radius:    2px;
+  cursor:           pointer;
+  transition:       background-color 0.3s ease, transform 0.2s ease;
 }
 
 .dot.active {
   background-color: #ffffff;
+  transform:        scaleY(1.5);
 }
 
-
-/* ========================================== */
-/* DASHBOARD 4 SÜTUNLU YAN YANA GRID YAPISI   */
-/* ========================================== */
+/* ================================================================== */
+/*  DASHBOARD GRID — 4 Sütun                                          */
+/* ================================================================== */
 .dashboard-grid {
-  display: grid;
+  display:               grid;
   grid-template-columns: 2.5fr 2fr 1.2fr 2.5fr;
-  gap: 20px;
+  gap:                   20px;
+  align-items:           start;
 }
 
-/* 🎯 YENİ BUTON YAPISINA UYGUN ENTEGRE EDİLMİŞ GLASS KARTLAR */
-.home-glass-card {
-  outline: none;
-  font-family: inherit;
-  text-align: left;
-  width: 100%;
-  
-  /* Arka planı şeffaf cam yapar */
-  background-color: rgba(255, 255, 255, 0.22) !important;
-  border: 1px solid rgba(255, 255, 255, 0.4) !important;
-  backdrop-filter: blur(10px) !important;
-  -webkit-backdrop-filter: blur(10px) !important;
-  
-  border-radius: 20px !important;
-  padding: 20px !important;
-  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.04) !important;
-  
-  /* Buton tıklama hissiyatı ve efektler */
-  cursor: pointer !important;
-  transition: transform 0.1s ease, background-color 0.2s !important;
+/* ================================================================== */
+/*  KART — TAM CAM EFEKTİ (tüm .card'lar için ortak)                 */
+/* ================================================================== */
+.card {
+  background:           var(--glass-bg);
+  border-radius:        20px;
+  padding:              20px;
+  border:               1px solid var(--glass-border);
+  backdrop-filter:      var(--glass-blur) saturate(1.4);
+  -webkit-backdrop-filter: var(--glass-blur) saturate(1.4);
+  box-shadow:           var(--glass-shadow),
+                        var(--glass-highlight);
+  transition:           background 0.25s ease, box-shadow 0.25s ease;
 }
 
-/* Kartların üzerine mouse ile gelindiğinde parlamasını sağlar */
-.home-glass-card:hover {
-  background-color: rgba(255, 255, 255, 0.35) !important;
+.card:hover {
+  background:  var(--glass-bg-hover);
+  box-shadow:  0 12px 40px rgba(0, 0, 0, 0.22), var(--glass-highlight);
 }
 
-.home-glass-card h2 {
-  font-size: 18px;
-  margin-top: 0;
+.card h2 {
+  font-size:     18px;
   margin-bottom: 16px;
-  font-weight: 700;
-  color: #000000 !important;
+  font-weight:   700;
+  color:         #ffffff;
+  text-shadow:   0 1px 4px rgba(0,0,0,0.3);
 }
 
-/* Explore sütununun kendisi buton olmadığı için hover parlamasını iptal ediyoruz */
-div.explore-section.home-glass-card {
-  cursor: default !important;
-}
-div.explore-section.home-glass-card:hover {
-  background-color: rgba(255, 255, 255, 0.22) !important;
-}
-
-/* 1. SÜTUN: DAILY TASKS */
+/* ================================================================== */
+/*  1. SÜTUN — DAILY TASKS                                            */
+/* ================================================================== */
 .daily-tasks-card {
-  display: flex;
+  display:        flex;
   flex-direction: column;
   justify-content: space-between;
 }
 
 .task-list {
   list-style: none;
-  padding: 0;
-  margin: 0 0 20px 0;
+  padding:    0;
+  margin:     0 0 20px 0;
 }
 
 .task-list li {
-  display: flex;
-  align-items: center;
+  display:       flex;
+  align-items:   center;
   margin-bottom: 14px;
-  font-size: 13px;
-  font-weight: 600;
+  font-size:     13px;
+  font-weight:   600;
 }
 
 .task-icon {
-  width: 24px;
-  font-size: 16px;
+  width:       24px;
+  font-size:   16px;
   margin-right: 8px;
+  flex-shrink: 0;
 }
 
 .task-text {
   flex-grow: 1;
-  color: #111111;
+  color:     rgba(255, 255, 255, 0.92);
 }
 
 .task-xp {
-  color: #e68a00;
+  color:       #ffaa44;
   margin-left: 8px;
   white-space: nowrap;
-}
-
-/* DESTEK OL BUTONU */
-.support-btn {
-  width: 100%;
-  background-color: rgba(0, 0, 0, 0.05) !important;
-  border: 1px solid rgba(0, 0, 0, 0.15) !important;
-  border-radius: 12px;
-  padding: 12px;
-  font-size: 16px;
   font-weight: 700;
-  color: #000000;
-  text-align: center;
+  text-shadow: 0 0 8px rgba(255, 170, 68, 0.45);
 }
 
-/* 2. SÜTUN: EXPLORE BUTTONS */
+/* Support Butonu — şeffaf cam */
+.support-btn {
+  width:           100%;
+  background:      rgba(255, 255, 255, 0.20);
+  border:          1px solid rgba(255, 255, 255, 0.55);
+  border-radius:   12px;
+  padding:         12px;
+  font-size:       16px;
+  font-weight:     700;
+  color:           #ffffff;
+  cursor:          pointer;
+  text-align:      center;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  box-shadow:      inset 0 2px 4px rgba(255, 255, 255, 0.35);
+  transition:      background 0.2s ease, transform 0.15s ease;
+}
+
+.support-btn:hover {
+  background: rgba(255, 255, 255, 0.35);
+  transform:  translateY(-1px);
+}
+
+/* ================================================================== */
+/*  2. SÜTUN — EXPLORE                                                */
+/* ================================================================== */
+.explore-section h2 {
+  font-size:     18px;
+  margin-bottom: 16px;
+  color:         #ffffff;
+  font-weight:   700;
+  text-shadow:   0 1px 4px rgba(0,0,0,0.3);
+}
+
 .explore-buttons {
-  display: flex;
+  display:        flex;
   flex-direction: column;
-  gap: 10px;
+  gap:            10px;
 }
 
-/* KEŞFET BUTONLARI */
+/* Liquid Blue Jel Butonlar */
 .explore-btn {
-  background-color: rgba(26, 21, 204, 0.2) !important;
-  color: #1a15cc !important;
-  border: 1px solid rgba(26, 21, 204, 0.3) !important;
-  backdrop-filter: blur(6px) !important;
-  -webkit-backdrop-filter: blur(6px) !important;
-  border-radius: 12px;
-  padding: 14px 16px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  cursor: pointer;
-  text-align: left;
-  width: 100%;
-  transition: transform 0.1s ease, background-color 0.2s;
+  background:    var(--blue-grad);
+  color:         #ffffff;
+  border:        1px solid var(--blue-border);
+  border-radius: 14px;
+  padding:       14px 16px;
+  display:       flex;
+  align-items:   center;
+  gap:           12px;
+  cursor:        pointer;
+  text-align:    left;
+  width:         100%;
+  box-shadow:    var(--blue-shadow);
+  text-shadow:   0 1px 2px rgba(0, 0, 0, 0.18);
+  transition:    transform 0.15s ease, filter 0.2s ease;
 }
 
 .explore-btn:hover {
-  background-color: rgba(26, 21, 204, 0.3) !important;
+  filter:    brightness(1.08);
+  transform: translateY(-1px);
+}
+
+.explore-btn .btn-icon {
+  font-size: 18px;
 }
 
 .explore-btn .btn-text {
+  font-weight:     700;
+  font-size:       13px;
+  letter-spacing:  0.6px;
+}
+
+/* ================================================================== */
+/*  3. SÜTUN — STATS (RANK + TIMER)                                   */
+/* ================================================================== */
+.stats-column {
+  display:        flex;
+  flex-direction: column;
+  gap:            20px;
+  height:         100%;
+}
+
+.rank-card,
+.timer-card {
+  text-align:      center;
+  padding:         20px 16px;
+  display:         flex;
+  flex-direction:  column;
+  justify-content: center;
+  align-items:     center;
+  flex:            1;
+
+  /* Cam özellikleri (.card'dan miras + override) */
+  background:           var(--glass-bg);
+  border-radius:        20px;
+  border:               1px solid var(--glass-border);
+  backdrop-filter:      var(--glass-blur) saturate(1.4);
+  -webkit-backdrop-filter: var(--glass-blur) saturate(1.4);
+  box-shadow:           var(--glass-shadow), var(--glass-highlight);
+  transition:           background 0.25s ease, box-shadow 0.25s ease;
+}
+
+.rank-card:hover,
+.timer-card:hover {
+  background:  var(--glass-bg-hover);
+  box-shadow:  0 12px 40px rgba(0, 0, 0, 0.22), var(--glass-highlight);
+}
+
+.rank-card h3,
+.timer-card h3 {
+  margin:      0 0 8px 0;
+  font-size:   14px;
+  color:       rgba(255, 255, 255, 0.70);
   font-weight: 700;
-  font-size: 13px;
   letter-spacing: 0.5px;
 }
 
-/* 3. SÜTUN: STATS COLUMN (RANK VE TIMER) */
-.stats-column {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.rank-card, .timer-card {
-  text-align: center !important;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  height: 50%;
-}
-
-.rank-card h3, .timer-card h3 {
-  margin: 0 0 8px 0;
-  font-size: 14px;
-  color: #333333;
-  font-weight: 700;
-}
-
 .rank-value {
-  font-size: 48px;
+  font-size:   52px;
   font-weight: 800;
-  color: #000000;
+  color:       #ffffff;
+  text-shadow: 0 2px 16px rgba(255, 255, 255, 0.25);
+  line-height: 1;
 }
 
 .timer-value {
-  font-size: 32px;
+  font-size:   30px;
   font-weight: 800;
-  color: #000000;
+  color:       #ffffff;
   line-height: 1.1;
+  text-shadow: 0 2px 12px rgba(255, 255, 255, 0.20);
 }
 
-/* 4. SÜTUN: MONTHLY BOARD (LEADERBOARD) */
+/* ================================================================== */
+/*  4. SÜTUN — LEADERBOARD                                            */
+/* ================================================================== */
+.leaderboard-card {
+  /* .card sınıfından gelen cam stillere ek */
+}
+
 .leaderboard-list {
-  display: flex;
+  display:        flex;
   flex-direction: column;
-  gap: 6px;
+  gap:            6px;
 }
 
+/* Her sıra kendi cam renk tonu ile */
 .leaderboard-item {
-  background: rgba(0, 0, 0, 0.07);
-  border-radius: 8px;
-  padding: 10px 12px;
-  display: flex;
+  border-radius:   10px;
+  padding:         10px 12px;
+  display:         flex;
   justify-content: space-between;
-  align-items: center;
-  color: #000000;
-  font-weight: 700;
+  align-items:     center;
+  color:           #ffffff;
+  font-weight:     700;
+  font-size:       12px;
+  text-shadow:     1px 1px 4px rgba(0, 0, 0, 0.70);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border:          1px solid rgba(255, 255, 255, 0.20);
+  transition:      transform 0.15s ease, filter 0.2s ease;
+}
+
+.leaderboard-item:hover {
+  transform: translateX(3px);
+  filter:    brightness(1.12);
+}
+
+.leaderboard-item.rank-1 { background: var(--lb-rank1); }
+.leaderboard-item.rank-2 { background: var(--lb-rank2); }
+.leaderboard-item.rank-3 { background: var(--lb-rank3); }
+.leaderboard-item.rank-4 { background: var(--lb-rank4); }
+.leaderboard-item.rank-5 { background: var(--lb-rank5); }
+.leaderboard-item.rank-6 { background: var(--lb-rank6); }
+.leaderboard-item.rank-7 { background: var(--lb-rank7); }
+
+.user-meta {
   font-size: 12px;
+  letter-spacing: 0.3px;
 }
 
+.user-xp {
+  font-size: 11px;
+  opacity:   0.90;
+  white-space: nowrap;
+}
+
+/* ================================================================== */
+/*  ANIMASYON                                                          */
+/* ================================================================== */
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0);   }
 }
 
+/* ================================================================== */
+/*  PROFİL SAYFASI ÖZEL STİLLERİ (profile.html için)                 */
+/* ================================================================== */
 
-/* ========================================== */
-/* ⚠️ PROFİL SAYFASI ÖZEL TASARIM STİLLERİ    */
-/* ⚠️ (BURAYA DOKUNULMADI - TAMAMEN KORUNDU) */
-/* ========================================== */
-
-/* Profil Sayfasına Geçildiğinde Body'i Ezerek Elden Ring Teması Yapar */
 .profile-body {
   background-color: transparent !important;
   background-image: url("https://media.discordapp.net/attachments/1480011788232822836/1506053625406029853/43387667-elden-ring-wallpaper.jpg?ex=6a0cdd3d&is=6a0b8bbd&hm=495f692a1c453e5c70ff75812a3b2b38ff4197d3b37c5b9fd47ea8cab57ddb3d&=&format=webp&width=1423&height=800") !important;
-  background-size: cover !important;
-  background-position: center !important;
-  background-repeat: no-repeat !important;
+  background-size:       cover !important;
+  background-position:   center !important;
+  background-repeat:     no-repeat !important;
   background-attachment: fixed !important;
 }
 
-/* Profil Menüsündeki Butonların ve Yazıların Beyaz Olma Kuralları */
 .profile-body .nav-link,
 .profile-body .icon-btn {
   color: #ffffff !important;
-}
-
-/* Profil sayfasındaki ikon butonlarının eski rengini korumak için koruma kuralı */
-.profile-body .icon-btn {
-  background-color: #1a15cc !important;
-  border: none !important;
-  backdrop-filter: none !important;
 }
 
 .profile-body .nav-link.active::after {
@@ -490,183 +635,192 @@ div.explore-section.home-glass-card:hover {
 }
 
 .profile-body .auth-btn.log-in {
-  background-color: rgba(255, 255, 255, 0.1) !important;
-  color: #ffffff !important;
-  border: 1px solid rgba(255, 255, 255, 0.3) !important;
-  backdrop-filter: none !important;
+  background-color: rgba(255, 255, 255, 0.10) !important;
+  color:            #ffffff !important;
+  border:           1px solid rgba(255, 255, 255, 0.30) !important;
 }
 
 .profile-container {
-  min-height: 93vh;
-  display: flex;
+  min-height:     93vh;
+  display:        flex;
   flex-direction: column;
   justify-content: space-between;
 }
 
-/* Kartı ve altındaki butonları SOLA tam sıfırlayan düzen */
 .profile-central-layout {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;  
+  display:         flex;
+  flex-direction:  column;
+  align-items:     flex-start;
   justify-content: center;
-  gap: 24px;
-  margin-top: auto;
-  margin-bottom: auto;
-  width: 100%;
-  padding-left: 0 !important; 
-  box-sizing: border-box;
+  gap:             24px;
+  margin-top:      auto;
+  margin-bottom:   auto;
+  width:           100%;
+  padding-left:    0 !important;
+  box-sizing:      border-box;
 }
 
-/* Kahverengi Büyük Profil Kartı */
 .profile-sidebar-card {
-  background-color: rgba(121, 102, 79, 0.9) !important;
-  border-radius: 32px !important;
-  padding: 30px 24px !important;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5) !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
-  width: 320px !important;
+  background-color: rgba(121, 102, 79, 0.90) !important;
+  border-radius:    32px !important;
+  padding:          30px 24px !important;
+  display:          flex;
+  flex-direction:   column;
+  align-items:      center;
+  text-align:       center;
+  box-shadow:       0 20px 40px rgba(0, 0, 0, 0.50) !important;
+  border:           1px solid rgba(255, 255, 255, 0.10) !important;
+  width:            320px !important;
 }
 
 .profile-username {
-  color: #ffffff !important;
-  font-size: 32px;
+  color:       #ffffff !important;
+  font-size:   32px;
   font-weight: 800;
-  margin: 0 0 20px 0;
+  margin:      0 0 20px 0;
 }
 
-/* Yuvarlak Profil Resim Alanı */
 .profile-avatar-container {
-  width: 160px;
-  height: 160px;
+  width:         160px;
+  height:        160px;
   border-radius: 50%;
-  overflow: hidden;   
-  border: 4px solid #3d2f21; 
+  overflow:      hidden;
+  border:        4px solid #3d2f21;
   margin-bottom: 20px;
 }
 
-/* Kedili avatar resmini bozmadan/esnetmeden kırpan alan */
 .profile-avatar-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;        
-  object-position: center;   
-  display: block;
+  width:           100%;
+  height:          100%;
+  object-fit:      cover;
+  object-position: center;
+  display:         block;
 }
 
 .profile-uid {
-  color: #ffffff !important;
-  font-size: 16px;
-  font-weight: 700;
-  opacity: 0.9;
+  color:         #ffffff !important;
+  font-size:     16px;
+  font-weight:   700;
+  opacity:       0.90;
   margin-bottom: 16px;
 }
 
-/* XP Alanı */
 .profile-xp-section {
-  width: 100%;
+  width:         100%;
   margin-bottom: 20px;
 }
 
 .profile-xp-bar-container {
-  width: 100%;
-  height: 14px;
+  width:         100%;
+  height:        14px;
   background-color: #ffffff;
   border-radius: 7px;
-  overflow: hidden;
+  overflow:      hidden;
   margin-bottom: 8px;
 }
 
 .profile-xp-progress {
-  height: 100%;
-  background-color: #5cdb5c; 
-  border-radius: 7px;
+  height:           100%;
+  background-color: #5cdb5c;
+  border-radius:    7px;
 }
 
 .profile-level-row {
-  display: flex;
+  display:         flex;
   justify-content: space-between;
-  width: 100%;
-  color: #ffffff;
-  font-weight: 700;
-  font-size: 14px;
+  width:           100%;
+  color:           #ffffff;
+  font-weight:     700;
+  font-size:       14px;
 }
 
-/* Rozetler */
 .profile-badges-row {
-  display: flex;
-  gap: 16px;
+  display:   flex;
+  gap:       16px;
   font-size: 24px;
 }
 
 .p-badge {
-  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
-  transition: transform 0.2s;
-  cursor: pointer;
+  filter:     drop-shadow(0 2px 4px rgba(0,0,0,0.30));
+  transition: transform 0.2s ease;
+  cursor:     pointer;
 }
 
 .p-badge:hover {
-  transform: scale(1.2);
+  transform: scale(1.20);
 }
 
-/* Alt kısımdaki 4'lü buton grubu (Achievements, Statistics vb.) */
 .profile-bottom-actions {
-  display: flex;
-  justify-content: flex-start; 
-  gap: 16px;
-  width: auto;
-  margin-left: 0 !important;  
-  padding-left: 0 !important; \
+  display:         flex;
+  justify-content: flex-start;
+  gap:             16px;
+  width:           auto;
+  margin-left:     0 !important;
+  padding-left:    0 !important;
 }
 
 .action-tab-btn {
   background-color: #ffffff !important;
-  color: #000000 !important;
-  border: none !important;
-  border-radius: 20px !important;
-  padding: 12px 28px !important;
-  font-size: 16px;
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  cursor: pointer;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-  transition: transform 0.2s, background-color 0.2s;
+  color:            #000000 !important;
+  border:           none !important;
+  border-radius:    20px !important;
+  padding:          12px 28px !important;
+  font-size:        16px;
+  font-weight:      700;
+  display:          flex;
+  align-items:      center;
+  gap:              8px;
+  cursor:           pointer;
+  box-shadow:       0 4px 12px rgba(0, 0, 0, 0.15);
+  transition:       transform 0.2s ease, background-color 0.2s ease;
 }
 
 .action-tab-btn:hover {
   background-color: #f0f0f0 !important;
+  transform:        translateY(-1px);
 }
 
 .action-tab-btn .tab-icon {
   font-size: 18px;
 }
 
-
-/* RESPONSIVE AYARLARI */
+/* ================================================================== */
+/*  RESPONSIVE                                                         */
+/* ================================================================== */
 @media (max-width: 1024px) {
   .dashboard-grid {
     grid-template-columns: 1fr 1fr;
+  }
+
+  .stats-column {
+    flex-direction: row;
   }
 }
 
 @media (max-width: 768px) {
   .navbar {
     flex-direction: column;
-    gap: 15px;
+    gap:            15px;
   }
+
+  .nav-links {
+    gap: 18px;
+  }
+
   .dashboard-grid {
     grid-template-columns: 1fr;
   }
-  .profile-central-layout {
-    align-items: center;       
+
+  .stats-column {
+    flex-direction: row;
   }
+
+  .profile-central-layout {
+    align-items: center;
+  }
+
   .profile-bottom-actions {
-    flex-wrap: wrap;
-    justify-content: center;   
+    flex-wrap:       wrap;
+    justify-content: center;
   }
 }
