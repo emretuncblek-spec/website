@@ -49,7 +49,7 @@
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background-color: #0d1b2a;                        /* Resim yüklenemezse fallback */
-  background-image: url("https://ibb.co/nsyW5WQ9");
+  background-image: url("./images/bg-home.jpeg");
   background-size:      cover;
   background-position:  center;
   background-repeat:    no-repeat;
