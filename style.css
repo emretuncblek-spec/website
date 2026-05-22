@@ -14,17 +14,17 @@ body {
   padding: 0;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   
-  /* Arka plan rengi (Resim yüklenene kadar yedek olarak durur) */
+  /* Arka plan rengi (Resim yüklenene kadar veya yüklenemezse buradaki renk görünür) */
   background-color: #f3f4f6; 
   
-  /* Görseldeki oda arka planı için kalıcı bağlantı */
+  /* ─── BURAYI DEĞİŞTİRDİK: Resim linkini buraya yapıştır ─── */
   background-image: url("https://i.imgur.com/kLinTYi.jpeg");
   
-  /* Arka plan resminin tam oturması ve sabit kalması için ayarlar */
-  background-size: cover;          
-  background-position: center;     
-  background-repeat: no-repeat;    
-  background-attachment: fixed;    
+  /* Arka plan resminin ayarları (Ekrana tam oturması için) */
+  background-size: cover;          /* Resmi esnetmeden tüm ekranı kaplayacak şekilde büyütür */
+  background-position: center;     /* Resmi ekrana tam ortalar */
+  background-repeat: no-repeat;    /* Resim küçükse kendini tekrar etmesini engeller */
+  background-attachment: fixed;    /* Sayfa aşağı kaysa bile arka planın sabit kalmasını sağlar */
   
   color: #000000;
   min-height: 100vh;
@@ -49,12 +49,10 @@ body {
   gap: 12px;
 }
 
-/* Sol üstteki İkon Butonları (Profil ve Bildirim) - APPLE LIQUID GLASS UPDATE */
+/* Sol üstteki İkon Butonları (Profil ve Bildirim) - APPLE LIQUID GLASS EFEKTİ */
 .icon-btn {
-  /* Açık mavi jel gradyanı */
-  background: linear-gradient(180deg, #74c2ff 0%, #3ca0f5 50%, #1b85e3 100%) !important;
+  background: linear-gradient(180deg, #6ec1ff 0%, #319bf5 45%, #107be2 100%) !important;
   color: #ffffff !important;
-  /* Cam parıltısı veren parlak sınır çizgisi */
   border: 1px solid rgba(255, 255, 255, 0.6) !important;
   border-radius: 12px;
   width: 45px;
@@ -63,14 +61,11 @@ body {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  /* Derinlik ve iç sıvı yansıması sağlayan özel gölgelendirmeler */
   box-shadow: 
-    0 4px 12px rgba(27, 133, 227, 0.3),
-    inset 0 2px 4px rgba(255, 255, 255, 0.6),
-    inset 0 -2px 6px rgba(0, 0, 0, 0.15) !important;
-  backdrop-filter: blur(5px);
-  -webkit-backdrop-filter: blur(5px);
-  transition: transform 0.1s ease, filter 0.2s;
+    0 4px 10px rgba(16, 123, 226, 0.3),
+    inset 0 2px 4px rgba(255, 255, 255, 0.7),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.15) !important;
+  transition: transform 0.1s ease, opacity 0.2s, filter 0.2s;
 }
 
 .icon-btn svg {
@@ -79,9 +74,9 @@ body {
 }
 
 .icon-btn:hover {
-  filter: brightness(1.05);
-  transform: translateY(-1px);
   opacity: 1;
+  filter: brightness(1.08);
+  transform: translateY(-1px);
 }
 
 /* Menü Linkleri (Profile, Home, Games) */
@@ -118,7 +113,7 @@ body {
   gap: 16px;
 }
 
-/* Sağ Üst Giriş/Çıkış Butonları - APPLE LIQUID GLASS UPDATE */
+/* Sağ Üst Giriş/Çıkış Butonları - AKIŞKAN CAM STİLİ */
 .auth-btn {
   border-radius: 20px;
   padding: 10px 24px;
@@ -129,38 +124,36 @@ body {
   transition: transform 0.1s ease, filter 0.2s;
 }
 
-/* Settings butonu için sıvı cam görünümü */
+/* Settings butonu için yarı şeffaf cam kapsül görünümü */
 .auth-btn.log-in {
   background: rgba(255, 255, 255, 0.4) !important;
   color: #000000 !important;
-  border: 1px solid rgba(255, 255, 255, 0.8) !important;
+  border: 1px solid rgba(255, 255, 255, 0.7) !important;
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   box-shadow: 
-    0 4px 12px rgba(0, 0, 0, 0.02),
+    0 4px 10px rgba(0, 0, 0, 0.03),
     inset 0 2px 4px rgba(255, 255, 255, 0.5) !important;
 }
 
 .auth-btn.log-in:hover {
-  background: rgba(255, 255, 255, 0.5) !important;
+  background: rgba(255, 255, 255, 0.55) !important;
 }
 
-/* Log out butonu için akışkan mavi jel görünümü */
+/* Log out butonu için akışkan jel mavi görünümü */
 .auth-btn.sign-up {
-  background: linear-gradient(180deg, #74c2ff 0%, #3ca0f5 50%, #1b85e3 100%) !important;
+  background: linear-gradient(180deg, #6ec1ff 0%, #319bf5 45%, #107be2 100%) !important;
   color: #ffffff !important;
-  border: 1px solid rgba(255, 255, 255, 0.6) !important;
+  border: 1px solid rgba(255, 255, 255, 0.5) !important;
   box-shadow: 
-    0 4px 12px rgba(27, 133, 227, 0.3),
-    inset 0 2px 4px rgba(255, 255, 255, 0.6),
-    inset 0 -2px 6px rgba(0, 0, 0, 0.15) !important;
-  backdrop-filter: blur(5px);
-  -webkit-backdrop-filter: blur(5px);
-  text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+    0 4px 12px rgba(16, 123, 226, 0.35),
+    inset 0 2px 4px rgba(255, 255, 255, 0.7),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.15) !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
 }
 
 .auth-btn.sign-up:hover {
-  filter: brightness(1.05);
+  filter: brightness(1.08);
   transform: translateY(-1px);
 }
 
@@ -179,11 +172,11 @@ body {
   flex-direction: column;
   justify-content: center;
   overflow: hidden; 
-  /* Kalın jel boru/cam çerçeve parlaması etkisi */
-  border: 1px solid rgba(255, 255, 255, 0.5) !important;
+  /* Banner etrafındaki kalın cam boru mercek parlaması efekti */
+  border: 1px solid rgba(255, 255, 255, 0.4) !important;
   box-shadow: 
-    0 12px 40px rgba(0, 0, 0, 0.15),
-    inset 0 4px 10px rgba(255, 255, 255, 0.3) !important;
+    0 12px 36px rgba(0, 0, 0, 0.16),
+    inset 0 4px 12px rgba(255, 255, 255, 0.25) !important;
 }
 
 .banner-slides {
@@ -292,18 +285,19 @@ body {
   gap: 20px;
 }
 
-/* KARTLARIN ORTAK GÖRÜNÜMÜ - MODERNISED GLASSMORPHISM EFFECT */
+/* KARTLARIN ORTAK GÖRÜNÜMÜ - MODERNISED GLASSMORPHISM (BUZLU CAM) */
 .card {
-  /* Arkasını yarı şeffaf gösteren buzlu cam tonu */
-  background-color: rgba(255, 255, 255, 0.65) !important; 
-  /* Arka planı derinlemesine bulanıklaştırma katmanı */
+  /* Tamamen şeffaf ve arkadaki odayı süzen yumuşak beyaz cam katmanı */
+  background-color: rgba(255, 255, 255, 0.62) !important;
+  border-radius: 20px !important; /* Görseldeki oval kenar yapısı */
+  padding: 20px;
+  /* İnce pürüzsüz parlak sınır çizgisi */
+  border: 1px solid rgba(255, 255, 255, 0.55) !important;
+  /* Arka planı derinlemesine eritme/bulanıklaştırma filtresi */
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
-  border-radius: 20px !important;
-  /* Beyaz ince kenar yansıması */
-  border: 1px solid rgba(255, 255, 255, 0.6) !important;
   box-shadow: 
-    0 8px 32px rgba(0, 0, 0, 0.05),
+    0 8px 32px rgba(0, 0, 0, 0.04),
     inset 0 2px 4px rgba(255, 255, 255, 0.4) !important;
 }
 
@@ -312,7 +306,7 @@ body {
   margin-top: 0;
   margin-bottom: 16px;
   font-weight: 700;
-  color: #1e293b;
+  color: #000000;
 }
 
 /* 1. SÜTUN: DAILY TASKS */
@@ -356,8 +350,8 @@ body {
 /* Support butonu sıvı alt tabaka cam uyumu */
 .support-btn {
   width: 100%;
-  background-color: rgba(255, 255, 255, 0.4) !important;
-  border: 1px solid rgba(255, 255, 255, 0.7) !important;
+  background-color: rgba(255, 255, 255, 0.35) !important;
+  border: 1px solid rgba(255, 255, 255, 0.65) !important;
   border-radius: 12px;
   padding: 12px;
   font-size: 16px;
@@ -365,14 +359,14 @@ body {
   color: #000000;
   cursor: pointer;
   text-align: center;
-  backdrop-filter: blur(5px);
-  -webkit-backdrop-filter: blur(5px);
-  box-shadow: inset 0 1px 3px rgba(255,255,255,0.4);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  box-shadow: inset 0 1px 3px rgba(255, 255, 255, 0.4);
   transition: transform 0.1s ease, background-color 0.2s;
 }
 
 .support-btn:hover {
-  background-color: rgba(255, 255, 255, 0.6) !important;
+  background-color: rgba(255, 255, 255, 0.55) !important;
 }
 
 /* 2. SÜTUN: EXPLORE BUTTONS */
@@ -389,12 +383,11 @@ body {
   gap: 10px;
 }
 
-/* ORTADAKİ 5'Lİ GRUP: AÇIK MAVİ LİKİT/JEL BUTONLAR */
+/* ORTADAKİ 5'Lİ GRUP: GÖRSELDEKİ ŞİŞİK PARLAK LİKİT MAVİ JEL BUTONLAR */
 .explore-btn {
-  /* Açık parlak göksel mavi likit gradyanı */
-  background: linear-gradient(180deg, #8ad0ff 0%, #4eb2ff 45%, #2599fa 100%) !important;
+  background: linear-gradient(180deg, #74c9ff 0%, #3ca2f6 45%, #188ae6 100%) !important;
   color: #ffffff !important;
-  border: 1px solid rgba(255, 255, 255, 0.7) !important;
+  border: 1px solid rgba(255, 255, 255, 0.65) !important;
   border-radius: 14px !important;
   padding: 14px 16px;
   display: flex;
@@ -403,18 +396,18 @@ body {
   cursor: pointer;
   text-align: left;
   width: 100%;
-  /* Üst kısma vuran beyaz parlama ve jel kapsül hissi veren dış gölge */
+  /* Butonun üstündeki o belirgin beyaz likit yansıması ve jel dolgunluğu efekti */
   box-shadow: 
-    0 6px 15px rgba(37, 153, 250, 0.25),
+    0 6px 14px rgba(24, 138, 230, 0.25),
     inset 0 3px 5px rgba(255, 255, 255, 0.8),    
-    inset 0 -3px 6px rgba(0, 0, 0, 0.1) !important; 
-  text-shadow: 0 1px 2px rgba(0,0,0,0.15);
+    inset 0 -3px 5px rgba(0, 0, 0, 0.12) !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
   transition: transform 0.1s ease, filter 0.2s;
 }
 
 .explore-btn:hover {
-  filter: brightness(1.05);
-  transform: translateY(-1px);
+  filter: brightness(1.06);
+  transform: translateY(-0.5px);
 }
 
 .explore-btn .btn-icon {
@@ -442,13 +435,14 @@ body {
   justify-content: center;
   align-items: center;
   height: 50%;
-  background-color: rgba(255, 255, 255, 0.65) !important; 
+  /* Ortak cam özellikleri */
+  background-color: rgba(255, 255, 255, 0.62) !important;
+  border-radius: 20px !important;
+  border: 1px solid rgba(255, 255, 255, 0.55) !important;
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
-  border-radius: 20px !important;
-  border: 1px solid rgba(255, 255, 255, 0.6) !important;
   box-shadow: 
-    0 8px 32px rgba(0, 0, 0, 0.05),
+    0 8px 32px rgba(0, 0, 0, 0.04),
     inset 0 2px 4px rgba(255, 255, 255, 0.4) !important;
 }
 
@@ -474,7 +468,7 @@ body {
 
 /* 4. SÜTUN: MONTHLY BOARD (LEADERBOARD) - BUZLU CAM GÜNCELLEMESİ */
 .leaderboard-card {
-  background-color: rgba(255, 255, 255, 0.65) !important;
+  background-color: rgba(255, 255, 255, 0.62) !important;
 }
 
 .leaderboard-list {
