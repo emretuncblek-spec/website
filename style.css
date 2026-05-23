@@ -46,13 +46,94 @@
 /* ================================================================== */
 /* BODY – Arka plan resmi + temel yazı tipi                          */
 /* ================================================================== */
-body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #030712;                        /* Yeni Aura arka plan rengiyle uyumlu hale getirildi */
-  background-image: none;                           /* Eski statik resim kaldırıldı */
-  color: #000000;
-  min-height: 100vh;
-}
+body{
+    overflow:hidden;
+    background:#030712;
+    height:100vh;
+    width:100vw;
+    font-family:sans-serif;
+  }
+
+  .background{
+    position:fixed;
+    inset:0;
+    overflow:hidden;
+    background:
+      radial-gradient(circle at center,
+      #0f172a 0%,
+      #050816 45%,
+      #020308 100%);
+  }
+
+  /* ANA AURA */
+  .aura{
+    position:absolute;
+    width:70vw;
+    height:70vw;
+    border-radius:50%;
+    filter:blur(90px);
+    opacity:.75;
+    mix-blend-mode:screen;
+    animation:
+      pulse 14s ease-in-out infinite,
+      drift 18s ease-in-out infinite;
+  }
+
+  .aura1{
+    background:
+      radial-gradient(circle,
+      rgba(59,130,246,.9) 0%,
+      rgba(37,99,235,.5) 30%,
+      transparent 70%);
+    top:-10%;
+    left:-10%;
+  }
+
+  .aura2{
+    background:
+      radial-gradient(circle,
+      rgba(99,102,241,.8) 0%,
+      rgba(30,64,175,.4) 35%,
+      transparent 70%);
+    bottom:-20%;
+    right:-10%;
+    animation-delay:-7s;
+  }
+
+  .aura3{
+    background:
+      radial-gradient(circle,
+      rgba(6,182,212,.45) 0%,
+      rgba(14,165,233,.2) 35%,
+      transparent 70%);
+    top:20%;
+    right:10%;
+    width:40vw;
+    height:40vw;
+    animation-duration:20s;
+  }
+
+  /* PATLAMA HALKASI */
+  .burst{
+    position:absolute;
+    inset:0;
+    background:
+      radial-gradient(circle at center,
+      rgba(96,165,250,.12) 0%,
+      rgba(59,130,246,.08) 10%,
+      transparent 35%);
+    animation:burst 8s ease-in-out infinite;
+    filter:blur(10px);
+  }
+
+  /* NOISE */
+  .noise{
+    position:absolute;
+    inset:0;
+    opacity:.05;
+    background-image:
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140' viewBox='0 0 140 140'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Ccircle cx='2' cy='2' r='1'/%3E%3C/g%3E%3C/svg%3E");
+  }
 
 /* ================================================================== */
 /* CONTAINER                                                          */
