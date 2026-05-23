@@ -4,27 +4,126 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aurelia Games - Home</title>
-    <link rel="stylesheet" href="./style.css">
+    <style>
+        /* ================================================================== */
+        /* CSS KATMANI - AURA VE GLASSMORPHISM TAMAMI BURADA                 */
+        /* ================================================================== */
+        :root {
+          color-scheme: dark;
+          --glass-bg: rgba(255, 255, 255, 0.12);
+          --glass-bg-hover: rgba(255, 255, 255, 0.22);
+          --glass-border: rgba(255, 255, 255, 0.35);
+          --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+          --glass-blur: blur(20px);
+          --glass-highlight: inset 0 2px 6px rgba(255, 255, 255, 0.4);
+          --blue-grad: linear-gradient(180deg, #74c9ff 0%, #3ca2f6 45%, #188ae6 100%);
+          --blue-border: rgba(255, 255, 255, 0.5);
+          --blue-shadow: 0 6px 18px rgba(24, 138, 230, 0.3);
+          --lb-rank1: rgba(230, 150, 180, 0.4);
+          --lb-rank2: rgba(70,  140, 100, 0.4);
+          --lb-rank3: rgba(140, 110,  70, 0.4);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+          font-family: 'Segoe UI', sans-serif;
+          background-color: #03050c !important; /* JS sıfırlarsa diye garantiye aldık */
+          color: #ffffff !important;
+          min-height: 100vh;
+          overflow-x: hidden;
+        }
+
+        .container {
+          max-width: 1200px;
+          margin: 0 auto;
+          padding: 24px;
+          position: relative;
+          z-index: 5;
+        }
+
+        /* NAVBAR */
+        .navbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+        .nav-left { display: flex; gap: 12px; }
+        .icon-btn {
+          background: var(--blue-grad); color: #ffffff; border: 1px solid var(--blue-border);
+          border-radius: 12px; width: 45px; height: 45px; display: flex; align-items: center;
+          justify-content: center; cursor: pointer; box-shadow: var(--blue-shadow); text-decoration: none;
+        }
+        .icon-btn svg { width: 24px; height: 24px; }
+        .nav-links { display: flex; gap: 32px; }
+        .nav-link { color: #ffffff; text-decoration: none; font-weight: 700; font-size: 18px; padding-bottom: 6px; position: relative; }
+        .nav-link.active::after { content: ""; position: absolute; left: 0; bottom: 0; width: 100%; height: 2px; background-color: #ffffff; }
+        .nav-right { display: flex; gap: 16px; }
+        .auth-btn { border-radius: 20px; padding: 10px 24px; font-size: 16px; font-weight: 700; cursor: pointer; border: none; }
+        .auth-btn.log-in { background: rgba(255, 255, 255, 0.2); color: #ffffff; border: 1px solid rgba(255, 255, 255, 0.5); backdrop-filter: var(--glass-blur); }
+        .auth-btn.sign-up { background: var(--blue-grad); color: #ffffff; border: 1px solid var(--blue-border); }
+
+        /* BANNER */
+        .main-banner { border-radius: 24px; position: relative; margin-bottom: 24px; min-height: 260px; overflow: hidden; background: #0a0a1e; border: 1px solid rgba(255,255,255,0.1); }
+        .slide { display: none; opacity: 0; padding: 40px; min-height: 260px; background-size: cover; background-position: center; flex-direction: column; justify-content: center; }
+        .slide.active { display: flex; opacity: 1; }
+        .slide-1 { background-image: linear-gradient(135deg, rgba(10,20,60,0.6), rgba(0,0,0,0.4)), url("https://i.imgur.com/jc9awY1.jpeg"); }
+        .slide-2 { background-image: linear-gradient(135deg, rgba(5,30,60,0.6), rgba(0,0,0,0.4)), url("https://i.imgur.com/O3PFx8M.jpeg"); }
+        .slide-3 { background-image: linear-gradient(135deg, rgba(60,25,5,0.6), rgba(0,0,0,0.4)), url("https://i.imgur.com/6rgRX0j.jpeg"); }
+        .badge-new { color: #ff3333; font-weight: 900; font-size: 24px; }
+        .main-banner h1 { font-size: 36px; margin-bottom: 12px; }
+        .slider-dots { position: absolute; bottom: 20px; left: 40px; display: flex; gap: 8px; }
+        .dot { width: 30px; height: 4px; background: rgba(255,255,255,0.3); cursor: pointer; }
+        .dot.active { background: #ffffff; }
+
+        /* GRID & CARDS */
+        .dashboard-grid { display: grid; grid-template-columns: 2.5fr 2fr 1.2fr 2.5fr; gap: 20px; }
+        .card {
+          background: var(--glass-bg); border-radius: 20px; padding: 20px; border: 1px solid var(--glass-border);
+          backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur); box-shadow: var(--glass-shadow);
+        }
+        .card h2 { font-size: 18px; margin-bottom: 16px; color: #ffffff; }
+        .task-list { list-style: none; }
+        .task-list li { display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 13px; }
+        .explore-buttons { display: flex; flex-direction: column; gap: 8px; }
+        .explore-btn { background: var(--blue-grad); color: white; border: 1px solid var(--blue-border); padding: 12px; border-radius: 12px; text-align: left; cursor: pointer; }
+        .rank-value { font-size: 48px; font-weight: 800; text-align: center; }
+        .leaderboard-list { display: flex; flex-direction: column; gap: 6px; }
+        .leaderboard-item { padding: 8px; border-radius: 8px; display: flex; justify-content: space-between; font-size: 12px; background: rgba(255,255,255,0.1); }
+        .leaderboard-item.rank-1 { background: var(--lb-rank1); }
+
+        /* HAREKETLİ AURA ARKA PLANI */
+        .background {
+          position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; overflow: hidden; z-index: 1;
+          background: radial-gradient(circle at center, #0c1020 0%, #050710 60%, #010206 100%) !important;
+        }
+        .aura { position: absolute; width: 70vw; height: 70vw; border-radius: 50%; filter: blur(120px); opacity: 0.6; mix-blend-mode: screen; animation: drift 25s ease-in-out infinite alternate; }
+        .aura1 { background: radial-gradient(circle, #2563eb 0%, transparent 70%); top: -10%; left: -10%; }
+        .aura2 { background: radial-gradient(circle, #4f46e5 0%, transparent 70%); bottom: -20%; right: -10%; animation-delay: -5s; }
+        .aura3 { background: radial-gradient(circle, #0891b2 0%, transparent 70%); top: 30%; right: 10%; width: 40vw; height: 40vw; }
+        
+        @keyframes drift {
+          0% { transform: translate(0, 0) scale(1); }
+          100% { transform: translate(8%, 8%) scale(1.12); }
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
+
+    <div class="background">
+        <div class="aura aura1"></div>
+        <div class="aura aura2"></div>
+        <div class="aura aura3"></div>
+    </div>
  
-        <!-- ===================== NAVBAR ===================== -->
+    <div class="container">
         <header class="navbar">
             <div class="nav-left">
-                <a href="./profile" class="icon-btn profile-btn" title="Profil">
+                <a href="#" class="icon-btn" title="Profil">
                     <svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
                 </a>
-                <button class="icon-btn notify-btn" title="Bildirimler">
-                    <svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg>
-                </button>
             </div>
             <nav class="nav-links">
-                <a href="./profile.html" class="nav-link">Profile</a>
-                <a href="./index.html" class="nav-link active">Home</a>
+                <a href="#" class="nav-link">Profile</a>
+                <a href="#" class="nav-link active">Home</a>
                 <a href="#" class="nav-link">Explore</a>
                 <a href="#" class="nav-link">Games</a>
-                <a href="./focus.html" class="nav-link">Focus</a>
             </nav>
             <div class="nav-right">
                 <button class="auth-btn log-in">Settings</button>
@@ -32,143 +131,84 @@
             </div>
         </header>
 
-        <!-- ===================== MAIN BANNER ===================== -->
         <section class="main-banner">
             <div class="banner-slides">
                 <div class="slide slide-1 active">
                     <span class="badge-new">NEW!</span>
                     <h1>Chess update</h1>
-                    <p>Added online chess game for, play with your friends!<br>you can earn xp and cups right now.</p>
-                    <a href="#" class="read-more">Read More</a>
+                    <p>Added online chess game! Play with friends and earn XP.</p>
                 </div>
                 <div class="slide slide-2">
                     <span class="badge-new">NEW!</span>
                     <h1>Quizlee Challenge</h1>
-                    <p>Test your knowledge with our brand new quiz system!<br>Solve daily puzzles and climb the ranks.</p>
-                    <a href="#" class="read-more">Read More</a>
-                </div>
-                <div class="slide slide-3">
-                    <span class="badge-new">HOT!</span>
-                    <h1>Luxury Boxes</h1>
-                    <p>New reward boxes are now available in the shop.<br>Open them to find epic and legendary items!</p>
-                    <a href="#" class="read-more">Read More</a>
+                    <p>Test your knowledge with our brand new quiz system!</p>
                 </div>
             </div>
             <div class="slider-dots">
                 <span class="dot active" data-index="0"></span>
                 <span class="dot" data-index="1"></span>
-                <span class="dot" data-index="2"></span>
             </div>
         </section>
 
-        <!-- ===================== DASHBOARD GRID ===================== -->
         <div class="dashboard-grid">
-
-            <!-- 1. SÜTUN: DAILY TASKS -->
-            <div class="card daily-tasks-card">
+            <div class="card">
                 <h2>Daily Tasks &gt;</h2>
                 <ul class="task-list">
-                    <li>
-                        <span class="task-icon">♟️</span>
-                        <span class="task-text">Win one game at online chess</span>
-                        <span class="task-xp">250 xp</span>
-                    </li>
-                    <li>
-                        <span class="task-icon">Q</span>
-                        <span class="task-text">Solve one quiz at quizlee</span>
-                        <span class="task-xp">75 xp</span>
-                    </li>
-                    <li>
-                        <span class="task-icon">📦</span>
-                        <span class="task-text">Open 1 Luxury Box</span>
-                        <span class="task-xp">155 xp</span>
-                    </li>
-                    <li>
-                        <span class="task-icon">🍿</span>
-                        <span class="task-text">Find movie from emoji game</span>
-                        <span class="task-xp">25 xp</span>
-                    </li>
+                    <li><span>♟️ Win online chess</span><strong>250 xp</strong></li>
+                    <li><span>📦 Open 1 Box</span><strong>155 xp</strong></li>
                 </ul>
-                <button class="support-btn">Support</button>
             </div>
 
-            <!-- 2. SÜTUN: EXPLORE -->
-            <div class="explore-section">
+            <div class="card">
                 <h2>Explore</h2>
                 <div class="explore-buttons">
-                    <button class="explore-btn">
-                        <span class="btn-icon">🛒</span>
-                        <span class="btn-text">XP SHOP</span>
-                    </button>
-                    <button class="explore-btn">
-                        <span class="btn-icon">📦</span>
-                        <span class="btn-text">LUXURY BOX</span>
-                    </button>
-                    <button class="explore-btn">
-                        <span class="btn-icon">💎</span>
-                        <span class="btn-text">ETERNAL BUNDLE</span>
-                    </button>
-                    <button class="explore-btn">
-                        <span class="btn-icon">🎒</span>
-                        <span class="btn-text">INVENTORY</span>
-                    </button>
-                    <button class="explore-btn">
-                        <span class="btn-icon">👥</span>
-                        <span class="btn-text">FRIENDS</span>
-                    </button>
+                    <button class="explore-btn">🛒 XP SHOP</button>
+                    <button class="explore-btn">🎒 INVENTORY</button>
                 </div>
             </div>
 
-            <!-- 3. SÜTUN: RANK + TIMER -->
-            <div class="stats-column">
-                <div class="card rank-card">
-                    <h3>Your Rank</h3>
-                    <div class="rank-value">38</div>
-                </div>
-                <div class="card timer-card">
-                    <h3>Timer</h3>
-                    <div class="timer-value">15d 16h</div>
-                </div>
+            <div class="card">
+                <h2>Your Rank</h2>
+                <div class="rank-value">38</div>
             </div>
 
-            <!-- 4. SÜTUN: LEADERBOARD -->
-            <div class="card leaderboard-card">
+            <div class="card">
                 <h2>Monthly Board</h2>
                 <div class="leaderboard-list">
-                    <div class="leaderboard-item rank-1">
-                        <span class="user-meta">#1 minocials</span>
-                        <span class="user-xp">3.7k XP 🌸</span>
-                    </div>
-                    <div class="leaderboard-item rank-2">
-                        <span class="user-meta">#2 moonbreakeryt_07...</span>
-                        <span class="user-xp">6.5k XP 🍃</span>
-                    </div>
-                    <div class="leaderboard-item rank-3">
-                        <span class="user-meta">#3 emrebronz</span>
-                        <span class="user-xp">1.6k XP ⚔️</span>
-                    </div>
-                    <div class="leaderboard-item rank-4">
-                        <span class="user-meta">#4 moony.000</span>
-                        <span class="user-xp">473 XP 🪶</span>
-                    </div>
-                    <div class="leaderboard-item rank-5">
-                        <span class="user-meta">#5 beawarez</span>
-                        <span class="user-xp">149 XP 🌌</span>
-                    </div>
-                    <div class="leaderboard-item rank-6">
-                        <span class="user-meta">#6 amjustrealm</span>
-                        <span class="user-xp">123 XP 🧱</span>
-                    </div>
-                    <div class="leaderboard-item rank-7">
-                        <span class="user-meta">#7 thund3rst0rm_1</span>
-                        <span class="user-xp">109 XP ⚜️</span>
-                    </div>
+                    <div class="leaderboard-item rank-1"><span>#1 minocials</span><span>3.7k XP 🌸</span></div>
+                    <div class="leaderboard-item"><span>#2 emrebronz</span><span>1.6k XP ⚔️</span></div>
                 </div>
             </div>
-
         </div>
     </div>
 
-    <script src="./index.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Slider Sistemi
+            const slides = document.querySelectorAll('.slide');
+            const dots = document.querySelectorAll('.dot');
+            let currentSlide = 0;
+
+            function showSlide(index) {
+                slides.forEach(s => s.classList.remove('active'));
+                dots.forEach(d => d.classList.remove('active'));
+                slides[index].classList.add('active');
+                dots[index].classList.add('active');
+            }
+
+            dots.forEach(dot => {
+                dot.addEventListener('click', () => {
+                    currentSlide = parseInt(dot.getAttribute('data-index'));
+                    showSlide(currentSlide);
+                });
+            });
+
+            // Otomatik geçiş
+            setInterval(() => {
+                currentSlide = (currentSlide + 1) % slides.length;
+                showSlide(currentSlide);
+            }, 5000);
+        });
+    </script>
 </body>
 </html>
