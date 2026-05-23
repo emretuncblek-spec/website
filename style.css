@@ -44,13 +44,12 @@
 }
 
 /* ================================================================== */
-/* BODY – Arka plan resmi + temel yazı tipi                          */
+/* BODY – Şeffaf Tabat (Auranın Görünmesi İçin)                      */
 /* ================================================================== */
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: transparent;                    /* Arka plandaki auranın görünmesi için transparent yapıldı */
-  background-image: none;                           
-  color: #000000;
+  background-color: transparent; 
+  color: #ffffff; /* Yazı rengi okunabilirlik için beyaza çekildi */
   min-height: 100vh;
 }
 
@@ -61,6 +60,8 @@ body {
   max-width: 1200px;
   margin:  0 auto;
   padding: 24px;
+  position: relative;
+  z-index: 2; /* İçeriklerin aura arkasında kalıp tıklanamaz olmasını engeller */
 }
 
 /* ================================================================== */
@@ -192,15 +193,12 @@ body {
   flex-direction:   column;
   justify-content:  center;
   overflow:         hidden;
-
-  /* Çerçeve ve gölge — backdrop-filter KALDIRILDI (resimler şeffaf değil) */
   background:  #0a0a1e;
   border:      1px solid var(--banner-border);
   box-shadow:  var(--banner-glow),
                inset 0 0 0 1px rgba(255,255,255,0.08);
 }
 
-/* Üst parlaklık çizgisi (cam kenar efekti) */
 .main-banner::before {
   content:        "";
   position:       absolute;
@@ -208,12 +206,11 @@ body {
   left:           0;
   right:          0;
   height:         1px;
-  background:     linear-gradient(90deg, transparent, rgba(255,255,255,0.55), transparent);
+  background:     gradient(90deg, transparent, rgba(255,255,255,0.55), transparent);
   pointer-events: none;
   z-index:        4;
 }
 
-/* Sol köşe halosu */
 .main-banner::after {
   content:        "";
   position:       absolute;
@@ -227,7 +224,6 @@ body {
   z-index:        4;
 }
 
-/* --- Slayt Kapsayıcı --- */
 .banner-slides {
   position: relative;
   width:    100%;
@@ -235,7 +231,6 @@ body {
   z-index:  3;
 }
 
-/* --- Ortak Slayt Stili --- */
 .slide {
   display:             none;
   opacity:             0;
@@ -256,37 +251,18 @@ body {
   opacity:         1;
 }
 
-/*
-  Resim + cam overlay katmanı — her slayt kendi URL'ini taşır.
-  Üstteki yarı-şeffaf gradient, resmi karartan cam etkisi verir,
-  yazıların okunmasını sağlar.
-  ↓ URL'leri buradan kolayca değiştirebilirsin ↓
-*/
 .slide-1 {
-  background-image:
-    linear-gradient(135deg,
-      rgba(10, 20, 60, 0.52) 0%,
-      rgba(60, 5,  30, 0.38) 100%),
-    url("https://i.imgur.com/jc9awY1.jpeg");
+  background-image: linear-gradient(135deg, rgba(10, 20, 60, 0.52) 0%, rgba(60, 5, 30, 0.38) 100%), url("https://i.imgur.com/jc9awY1.jpeg");
 }
 
 .slide-2 {
-  background-image:
-    linear-gradient(135deg,
-      rgba(5,  30, 60, 0.52) 0%,
-      rgba(10, 70, 45, 0.38) 100%),
-    url("https://i.imgur.com/O3PFx8M.jpeg");
+  background-image: linear-gradient(135deg, rgba(5,  30, 60, 0.52) 0%, rgba(10, 70, 45, 0.38) 100%), url("https://i.imgur.com/O3PFx8M.jpeg");
 }
 
 .slide-3 {
-  background-image:
-    linear-gradient(135deg,
-      rgba(60, 25, 5,  0.52) 0%,
-      rgba(35, 5,  60, 0.38) 100%),
-    url("https://i.imgur.com/6rgRX0j.jpeg");
+  background-image: linear-gradient(135deg, rgba(60, 25, 5,  0.52) 0%, rgba(35, 5,  60, 0.38) 100%), url("https://i.imgur.com/6rgRX0j.jpeg");
 }
 
-/* --- Badge --- */
 .badge-new {
   color:        #ff3333;
   font-weight:  900;
@@ -326,7 +302,6 @@ body {
   opacity: 0.75;
 }
 
-/* --- Slider Dots --- */
 .slider-dots {
   position: absolute;
   bottom:   20px;
@@ -360,9 +335,6 @@ body {
   align-items:           start;
 }
 
-/* ================================================================== */
-/* KART — TAM CAM EFEKTİ (tüm .card'lar için ortak)                 */
-/* ================================================================== */
 .card {
   background:           var(--glass-bg);
   border-radius:        20px;
@@ -370,8 +342,7 @@ body {
   border:               1px solid var(--glass-border);
   backdrop-filter:      var(--glass-blur) saturate(1.4);
   -webkit-backdrop-filter: var(--glass-blur) saturate(1.4);
-  box-shadow:           var(--glass-shadow),
-                        var(--glass-highlight);
+  box-shadow:           var(--glass-shadow), var(--glass-highlight);
   transition:           background 0.25s ease, box-shadow 0.25s ease;
 }
 
@@ -388,218 +359,53 @@ body {
   text-shadow:   0 1px 4px rgba(0,0,0,0.3);
 }
 
-/* ================================================================== */
-/* 1. SÜTUN — DAILY TASKS                                            */
-/* ================================================================== */
-.daily-tasks-card {
-  display:        flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
+/* --- Sütun Özelleştirmeleri --- */
+.daily-tasks-card { display: flex; flex-direction: column; justify-content: space-between; }
+.task-list { list-style: none; padding: 0; margin: 0 0 20px 0; }
+.task-list li { display: flex; align-items: center; margin-bottom: 14px; font-size: 13px; font-weight: 600; }
+.task-icon { width: 24px; font-size: 16px; margin-right: 8px; flex-shrink: 0; }
+.task-text { flex-grow: 1; color: rgba(255, 255, 255, 0.92); }
+.task-xp { color: #ffaa44; margin-left: 8px; white-space: nowrap; font-weight: 700; text-shadow: 0 0 8px rgba(255, 170, 68, 0.45); }
 
-.task-list {
-  list-style: none;
-  padding:    0;
-  margin:     0 0 20px 0;
-}
-
-.task-list li {
-  display:       flex;
-  align-items:   center;
-  margin-bottom: 14px;
-  font-size:     13px;
-  font-weight:   600;
-}
-
-.task-icon {
-  width:       24px;
-  font-size:   16px;
-  margin-right: 8px;
-  flex-shrink: 0;
-}
-
-.task-text {
-  flex-grow: 1;
-  color:     rgba(255, 255, 255, 0.92);
-}
-
-.task-xp {
-  color:       #ffaa44;
-  margin-left: 8px;
-  white-space: nowrap;
-  font-weight: 700;
-  text-shadow: 0 0 8px rgba(255, 170, 68, 0.45);
-}
-
-/* Support Butonu — şeffaf cam */
 .support-btn {
-  width:           100%;
-  background:      rgba(255, 255, 255, 0.20);
-  border:          1px solid rgba(255, 255, 255, 0.55);
-  border-radius:   12px;
-  padding:         12px;
-  font-size:       16px;
-  font-weight:     700;
-  color:           #ffffff;
-  cursor:          pointer;
-  text-align:      center;
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-  box-shadow:      inset 0 2px 4px rgba(255, 255, 255, 0.35);
-  transition:      background 0.2s ease, transform 0.15s ease;
+  width: 100%; background: rgba(255, 255, 255, 0.20); border: 1px solid rgba(255, 255, 255, 0.55);
+  border-radius: 12px; padding: 12px; font-size: 16px; font-weight: 700; color: #ffffff; cursor: pointer;
+  text-align: center; backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+  box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.35); transition: background 0.2s ease, transform 0.15s ease;
 }
+.support-btn:hover { background: rgba(255, 255, 255, 0.35); transform: translateY(-1px); }
 
-.support-btn:hover {
-  background: rgba(255, 255, 255, 0.35);
-  transform:  translateY(-1px);
-}
-
-/* ================================================================== */
-/* 2. SÜTUN — EXPLORE                                                */
-/* ================================================================== */
-.explore-section h2 {
-  font-size:     18px;
-  margin-bottom: 16px;
-  color:         #ffffff;
-  font-weight:   700;
-  text-shadow:   0 1px 4px rgba(0,0,0,0.3);
-}
-
-.explore-buttons {
-  display:        flex;
-  flex-direction: column;
-  gap:            10px;
-}
-
-/* Liquid Blue Jel Butonlar */
+.explore-section h2 { font-size: 18px; margin-bottom: 16px; color: #ffffff; font-weight: 700; text-shadow: 0 1px 4px rgba(0,0,0,0.3); }
+.explore-buttons { display: flex; flex-direction: column; gap: 10px; }
 .explore-btn {
-  background:    var(--blue-grad);
-  color:         #ffffff;
-  border:        1px solid var(--blue-border);
-  border-radius: 14px;
-  padding:       14px 16px;
-  display:       flex;
-  align-items:   center;
-  gap:           12px;
-  cursor:        pointer;
-  text-align:    left;
-  width:         100%;
-  box-shadow:    var(--blue-shadow);
-  text-shadow:   0 1px 2px rgba(0, 0, 0, 0.18);
-  transition:    transform 0.15s ease, filter 0.2s ease;
+  background: var(--blue-grad); color: #ffffff; border: 1px solid var(--blue-border); border-radius: 14px;
+  padding: 14px 16px; display: flex; align-items: center; gap: 12px; cursor: pointer; text-align: left; width: 100%;
+  box-shadow: var(--blue-shadow); text-shadow: 0 1px 2px rgba(0, 0, 0, 0.18); transition: transform 0.15s ease, filter 0.2s ease;
 }
+.explore-btn:hover { filter: brightness(1.08); transform: translateY(-1px); }
+.explore-btn .btn-icon { font-size: 18px; }
+.explore-btn .btn-text { font-weight: 700; font-size: 13px; letter-spacing: 0.6px; }
 
-.explore-btn:hover {
-  filter:    brightness(1.08);
-  transform: translateY(-1px);
+.stats-column { display: flex; flex-direction: column; gap: 20px; height: 100%; }
+.rank-card, .timer-card {
+  text-align: center; padding: 20px 16px; display: flex; flex-direction: column; justify-content: center;
+  align-items: center; flex: 1; background: var(--glass-bg); border-radius: 20px; border: 1px solid var(--glass-border);
+  backdrop-filter: var(--glass-blur) saturate(1.4); -webkit-backdrop-filter: var(--glass-blur) saturate(1.4);
+  box-shadow: var(--glass-shadow), var(--glass-highlight); transition: background 0.25s ease, box-shadow 0.25s ease;
 }
+.rank-card:hover, .timer-card:hover { background: var(--glass-bg-hover); box-shadow: 0 12px 40px rgba(0, 0, 0, 0.22), var(--glass-highlight); }
+.rank-card h3, .timer-card h3 { margin: 0 0 8px 0; font-size: 14px; color: rgba(255, 255, 255, 0.70); font-weight: 700; letter-spacing: 0.5px; }
+.rank-value { font-size: 52px; font-weight: 800; color: #ffffff; text-shadow: 0 2px 16px rgba(255, 255, 255, 0.25); line-height: 1; }
+.timer-value { font-size: 30px; font-weight: 800; color: #ffffff; line-height: 1.1; text-shadow: 0 2px 12px rgba(255, 255, 255, 0.20); }
 
-.explore-btn .btn-icon {
-  font-size: 18px;
-}
-
-.explore-btn .btn-text {
-  font-weight:     700;
-  font-size:       13px;
-  letter-spacing:  0.6px;
-}
-
-/* ================================================================== */
-/* 3. SÜTUN — STATS (RANK + TIMER)                                   */
-/* ================================================================== */
-.stats-column {
-  display:        flex;
-  flex-direction: column;
-  gap:            20px;
-  height:         100%;
-}
-
-.rank-card,
-.timer-card {
-  text-align:      center;
-  padding:         20px 16px;
-  display:         flex;
-  flex-direction:  column;
-  justify-content: center;
-  align-items:     center;
-  flex:            1;
-
-  /* Cam özellikleri (.card'dan miras + override) */
-  background:           var(--glass-bg);
-  border-radius:        20px;
-  border:               1px solid var(--glass-border);
-  backdrop-filter:      var(--glass-blur) saturate(1.4);
-  -webkit-backdrop-filter: var(--glass-blur) saturate(1.4);
-  box-shadow:           var(--glass-shadow), var(--glass-highlight);
-  transition:           background 0.25s ease, box-shadow 0.25s ease;
-}
-
-.rank-card:hover,
-.timer-card:hover {
-  background:  var(--glass-bg-hover);
-  box-shadow:  0 12px 40px rgba(0, 0, 0, 0.22), var(--glass-highlight);
-}
-
-.rank-card h3,
-.timer-card h3 {
-  margin:      0 0 8px 0;
-  font-size:   14px;
-  color:       rgba(255, 255, 255, 0.70);
-  font-weight: 700;
-  letter-spacing: 0.5px;
-}
-
-.rank-value {
-  font-size:   52px;
-  font-weight: 800;
-  color:       #ffffff;
-  text-shadow: 0 2px 16px rgba(255, 255, 255, 0.25);
-  line-height: 1;
-}
-
-.timer-value {
-  font-size:   30px;
-  font-weight: 800;
-  color:       #ffffff;
-  line-height: 1.1;
-  text-shadow: 0 2px 12px rgba(255, 255, 255, 0.20);
-}
-
-/* ================================================================== */
-/* 4. SÜTUN — LEADERBOARD                                            */
-/* ================================================================== */
-.leaderboard-card {
-  /* .card sınıfından gelen cam stillere ek */
-}
-
-.leaderboard-list {
-  display:        flex;
-  flex-direction: column;
-  gap:            6px;
-}
-
-/* Her sıra kendi cam renk tonu ile */
+.leaderboard-list { display: flex; flex-direction: column; gap: 6px; }
 .leaderboard-item {
-  border-radius:   10px;
-  padding:         10px 12px;
-  display:         flex;
-  justify-content: space-between;
-  align-items:     center;
-  color:           #ffffff;
-  font-weight:     700;
-  font-size:       12px;
-  text-shadow:     1px 1px 4px rgba(0, 0, 0, 0.70);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border:          1px solid rgba(255, 255, 255, 0.20);
-  transition:      transform 0.15s ease, filter 0.2s ease;
+  border-radius: 10px; padding: 10px 12px; display: flex; justify-content: space-between; align-items: center;
+  color: #ffffff; font-weight: 700; font-size: 12px; text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.70);
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border: 1px solid rgba(255, 255, 255, 0.20);
+  transition: transform 0.15s ease, filter 0.2s ease;
 }
-
-.leaderboard-item:hover {
-  transform: translateX(3px);
-  filter:    brightness(1.12);
-}
-
+.leaderboard-item:hover { transform: translateX(3px); filter: brightness(1.12); }
 .leaderboard-item.rank-1 { background: var(--lb-rank1); }
 .leaderboard-item.rank-2 { background: var(--lb-rank2); }
 .leaderboard-item.rank-3 { background: var(--lb-rank3); }
@@ -607,426 +413,153 @@ body {
 .leaderboard-item.rank-5 { background: var(--lb-rank5); }
 .leaderboard-item.rank-6 { background: var(--lb-rank6); }
 .leaderboard-item.rank-7 { background: var(--lb-rank7); }
+.user-meta { font-size: 12px; letter-spacing: 0.3px; }
+.user-xp { font-size: 11px; opacity: 0.90; white-space: nowrap; }
 
-.user-meta {
-  font-size: 12px;
-  letter-spacing: 0.3px;
-}
-
-.user-xp {
-  font-size: 11px;
-  opacity:   0.90;
-  white-space: nowrap;
-}
+@keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
 
 /* ================================================================== */
-/* ANIMASYON                                                          */
+/* PROFİL SAYFASI ÖZEL STİLLERİ                                      */
 /* ================================================================== */
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(6px); }
-  to   { opacity: 1; transform: translateY(0);   }
-}
-
-/* ================================================================== */
-/* PROFİL SAYFASI ÖZEL STİLLERİ (profile.html için)                 */
-/* Glass efektli, resimdeki tasarımla tam uyumlu                     */
-/* ================================================================== */
-
-/* --- Profil sayfasında body arka planını Elden Ring temasıyla ez --- */
 .profile-body {
-  background-color:      transparent !important;            /* Arka plandaki auranın görünmesi için transparent yapıldı */
-  background-image:      none !important;
+  background-color:      #0a0a12 !important;
+  background-image:      url("https://i.imgur.com/9Sdl0Wc.jpeg") !important;
   background-size:       cover !important;
   background-position:   center top !important;
   background-repeat:     no-repeat !important;
   background-attachment: fixed !important;
 }
 
-/* --- Profil navbar: beyaz yazı + aktif çizgi --- */
-.profile-body .nav-link {
-  color: #ffffff !important;
-}
-
-.profile-body .nav-link.active::after {
-  background-color: #ffffff !important;
-}
-
-/* Settings butonu profil sayfasında cam görünüm */
+.profile-body .nav-link { color: #ffffff !important; }
+.profile-body .nav-link.active::after { background-color: #ffffff !important; }
 .profile-body .auth-btn.log-in {
-  background:      rgba(255, 255, 255, 0.18) !important;
-  color:           #ffffff !important;
-  border:          1px solid rgba(255, 255, 255, 0.40) !important;
-  backdrop-filter: blur(12px) !important;
-  -webkit-backdrop-filter: blur(12px) !important;
+  background: rgba(255, 255, 255, 0.18) !important; color: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.40) !important; backdrop-filter: blur(12px) !important; -webkit-backdrop-filter: blur(12px) !important;
 }
+.profile-body .auth-btn.log-in:hover { background: rgba(255, 255, 255, 0.30) !important; }
 
-.profile-body .auth-btn.log-in:hover {
-  background: rgba(255, 255, 255, 0.30) !important;
-}
+.profile-container { min-height: 94vh; display: flex; flex-direction: column; justify-content: space-between; padding-bottom: 32px; }
+.profile-central-layout { display: flex; flex-direction: column; align-items: flex-start; justify-content: flex-end; gap: 28px; flex: 1; width: 100%; padding-left: 0 !important; box-sizing: border-box; padding-bottom: 0; }
 
-/* ------------------------------------------------------------------ */
-/* SAYFA KAPSAYICISI                                                  */
-/* ================================================================== */
-.profile-container {
-  min-height:      94vh;
-  display:         flex;
-  flex-direction:  column;
-  justify-content: space-between;
-  padding-bottom:  32px;
-}
-
-/* ------------------------------------------------------------------ */
-/* ORTA ALAN: Kart + Alt Butonlar                                     */
-/* Sol hizalı, dikey akış, resimdeki gibi                            */
-/* ------------------------------------------------------------------ */
-.profile-central-layout {
-  display:         flex;
-  flex-direction:  column;
-  align-items:     flex-start;
-  justify-content: flex-end;
-  gap:             28px;
-  flex:            1;
-  width:           100%;
-  padding-left:    0 !important;
-  box-sizing:      border-box;
-  padding-bottom:  0;
-}
-
-/* ------------------------------------------------------------------ */
-/* PROFİL KARTI — GLASS EFEKTİ                                       */
-/* Resimdeki kahverengi-şeffaf cam kart                               */
-/* ------------------------------------------------------------------ */
 .profile-sidebar-card {
-  /* Kahverengi cam tonu — resimdeki ton korundu, şeffaflık artırıldı */
-  background:           rgba(100, 82, 60, 0.72) !important;
-  backdrop-filter:      blur(20px) saturate(1.5) !important;
-  -webkit-backdrop-filter: blur(20px) saturate(1.5) !important;
-
-  border-radius:    32px !important;
-  padding:          30px 28px !important;
-  display:          flex;
-  flex-direction:   column;
-  align-items:      center;
-  text-align:       center;
-
-  /* İnce parlak cam kenarı */
-  border:           1px solid rgba(255, 255, 255, 0.22) !important;
-
-  /* Derin gölge + içten üst parlaklık */
-  box-shadow:
-    0 24px 56px rgba(0, 0, 0, 0.55),
-    0  8px 24px rgba(0, 0, 0, 0.35),
-    inset 0 2px 6px rgba(255, 255, 255, 0.18) !important;
-
-  width:   300px !important;
-  min-width: 280px;
+  background: rgba(100, 82, 60, 0.72) !important; backdrop-filter: blur(20px) saturate(1.5) !important; -webkit-backdrop-filter: blur(20px) saturate(1.5) !important;
+  border-radius: 32px !important; padding: 30px 28px !important; display: flex; flex-direction: column; align-items: center; text-align: center;
+  border: 1px solid rgba(255, 255, 255, 0.22) !important;
+  box-shadow: 0 24px 56px rgba(0, 0, 0, 0.55), 0 8px 24px rgba(0, 0, 0, 0.35), inset 0 2px 6px rgba(255, 255, 255, 0.18) !important;
+  width: 300px !important; min-width: 280px; position: relative;
 }
+.profile-sidebar-card::before { content: ""; display: block; position: absolute; top: 0; left: 15%; width: 70%; height: 1px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.50), transparent); border-radius: 1px; pointer-events: none; }
 
-/* Kart üstündeki ince beyaz çizgi parlaklığı */
-.profile-sidebar-card::before {
-  content:       "";
-  display:       block;
-  position:      absolute;
-  top:           0;
-  left:          15%;
-  width:         70%;
-  height:        1px;
-  background:    linear-gradient(90deg, transparent, rgba(255,255,255,0.50), transparent);
-  border-radius: 1px;
-  pointer-events: none;
-}
+.profile-username { color: #ffffff !important; font-size: 30px; font-weight: 800; margin: 0 0 18px 0; text-shadow: 0 2px 8px rgba(0, 0, 0, 0.45); letter-spacing: 0.3px; }
+.profile-avatar-container { width: 150px; height: 150px; border-radius: 50%; overflow: hidden; border: 4px solid rgba(40, 28, 16, 0.90); box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.18), 0 8px 24px rgba(0, 0, 0, 0.50); margin-bottom: 18px; }
+.profile-avatar-img { width: 100%; height: 100%; object-fit: cover; object-position: center; display: block; }
+.profile-uid { color: rgba(255, 255, 255, 0.88) !important; font-size: 15px; font-weight: 700; margin-bottom: 18px; letter-spacing: 0.5px; }
+.profile-xp-section { width: 100%; margin-bottom: 18px; }
+.profile-xp-bar-container { width: 100%; height: 13px; background-color: rgba(255, 255, 255, 0.25); border-radius: 7px; overflow: hidden; margin-bottom: 8px; box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.35); }
+.profile-xp-progress { height: 100%; background: linear-gradient(90deg, #3ecf3e 0%, #5ddb5d 60%, #7de87d 100%); border-radius: 7px; box-shadow: 0 0 8px rgba(93, 219, 93, 0.55); transition: width 0.6s ease; }
+.profile-level-row { display: flex; justify-content: space-between; width: 100%; color: rgba(255, 255, 255, 0.92); font-weight: 700; font-size: 13px; text-shadow: 0 1px 4px rgba(0, 0, 0, 0.40); }
 
-/* ------------------------------------------------------------------ */
-/* KULLANICI ADI                                                       */
-/* ------------------------------------------------------------------ */
-.profile-username {
-  color:       #ffffff !important;
-  font-size:   30px;
-  font-weight: 800;
-  margin:      0 0 18px 0;
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.45);
-  letter-spacing: 0.3px;
-}
+.profile-badges-row { display: flex; gap: 14px; font-size: 26px; margin-top: 4px; }
+.p-badge { filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.45)); transition: transform 0.2s ease, filter 0.2s ease; cursor: pointer; }
+.p-badge:hover { transform: scale(1.22) translateY(-2px); filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.55)) brightness(1.15); }
 
-/* ------------------------------------------------------------------ */
-/* YUVARLAK AVATAR                                                     */
-/* ------------------------------------------------------------------ */
-.profile-avatar-container {
-  width:         150px;
-  height:        150px;
-  border-radius: 50%;
-  overflow:      hidden;
-  /* Koyu kahverengi halka */
-  border:        4px solid rgba(40, 28, 16, 0.90);
-  /* Dış parlak cam halkası */
-  box-shadow:
-    0 0 0 2px rgba(255, 255, 255, 0.18),
-    0 8px 24px rgba(0, 0, 0, 0.50);
-  margin-bottom: 18px;
-}
-
-.profile-avatar-img {
-  width:           100%;
-  height:          100%;
-  object-fit:      cover;
-  object-position: center;
-  display:         block;
-}
-
-/* ------------------------------------------------------------------ */
-/* UID YAZISI                                                          */
-/* ------------------------------------------------------------------ */
-.profile-uid {
-  color:         rgba(255, 255, 255, 0.88) !important;
-  font-size:     15px;
-  font-weight:   700;
-  margin-bottom: 18px;
-  letter-spacing: 0.5px;
-}
-
-/* ------------------------------------------------------------------ */
-/* XP BÖLÜMÜ                                                          */
-/* ------------------------------------------------------------------ */
-.profile-xp-section {
-  width:         100%;
-  margin-bottom: 18px;
-}
-
-/* XP bar arka plan: beyaz değil, yarı-saydam gri */
-.profile-xp-bar-container {
-  width:            100%;
-  height:           13px;
-  background-color: rgba(255, 255, 255, 0.25);
-  border-radius:    7px;
-  overflow:         hidden;
-  margin-bottom:    8px;
-  box-shadow:       inset 0 1px 3px rgba(0, 0, 0, 0.35);
-}
-
-/* XP doluluk — yeşil gradient */
-.profile-xp-progress {
-  height:     100%;
-  background: linear-gradient(90deg, #3ecf3e 0%, #5ddb5d 60%, #7de87d 100%);
-  border-radius: 7px;
-  box-shadow:  0 0 8px rgba(93, 219, 93, 0.55);
-  transition:  width 0.6s ease;
-}
-
-/* Lvl / XP sayı satırı */
-.profile-level-row {
-  display:         flex;
-  justify-content: space-between;
-  width:           100%;
-  color:           rgba(255, 255, 255, 0.92);
-  font-weight:     700;
-  font-size:       13px;
-  text-shadow:     0 1px 4px rgba(0, 0, 0, 0.40);
-}
-
-/* ------------------------------------------------------------------ */
-/* ROZETLER                                                            */
-/* ------------------------------------------------------------------ */
-.profile-badges-row {
-  display:   flex;
-  gap:       14px;
-  font-size: 26px;
-  margin-top: 4px;
-}
-
-.p-badge {
-  filter:     drop-shadow(0 2px 6px rgba(0, 0, 0, 0.45));
-  transition: transform 0.2s ease, filter 0.2s ease;
-  cursor:     pointer;
-}
-
-.p-badge:hover {
-  transform: scale(1.22) translateY(-2px);
-  filter:    drop-shadow(0 4px 10px rgba(0, 0, 0, 0.55)) brightness(1.15);
-}
-
-/* ------------------------------------------------------------------ */
-/* ALT BUTON GRUBU                                                     */
-/* Following · Followers · Achievements · Statistics · Collection · Comments */
-/* ------------------------------------------------------------------ */
-.profile-bottom-actions {
-  display:     flex;
-  flex-wrap:   wrap;
-  gap:         12px;
-  width:       auto;
-  align-items: center;
-  margin-left: 0 !important;
-  padding-left: 0 !important;
-}
-
-/* Beyaz pill butonlar — resimdeki gibi */
+.profile-bottom-actions { display: flex; flex-wrap: wrap; gap: 12px; width: auto; align-items: center; margin-left: 0 !important; padding-left: 0 !important; }
 .action-tab-btn {
-  background:      rgba(255, 255, 255, 0.92) !important;
-  color:           #111111 !important;
-  border:          1px solid rgba(255, 255, 255, 0.70) !important;
-  border-radius:   50px !important;
-  padding:         11px 24px !important;
-  font-size:       15px;
-  font-weight:     700;
-  display:         flex;
-  align-items:     center;
-  gap:             8px;
-  cursor:          pointer;
-  white-space:     nowrap;
-  /* Hafif cam parlaklığı */
-  box-shadow:
-    0 4px 16px rgba(0, 0, 0, 0.22),
-    inset 0 1px 3px rgba(255, 255, 255, 0.80);
-  transition: transform 0.15s ease, background 0.2s ease, box-shadow 0.2s ease;
+  background: rgba(255, 255, 255, 0.92) !important; color: #111111 !important; border: 1px solid rgba(255, 255, 255, 0.70) !important;
+  border-radius: 50px !important; padding: 11px 24px !important; font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px; cursor: pointer; white-space: nowrap;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.22), inset 0 1px 3px rgba(255, 255, 255, 0.80); transition: transform 0.15s ease, background 0.2s ease, box-shadow 0.2s ease;
 }
+.action-tab-btn:hover { background: rgba(255, 255, 255, 1.0) !important; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0, 0, 0, 0.30), inset 0 1px 3px rgba(255, 255, 255, 0.80) !important; }
+.action-tab-btn .tab-icon { font-size: 17px; }
 
-.action-tab-btn:hover {
-  background:   rgba(255, 255, 255, 1.0) !important;
-  transform:    translateY(-2px);
-  box-shadow:
-    0 8px 24px rgba(0, 0, 0, 0.30),
-    inset 0 1px 3px rgba(255, 255, 255, 0.80) !important;
-}
-
-.action-tab-btn:active {
-  transform: translateY(0px);
-}
-
-.action-tab-btn .tab-icon {
-  font-size: 17px;
-}
-
-/* ================================================================== */
-/* RESPONSIVE                                                         */
-/* ================================================================== */
-@media (max-width: 1024px) {
-  .dashboard-grid {
-    grid-template-columns: 1fr 1fr;
-  }
-
-  .stats-column {
-    flex-direction: row;
-  }
-}
-
-@media (max-width: 768px) {
-  .navbar {
-    flex-direction: column;
-    gap:            15px;
-  }
-
-  .nav-links {
-    gap: 18px;
-  }
-
-  .dashboard-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .stats-column {
-    flex-direction: row;
-  }
-
-  .profile-central-layout {
-    align-items: center;
-  }
-
-  .profile-bottom-actions {
-    flex-wrap:       wrap;
-    justify-content: center;
-  }
-}
+@media (max-width: 1024px) { .dashboard-grid { grid-template-columns: 1fr 1fr; } .stats-column { flex-direction: row; } }
+@media (max-width: 768px) { .navbar { flex-direction: column; gap: 15px; } .nav-links { gap: 18px; } .dashboard-grid { grid-template-columns: 1fr; } .stats-column { flex-direction: row; } .profile-central-layout { align-items: center; } .profile-bottom-actions { flex-wrap: wrap; justify-content: center; } }
 
 
 /* ================================================================== */
 /* LIQUID AURA ANIMATED BACKGROUND                                   */
-/* Ekstra buton, kart veya material içermez, sadece arka plandır.    */
+/* Ekranın en arkasında derin sinematik karanlık ve parlayan auralar */
 /* ================================================================== */
-
 .background {
   position: fixed;
-  inset: 0;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
   overflow: hidden;
-  z-index: -1;                                      /* İçeriklerin arkasında kalması için */
-  background: radial-gradient(circle at center, #0f172a 0%, #050816 45%, #020308 100%);
+  z-index: -10 !important; /* Tüm kartların ve yazıların en arkasında kalması için */
+  background: radial-gradient(circle at center, #0a0f1d 0%, #03050c 50%, #010205 100%) !important;
 }
 
-/* ANA AURA */
+/* ANA RENK HALOLARI */
 .aura {
   position: absolute;
-  width: 70vw;
-  height: 70vw;
+  width: 75vw;
+  height: 75vw;
   border-radius: 50%;
-  filter: blur(90px);
-  opacity: .75;
+  filter: blur(110px);
+  opacity: 0.65;
   mix-blend-mode: screen;
-  animation: pulse 14s ease-in-out infinite, drift 18s ease-in-out infinite;
+  animation: pulse 12s ease-in-out infinite, drift 20s ease-in-out infinite;
 }
 
 .aura1 {
-  background: radial-gradient(circle, rgba(59,130,246,.9) 0%, rgba(37,99,235,.5) 30%, transparent 70%);
-  top: -10%;
-  left: -10%;
+  background: radial-gradient(circle, rgba(59, 130, 246, 0.85) 0%, rgba(37, 99, 235, 0.4) 40%, transparent 70%);
+  top: -15%;
+  left: -15%;
 }
 
 .aura2 {
-  background: radial-gradient(circle, rgba(99,102,241,.8) 0%, rgba(30,64,175,.4) 35%, transparent 70%);
-  bottom: -20%;
-  right: -10%;
-  animation-delay: -7s;
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.75) 0%, rgba(30, 64, 175, 0.35) 45%, transparent 70%);
+  bottom: -25%;
+  right: -15%;
+  animation-delay: -6s;
 }
 
 .aura3 {
-  background: radial-gradient(circle, rgba(6,182,212,.45) 0%, rgba(14,165,233,.2) 35%, transparent 70%);
-  top: 20%;
-  right: 10%;
-  width: 40vw;
-  height: 40vw;
-  animation-duration: 20s;
+  background: radial-gradient(circle, rgba(6, 182, 212, 0.4) 0%, rgba(14, 165, 233, 0.15) 40%, transparent 70%);
+  top: 25%;
+  right: 5%;
+  width: 45vw;
+  height: 45vw;
+  animation-duration: 16s;
+  animation-delay: -3s;
 }
 
-/* PATLAMA HALKASI */
+/* YANIP SÖNEN MERKEZİ PARLAMA */
 .burst {
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at center, rgba(96,165,250,.12) 0%, rgba(59,130,246,.08) 10%, transparent 35%);
-  animation: burst 8s ease-in-out infinite;
-  filter: blur(10px);
+  background: radial-gradient(circle at center, rgba(96, 165, 250, 0.1) 0%, rgba(59, 130, 246, 0.05) 20%, transparent 50%);
+  animation: burst 9s ease-in-out infinite;
+  filter: blur(20px);
+  pointer-events: none;
 }
 
-/* NOISE */
+/* SİNEMATİK GRENDO DOKUSU (NOISE) */
 .noise {
   position: absolute;
   inset: 0;
-  opacity: .05;
+  opacity: 0.04;
+  pointer-events: none;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140' viewBox='0 0 140 140'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Ccircle cx='2' cy='2' r='1'/%3E%3C/g%3E%3C/svg%3E");
 }
 
+/* ANIMASYON TANIMLAMALARI */
 @keyframes pulse {
-  0%, 100% {
-    transform: scale(1);
-    opacity: .7;
-  }
-  50% {
-    transform: scale(1.12);
-    opacity: 1;
-  }
+  0%, 100% { transform: scale(1); opacity: 0.55; }
+  50% { transform: scale(1.15); opacity: 0.85; }
 }
 
 @keyframes drift {
-  0% { transform: translate(0,0); }
-  25% { transform: translate(4%, -3%); }
-  50% { transform: translate(-3%, 4%); }
-  75% { transform: translate(3%, 2%); }
-  100% { transform: translate(0,0); }
+  0% { transform: translate(0, 0); }
+  25% { transform: translate(5%, -4%); }
+  50% { transform: translate(-4%, 5%); }
+  75% { transform: translate(4%, 3%); }
+  100% { transform: translate(0, 0); }
 }
 
 @keyframes burst {
-  0%, 100% {
-    transform: scale(.9);
-    opacity: .25;
-  }
-  50% {
-    transform: scale(1.25);
-    opacity: .7;
-  }
+  0%, 100% { transform: scale(0.85); opacity: 0.3; }
+  50% { transform: scale(1.3); opacity: 0.8; }
 }
