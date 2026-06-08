@@ -108,12 +108,15 @@
     }
 
     .sidebar-logo {
-      font-size: 20px;
+      font-size: 24px;
       font-weight: 900;
       letter-spacing: -0.5px;
       color: #fff;
-      padding: 0 4px 12px;
-      margin-bottom: 0;
+      padding: 0 4px 0;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: flex-end;
+      min-height: 80px;
     }
 
     /* Nav items wrapped in a glass rounded-rect box */
@@ -605,6 +608,67 @@
     ::-webkit-scrollbar { width: 5px; }
     ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.18); border-radius: 10px; }
+
+    /* ============================================================ */
+    /*  DOUBLE-TAP HEART ANIMATION (Instagram style)                 */
+    /* ============================================================ */
+    .post-card {
+      position: relative;
+    }
+
+    .heart-burst {
+      position: absolute;
+      left: 50%;
+      top: 45%;
+      transform: translate(-50%, -50%) scale(0);
+      pointer-events: none;
+      z-index: 20;
+      color: #fff;
+      filter: drop-shadow(0 0 12px rgba(255,255,255,0.6));
+    }
+
+    .heart-burst svg {
+      width: 110px;
+      height: 110px;
+    }
+
+    .heart-burst.animate {
+      animation: heartPop 0.75s cubic-bezier(0.17, 0.89, 0.32, 1.28) forwards;
+    }
+
+    @keyframes heartPop {
+      0%   { transform: translate(-50%, -50%) scale(0); opacity: 1; }
+      30%  { transform: translate(-50%, -50%) scale(1.25); opacity: 1; }
+      55%  { transform: translate(-50%, -50%) scale(1.0);  opacity: 1; }
+      80%  { transform: translate(-50%, -50%) scale(1.1);  opacity: 0.9; }
+      100% { transform: translate(-50%, -50%) scale(1.2);  opacity: 0; }
+    }
+
+    /* Like button toggle animation */
+    .post-action-btn.like-btn.liked {
+      color: #ef4444;
+      animation: none;
+    }
+
+    .post-action-btn.like-btn.like-pop {
+      animation: likePop 0.35s cubic-bezier(0.17, 0.89, 0.32, 1.28);
+    }
+
+    @keyframes likePop {
+      0%   { transform: scale(1); }
+      50%  { transform: scale(1.5); }
+      100% { transform: scale(1); }
+    }
+
+    .post-action-btn.like-btn.unlike-pop {
+      animation: unlikePop 0.28s ease;
+    }
+
+    @keyframes unlikePop {
+      0%   { transform: scale(1); }
+      50%  { transform: scale(0.7); }
+      100% { transform: scale(1); }
+    }
   </style>
 </head>
 <body>
@@ -747,6 +811,9 @@
 
         <!-- Post 1 -->
         <div class="post-card">
+          <div class="heart-burst">
+            <svg viewBox="0 0 24 24" fill="#ef4444"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          </div>
           <div class="post-header">
             <img class="post-avatar" src="https://api.dicebear.com/7.x/adventurer/svg?seed=moon88" alt="Moon">
             <div class="post-user-info">
@@ -758,7 +825,7 @@
           </div>
           <img class="post-image" src="https://images.unsplash.com/photo-1511512578047-dfb367046420?w=800&q=80" alt="Game post">
           <div class="post-actions">
-            <button class="post-action-btn liked">
+            <button class="post-action-btn like-btn liked">
               <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
             </button>
             <button class="post-action-btn">
@@ -777,6 +844,9 @@
 
         <!-- Post 2 -->
         <div class="post-card">
+          <div class="heart-burst">
+            <svg viewBox="0 0 24 24" fill="#ef4444"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          </div>
           <div class="post-header">
             <img class="post-avatar" src="https://api.dicebear.com/7.x/adventurer/svg?seed=mino55" alt="Mino">
             <div class="post-user-info">
@@ -788,7 +858,7 @@
           </div>
           <img class="post-image tall" src="https://images.unsplash.com/photo-1493711662062-fa541adb3fc8?w=800&q=80" alt="Game post 2">
           <div class="post-actions">
-            <button class="post-action-btn">
+            <button class="post-action-btn like-btn">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
             </button>
             <button class="post-action-btn">
@@ -807,6 +877,9 @@
 
         <!-- Post 3 -->
         <div class="post-card">
+          <div class="heart-burst">
+            <svg viewBox="0 0 24 24" fill="#ef4444"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          </div>
           <div class="post-header">
             <img class="post-avatar" src="https://api.dicebear.com/7.x/adventurer/svg?seed=apple99" alt="Apple">
             <div class="post-user-info">
@@ -818,7 +891,7 @@
           </div>
           <img class="post-image" src="https://images.unsplash.com/photo-1542751371-adc38448a05e?w=800&q=80" alt="Game post 3">
           <div class="post-actions">
-            <button class="post-action-btn">
+            <button class="post-action-btn like-btn">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
             </button>
             <button class="post-action-btn">
@@ -837,6 +910,9 @@
 
         <!-- Post 4 -->
         <div class="post-card">
+          <div class="heart-burst">
+            <svg viewBox="0 0 24 24" fill="#ef4444"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          </div>
           <div class="post-header">
             <img class="post-avatar" src="https://api.dicebear.com/7.x/adventurer/svg?seed=jhon42" alt="Jhon">
             <div class="post-user-info">
@@ -848,7 +924,7 @@
           </div>
           <img class="post-image" src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=800&q=80" alt="Game post 4">
           <div class="post-actions">
-            <button class="post-action-btn liked">
+            <button class="post-action-btn like-btn liked">
               <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
             </button>
             <button class="post-action-btn">
@@ -925,75 +1001,129 @@
 
   /* ============================================================ */
   /*  STORIES SCROLL BEHAVIOR                                      */
-  /*                                                               */
-  /*  - Aşağı kaydırırken: stories gizlenir (animasyonla yukarı) */
-  /*  - Yukarı gelince: stories tekrar görünür                    */
   /* ============================================================ */
   const storiesCard = document.getElementById('storiesCard');
   const storiesWrapper = document.getElementById('storiesWrapper');
 
   let lastScrollY = window.scrollY;
   let storiesVisible = true;
-
-  // The threshold past which stories should hide
-  // (roughly one story card height below the top)
   const HIDE_THRESHOLD = 100;
 
   window.addEventListener('scroll', () => {
     const scrollY = window.scrollY;
     const scrollingDown = scrollY > lastScrollY;
-
     if (scrollY > HIDE_THRESHOLD && scrollingDown && storiesVisible) {
-      // Hide stories
       storiesCard.classList.add('hidden-up');
       storiesVisible = false;
     } else if (scrollY <= HIDE_THRESHOLD && !storiesVisible) {
-      // Show stories again
       storiesCard.classList.remove('hidden-up');
       storiesVisible = true;
     } else if (!scrollingDown && scrollY <= HIDE_THRESHOLD && !storiesVisible) {
       storiesCard.classList.remove('hidden-up');
       storiesVisible = true;
     }
-
-    // When scrolling back up significantly, always restore stories
-    if (!scrollingDown && storiesY <= 20) {
-      storiesCard.classList.remove('hidden-up');
-      storiesVisible = true;
-    }
-
     lastScrollY = scrollY;
   }, { passive: true });
 
-  // Better scroll: hide stories when scrolled past them, restore when back at top
-  const observer = new IntersectionObserver((entries) => {
-    // not needed but kept as fallback
-  }, { threshold: 0.5 });
-
-  // Simpler & more reliable approach:
-  window.addEventListener('scroll', () => {}, { passive: true }); // already added above
-
-  // Override with cleaner logic
   let ticking = false;
   document.addEventListener('scroll', () => {
     if (!ticking) {
       window.requestAnimationFrame(() => {
         const sy = window.scrollY;
-
         if (sy > 80) {
-          if (!storiesCard.classList.contains('hidden-up')) {
-            storiesCard.classList.add('hidden-up');
-          }
+          if (!storiesCard.classList.contains('hidden-up')) storiesCard.classList.add('hidden-up');
         } else {
-          if (storiesCard.classList.contains('hidden-up')) {
-            storiesCard.classList.remove('hidden-up');
-          }
+          if (storiesCard.classList.contains('hidden-up')) storiesCard.classList.remove('hidden-up');
         }
         ticking = false;
       });
       ticking = true;
     }
   }, { passive: true });
+
+  /* ============================================================ */
+  /*  LIKE BUTTON TOGGLE                                           */
+  /* ============================================================ */
+  function updateLikeBtnAppearance(btn) {
+    const svg = btn.querySelector('svg');
+    if (btn.classList.contains('liked')) {
+      svg.setAttribute('fill', 'currentColor');
+      svg.removeAttribute('stroke');
+      svg.removeAttribute('stroke-width');
+    } else {
+      svg.setAttribute('fill', 'none');
+      svg.setAttribute('stroke', 'currentColor');
+      svg.setAttribute('stroke-width', '2');
+    }
+  }
+
+  document.querySelectorAll('.post-action-btn.like-btn').forEach(btn => {
+    // Set initial SVG state
+    updateLikeBtnAppearance(btn);
+
+    btn.addEventListener('click', () => {
+      const isLiked = btn.classList.contains('liked');
+      if (isLiked) {
+        // Unlike
+        btn.classList.remove('liked');
+        btn.classList.remove('like-pop');
+        void btn.offsetWidth; // reflow
+        btn.classList.add('unlike-pop');
+        btn.addEventListener('animationend', () => btn.classList.remove('unlike-pop'), { once: true });
+      } else {
+        // Like
+        btn.classList.add('liked');
+        btn.classList.remove('unlike-pop');
+        void btn.offsetWidth;
+        btn.classList.add('like-pop');
+        btn.addEventListener('animationend', () => btn.classList.remove('like-pop'), { once: true });
+      }
+      updateLikeBtnAppearance(btn);
+    });
+  });
+
+  /* ============================================================ */
+  /*  DOUBLE-TAP HEART ANIMATION (Instagram style)                 */
+  /* ============================================================ */
+  const doubleTapDelay = 300; // ms
+
+  document.querySelectorAll('.post-card').forEach(card => {
+    let lastTap = 0;
+
+    card.addEventListener('click', (e) => {
+      // Don't trigger on buttons
+      if (e.target.closest('button') || e.target.closest('a')) return;
+
+      const now = Date.now();
+      const timeSinceLast = now - lastTap;
+
+      if (timeSinceLast < doubleTapDelay && timeSinceLast > 0) {
+        // Double tap!
+        const burst = card.querySelector('.heart-burst');
+        const likeBtn = card.querySelector('.like-btn');
+
+        // Trigger like if not already liked
+        if (likeBtn && !likeBtn.classList.contains('liked')) {
+          likeBtn.classList.add('liked');
+          updateLikeBtnAppearance(likeBtn);
+          likeBtn.classList.add('like-pop');
+          likeBtn.addEventListener('animationend', () => likeBtn.classList.remove('like-pop'), { once: true });
+        }
+
+        // Show burst animation
+        if (burst) {
+          burst.classList.remove('animate');
+          void burst.offsetWidth; // reflow
+          burst.classList.add('animate');
+          burst.addEventListener('animationend', () => burst.classList.remove('animate'), { once: true });
+        }
+
+        lastTap = 0;
+      } else {
+        lastTap = now;
+      }
+    });
+  });
 
 </script>
 </body>
