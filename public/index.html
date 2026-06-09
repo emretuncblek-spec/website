@@ -1057,7 +1057,589 @@
       100% { transform: translate(-50%, -50%) scale(1.2);  opacity: 0; }
     }
 
-    /* Like button toggle animation */
+
+    /* ============================================================ */
+    /*  MESSAGES POPUP SYSTEM                                        */
+    /* ============================================================ */
+
+    /* Shared popup base */
+    .msg-inbox-popup,
+    .msg-chat-popup {
+      position: fixed;
+      top: 70px;
+      right: 28px;
+      width: 340px;
+      border-radius: 22px;
+      background: rgba(12,14,28,0.82);
+      backdrop-filter: blur(32px) saturate(1.8);
+      -webkit-backdrop-filter: blur(32px) saturate(1.8);
+      border: 1px solid rgba(255,255,255,0.18);
+      box-shadow: 0 16px 60px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.16), inset 0 0 0 1px rgba(255,255,255,0.06);
+      z-index: 3000;
+      display: none;
+      flex-direction: column;
+      overflow: hidden;
+      animation: msgPopupIn 0.28s cubic-bezier(0.17,0.89,0.32,1.28) forwards;
+    }
+
+    .msg-inbox-popup.open,
+    .msg-chat-popup.open { display: flex; }
+
+    @keyframes msgPopupIn {
+      from { opacity:0; transform: scale(0.88) translateY(-10px); }
+      to   { opacity:1; transform: scale(1) translateY(0); }
+    }
+
+    /* Inbox header */
+    .msg-inbox-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 16px 16px 12px;
+      border-bottom: 1px solid rgba(255,255,255,0.09);
+      flex-shrink: 0;
+    }
+
+    .msg-inbox-title {
+      font-size: 16px;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .msg-inbox-badge {
+      background: #ef4444;
+      color: #fff;
+      font-size: 10px;
+      font-weight: 800;
+      border-radius: 20px;
+      padding: 1px 6px;
+      min-width: 18px;
+      text-align: center;
+    }
+
+    .msg-inbox-expand,
+    .msg-inbox-close {
+      background: none;
+      border: none;
+      color: rgba(255,255,255,0.5);
+      cursor: pointer;
+      padding: 4px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.15s, color 0.15s;
+    }
+
+    .msg-inbox-expand:hover,
+    .msg-inbox-close:hover { background: rgba(255,255,255,0.10); color: #fff; }
+
+    /* Inbox list */
+    .msg-inbox-list {
+      overflow-y: auto;
+      max-height: 420px;
+      padding: 6px 0 8px;
+      scrollbar-width: none;
+    }
+
+    .msg-inbox-list::-webkit-scrollbar { display: none; }
+
+    .msg-conv-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 16px;
+      cursor: pointer;
+      transition: background 0.15s;
+      position: relative;
+    }
+
+    .msg-conv-item:hover { background: rgba(255,255,255,0.07); }
+
+    .msg-conv-avatar-wrap {
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .msg-conv-avatar {
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid rgba(255,255,255,0.15);
+    }
+
+    .msg-conv-online-dot {
+      position: absolute;
+      bottom: 2px; right: 2px;
+      width: 11px; height: 11px;
+      border-radius: 50%;
+      background: #22c55e;
+      border: 2px solid #0c0e1c;
+    }
+
+    .msg-conv-info { flex: 1; min-width: 0; }
+    .msg-conv-name { font-size: 14px; font-weight: 700; color: #fff; }
+    .msg-conv-preview {
+      font-size: 12px;
+      color: rgba(255,255,255,0.5);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 170px;
+    }
+
+    .msg-conv-meta {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 4px;
+      flex-shrink: 0;
+    }
+
+    .msg-conv-time { font-size: 11px; color: rgba(255,255,255,0.4); }
+
+    .msg-conv-unread-dot {
+      width: 9px; height: 9px;
+      border-radius: 50%;
+      background: #3b82f6;
+    }
+
+    /* ---- CHAT POPUP ---- */
+    .msg-chat-popup {
+      height: 520px;
+      top: 70px;
+    }
+
+    .msg-chat-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 14px;
+      border-bottom: 1px solid rgba(255,255,255,0.09);
+      flex-shrink: 0;
+    }
+
+    .msg-chat-back {
+      background: none;
+      border: none;
+      color: rgba(255,255,255,0.6);
+      cursor: pointer;
+      padding: 4px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      transition: background 0.15s, color 0.15s;
+    }
+
+    .msg-chat-back:hover { background: rgba(255,255,255,0.10); color: #fff; }
+
+    .msg-chat-user-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .msg-chat-avatar {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid rgba(255,255,255,0.2);
+    }
+
+    .msg-chat-name { font-size: 14px; font-weight: 700; color: #fff; }
+    .msg-chat-status { font-size: 11px; color: #22c55e; }
+
+    /* Chat messages scrollable area */
+    .msg-chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 14px 12px 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(255,255,255,0.12) transparent;
+    }
+
+    .msg-chat-messages::-webkit-scrollbar { width: 3px; }
+    .msg-chat-messages::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius: 10px; }
+
+    /* Individual message bubble */
+    .msg-bubble-wrap {
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    .msg-bubble-wrap.mine { align-items: flex-end; }
+    .msg-bubble-wrap.theirs { align-items: flex-start; }
+
+    .msg-bubble {
+      max-width: 75%;
+      padding: 9px 13px;
+      border-radius: 18px;
+      font-size: 13px;
+      line-height: 1.45;
+      position: relative;
+      word-break: break-word;
+      cursor: pointer;
+    }
+
+    .msg-bubble-wrap.mine .msg-bubble {
+      background: linear-gradient(135deg, #3b5bdb, #2563eb);
+      color: #fff;
+      border-bottom-right-radius: 5px;
+    }
+
+    .msg-bubble-wrap.theirs .msg-bubble {
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.10);
+      color: #fff;
+      border-bottom-left-radius: 5px;
+    }
+
+    /* Voice message bubble */
+    .msg-voice-bubble {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      min-width: 160px;
+    }
+
+    .msg-voice-play-btn {
+      width: 30px; height: 30px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.2);
+      border: none;
+      color: #fff;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: background 0.15s;
+    }
+
+    .msg-voice-play-btn:hover { background: rgba(255,255,255,0.32); }
+
+    .msg-voice-waveform {
+      flex: 1;
+      height: 26px;
+      display: flex;
+      align-items: center;
+      gap: 2px;
+    }
+
+    .msg-voice-bar {
+      width: 3px;
+      border-radius: 2px;
+      background: rgba(255,255,255,0.6);
+      flex-shrink: 0;
+    }
+
+    .msg-voice-dur {
+      font-size: 11px;
+      color: rgba(255,255,255,0.65);
+      flex-shrink: 0;
+    }
+
+    /* Image message */
+    .msg-image-msg {
+      max-width: 200px;
+      border-radius: 14px;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .msg-image-msg img {
+      width: 100%;
+      display: block;
+      border-radius: 14px;
+    }
+
+    /* Sticker message */
+    .msg-sticker-msg {
+      font-size: 42px;
+      padding: 4px 8px;
+      background: none !important;
+      border: none !important;
+      box-shadow: none !important;
+    }
+
+    /* Reaction on message */
+    .msg-reaction-wrap {
+      display: flex;
+      margin-top: 2px;
+    }
+
+    .msg-bubble-wrap.mine .msg-reaction-wrap { justify-content: flex-end; }
+
+    .msg-reaction-badge {
+      background: rgba(255,255,255,0.14);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 20px;
+      padding: 2px 7px;
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    /* Reply reference inside bubble */
+    .msg-reply-ref {
+      background: rgba(255,255,255,0.12);
+      border-left: 2px solid rgba(255,255,255,0.5);
+      border-radius: 8px 8px 0 0;
+      padding: 5px 9px;
+      font-size: 11px;
+      color: rgba(255,255,255,0.65);
+      margin-bottom: 4px;
+      max-width: 75%;
+    }
+
+    .msg-bubble-wrap.mine .msg-reply-ref {
+      align-self: flex-end;
+      border-left-color: rgba(255,255,255,0.7);
+    }
+
+    /* Hover action icons (react + reply) */
+    .msg-bubble-actions {
+      display: none;
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      gap: 4px;
+      align-items: center;
+    }
+
+    .msg-bubble-wrap.theirs .msg-bubble-actions { right: -64px; }
+    .msg-bubble-wrap.mine .msg-bubble-actions { left: -64px; }
+
+    .msg-bubble-wrap:hover .msg-bubble-actions { display: flex; }
+
+    .msg-action-icon {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.12);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,0.16);
+      color: rgba(255,255,255,0.8);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.15s;
+    }
+
+    .msg-action-icon:hover { background: rgba(255,255,255,0.22); color: #fff; }
+
+    /* Reply bar */
+    .msg-reply-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 14px;
+      background: rgba(255,255,255,0.06);
+      border-top: 1px solid rgba(255,255,255,0.08);
+      flex-shrink: 0;
+    }
+
+    .msg-reply-bar-inner { flex: 1; min-width: 0; }
+    .msg-reply-label { font-size: 10px; color: rgba(255,255,255,0.5); display: block; }
+    .msg-reply-preview { font-size: 12px; color: rgba(255,255,255,0.8); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; max-width: 230px; }
+
+    .msg-reply-cancel-btn {
+      background: none;
+      border: none;
+      color: rgba(255,255,255,0.5);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      padding: 3px;
+      border-radius: 6px;
+    }
+
+    .msg-reply-cancel-btn:hover { background: rgba(255,255,255,0.1); color: #fff; }
+
+    /* Image preview bar */
+    .msg-image-preview-bar {
+      display: flex;
+      gap: 6px;
+      padding: 8px 14px;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      overflow-x: auto;
+      scrollbar-width: none;
+      flex-shrink: 0;
+    }
+
+    .msg-image-preview-bar::-webkit-scrollbar { display: none; }
+
+    .msg-preview-thumb {
+      width: 52px; height: 52px;
+      border-radius: 10px;
+      object-fit: cover;
+      flex-shrink: 0;
+      border: 1.5px solid rgba(255,255,255,0.2);
+    }
+
+    /* Input area */
+    .msg-chat-input-area {
+      padding: 8px 10px 10px;
+      border-top: 1px solid rgba(255,255,255,0.09);
+      flex-shrink: 0;
+    }
+
+    .msg-normal-input {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.14);
+      border-radius: 26px;
+      padding: 6px 10px;
+    }
+
+    .msg-chat-text-input {
+      flex: 1;
+      background: none;
+      border: none;
+      outline: none;
+      color: #fff;
+      font-size: 13px;
+      font-family: 'Outfit', sans-serif;
+      min-width: 0;
+    }
+
+    .msg-chat-text-input::placeholder { color: rgba(255,255,255,0.38); }
+
+    .msg-input-action-btn {
+      background: none;
+      border: none;
+      color: rgba(255,255,255,0.55);
+      cursor: pointer;
+      padding: 3px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      flex-shrink: 0;
+      transition: color 0.15s, background 0.15s;
+    }
+
+    .msg-input-action-btn:hover { color: #fff; background: rgba(255,255,255,0.1); }
+    .msg-send-active { color: #3b82f6 !important; }
+
+    /* Voice record state */
+    .msg-voice-rec-state {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 10px;
+      background: rgba(239,68,68,0.12);
+      border: 1px solid rgba(239,68,68,0.3);
+      border-radius: 26px;
+    }
+
+    .msg-voice-pulse {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: #ef4444;
+      flex-shrink: 0;
+      animation: voicePulse 1.2s ease-in-out infinite;
+    }
+
+    @keyframes voicePulse {
+      0%,100% { opacity:1; transform: scale(1); }
+      50% { opacity:0.4; transform: scale(0.7); }
+    }
+
+    .msg-rec-timer {
+      font-size: 13px;
+      font-weight: 700;
+      color: #ef4444;
+      min-width: 36px;
+    }
+
+    .msg-voice-ctrl-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      padding: 5px;
+      transition: background 0.15s;
+    }
+
+    .msg-voice-ctrl-btn { color: rgba(255,255,255,0.7); }
+    .msg-voice-ctrl-btn:hover { background: rgba(255,255,255,0.1); color: #fff; }
+    .msg-voice-stop { color: #3b82f6 !important; }
+    .msg-voice-cancel { color: rgba(255,255,255,0.5) !important; }
+    .msg-voice-cancel:hover { color: #ef4444 !important; }
+
+    /* Cancel img btn */
+    .msg-cancel-img-btn { color: rgba(255,255,255,0.5) !important; }
+    .msg-cancel-img-btn:hover { color: #ef4444 !important; }
+
+    /* Emoji picker */
+    .msg-emoji-picker {
+      position: fixed;
+      background: rgba(18,20,36,0.90);
+      backdrop-filter: blur(24px);
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 40px;
+      padding: 8px 12px;
+      display: flex;
+      gap: 6px;
+      z-index: 4000;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+      animation: msgPopupIn 0.2s ease forwards;
+    }
+
+    .msg-emoji-picker span {
+      font-size: 20px;
+      cursor: pointer;
+      border-radius: 50%;
+      padding: 4px;
+      transition: transform 0.15s, background 0.15s;
+    }
+
+    .msg-emoji-picker span:hover { transform: scale(1.3); background: rgba(255,255,255,0.1); }
+
+    /* Sticker picker */
+    .msg-sticker-picker {
+      position: fixed;
+      background: rgba(18,20,36,0.90);
+      backdrop-filter: blur(24px);
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 20px;
+      padding: 12px;
+      z-index: 4000;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+      animation: msgPopupIn 0.2s ease forwards;
+      width: 200px;
+    }
+
+    .msg-sticker-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 4px;
+    }
+
+    .msg-sticker-item {
+      font-size: 26px;
+      text-align: center;
+      cursor: pointer;
+      padding: 6px;
+      border-radius: 10px;
+      transition: background 0.15s, transform 0.15s;
+    }
+
+    .msg-sticker-item:hover { background: rgba(255,255,255,0.12); transform: scale(1.15); }
+
+  
     .post-action-btn.like-btn.liked {
       color: #ef4444;
       animation: none;
@@ -1372,8 +1954,8 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
             <span class="badge-dot"></span>
           </button>
-          <button class="top-icon-btn">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          <button class="top-icon-btn" id="msgInboxBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
             <span class="badge-dot"></span>
           </button>
         </div>
@@ -1506,6 +2088,125 @@
 
   </div><!-- end main-content -->
 </div><!-- end app-layout -->
+
+<!-- ==================== MESSAGES POPUP SYSTEM ==================== -->
+
+<!-- Messages Inbox Popup -->
+<div id="msgInboxPopup" class="msg-inbox-popup">
+  <div class="msg-inbox-header">
+    <span class="msg-inbox-title">Messages</span>
+    <span class="msg-inbox-badge">2</span>
+    <div style="flex:1"></div>
+    <button class="msg-inbox-expand" title="Expand">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+    </button>
+    <button class="msg-inbox-close" id="msgInboxClose">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="msg-inbox-list" id="msgInboxList">
+    <!-- Conversations list injected by JS -->
+  </div>
+</div>
+
+<!-- Chat Conversation Popup -->
+<div id="msgChatPopup" class="msg-chat-popup">
+  <div class="msg-chat-header">
+    <button class="msg-chat-back" id="msgChatBack">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><polyline points="15 18 9 12 15 6"/></svg>
+    </button>
+    <div class="msg-chat-user-info">
+      <img id="msgChatAvatar" src="" alt="" class="msg-chat-avatar">
+      <div>
+        <div id="msgChatName" class="msg-chat-name"></div>
+        <div id="msgChatStatus" class="msg-chat-status">Online</div>
+      </div>
+    </div>
+    <div style="flex:1"></div>
+    <button class="msg-inbox-close" id="msgChatClose">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="msg-chat-messages" id="msgChatMessages"></div>
+  <!-- Reply bar -->
+  <div id="msgReplyBar" class="msg-reply-bar" style="display:none">
+    <div class="msg-reply-bar-inner">
+      <span class="msg-reply-label">Yanıtlıyorsun:</span>
+      <span id="msgReplyText" class="msg-reply-preview"></span>
+    </div>
+    <button id="msgReplyCancel" class="msg-reply-cancel-btn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <!-- Image preview strip -->
+  <div id="msgImagePreviewBar" class="msg-image-preview-bar" style="display:none"></div>
+  <!-- Input area -->
+  <div class="msg-chat-input-area" id="msgChatInputArea">
+    <!-- Voice recording state -->
+    <div id="msgVoiceRecState" class="msg-voice-rec-state" style="display:none">
+      <div class="msg-voice-pulse"></div>
+      <span id="msgRecTimer" class="msg-rec-timer">0:00</span>
+      <button id="msgVoicePauseBtn" class="msg-voice-ctrl-btn" title="Pause/Resume">
+        <svg id="msgVoicePauseIcon" viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+      </button>
+      <button id="msgVoiceStopBtn" class="msg-voice-ctrl-btn msg-voice-stop" title="Send">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+      </button>
+      <button id="msgVoiceCancelBtn" class="msg-voice-ctrl-btn msg-voice-cancel" title="Cancel">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <!-- Normal input state -->
+    <div id="msgNormalInput" class="msg-normal-input">
+      <button id="msgCancelImgBtn" class="msg-input-action-btn msg-cancel-img-btn" style="display:none" title="Cancel image">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+      <input type="text" id="msgChatInput" class="msg-chat-text-input" placeholder="Message...">
+      <!-- Right side controls — shown based on state -->
+      <button id="msgMicBtn" class="msg-input-action-btn" title="Voice message">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 10a7 7 0 0 0 14 0"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+      </button>
+      <button id="msgImageBtn" class="msg-input-action-btn" title="Send image">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+      </button>
+      <button id="msgStickerBtn" class="msg-input-action-btn" title="Sticker">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+      </button>
+      <button id="msgSendBtn" class="msg-input-action-btn msg-send-active" style="display:none" title="Send">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="18" height="18"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+      </button>
+    </div>
+    <input type="file" id="msgFileInput" accept="image/*" multiple style="display:none">
+  </div>
+</div>
+
+<!-- Emoji Reaction Picker (floating) -->
+<div id="msgEmojiPicker" class="msg-emoji-picker" style="display:none">
+  <span data-emoji="❤️">❤️</span>
+  <span data-emoji="😂">😂</span>
+  <span data-emoji="😮">😮</span>
+  <span data-emoji="😢">😢</span>
+  <span data-emoji="😡">😡</span>
+  <span data-emoji="👍">👍</span>
+</div>
+
+<!-- Sticker Picker -->
+<div id="msgStickerPicker" class="msg-sticker-picker" style="display:none">
+  <div class="msg-sticker-grid">
+    <span class="msg-sticker-item" data-sticker="🎮">🎮</span>
+    <span class="msg-sticker-item" data-sticker="🔥">🔥</span>
+    <span class="msg-sticker-item" data-sticker="💎">💎</span>
+    <span class="msg-sticker-item" data-sticker="🏆">🏆</span>
+    <span class="msg-sticker-item" data-sticker="⚔️">⚔️</span>
+    <span class="msg-sticker-item" data-sticker="🛡️">🛡️</span>
+    <span class="msg-sticker-item" data-sticker="👾">👾</span>
+    <span class="msg-sticker-item" data-sticker="🚀">🚀</span>
+    <span class="msg-sticker-item" data-sticker="💀">💀</span>
+    <span class="msg-sticker-item" data-sticker="⭐">⭐</span>
+    <span class="msg-sticker-item" data-sticker="🎯">🎯</span>
+    <span class="msg-sticker-item" data-sticker="💥">💥</span>
+  </div>
+</div>
 
 <!-- AI Floating Button -->
 <div class="ai-fab-wrap">
@@ -1682,6 +2383,446 @@
     sendBtn.addEventListener('click', sendMessage);
     input.addEventListener('keydown', e => { if (e.key === 'Enter') sendMessage(); });
   })();
+
+  /* ============================================================ */
+  /*  MESSAGES SYSTEM                                              */
+  /* ============================================================ */
+  (function() {
+    const conversations = [
+      {
+        id: 'yeerzy', name: 'Yeerzy',
+        avatar: 'https://i.pinimg.com/1200x/61/5b/13/615b13791d3c1c8568d36a64195181d4.jpg',
+        online: true, unread: true, preview: 'Liked your message', time: '8m',
+        messages: [
+          { id:1, mine:false, type:'text', text:'yo moon!!', time:'10:20' },
+          { id:2, mine:true,  type:'text', text:'hey yeerzy wsp', time:'10:21' },
+          { id:3, mine:false, type:'text', text:'you coming to the tournament friday?', time:'10:22' },
+          { id:4, mine:true,  type:'text', text:'yea probably, gotta check my schedule', time:'10:22', reaction:'👍' },
+        ]
+      },
+      {
+        id: 'mino', name: 'Mino',
+        avatar: 'https://i.pinimg.com/736x/bc/b3/61/bcb3612bebc2b5dfee3044600ea93700.jpg',
+        online: true, unread: true, preview: 'Do u building somet..', time: '2h',
+        messages: [
+          { id:1, mine:false, type:'text', text:'Do u building something cool rn?', time:'08:10' },
+          { id:2, mine:true,  type:'text', text:'yeah working on a new map actually', time:'08:12' },
+          { id:3, mine:false, type:'text', text:'send pics when done!!', time:'08:12' },
+        ]
+      },
+      {
+        id: 'eckk', name: 'Eckk',
+        avatar: 'https://i.pinimg.com/736x/fc/56/8e/fc568e1fc2445b8af18cc4e050ca13cf.jpg',
+        online: true, unread: false, preview: 'Yooo hi moon!!', time: '10s',
+        messages: [
+          { id:1, mine:false, type:'text', text:'Yoo will u join today?', time:'11:00' },
+          { id:2, mine:true,  type:'text', text:'Nope i should visit my parrents for special day', time:'11:01' },
+          { id:3, mine:true,  type:'text', text:'Tommorow maybe?', time:'11:01' },
+          { id:4, mine:false, type:'text', text:'Ohh okey okey npp enjoy with ur day see u soon :))', time:'11:02' },
+          { id:5, mine:false, type:'text', text:'When u be free?', time:'11:03' },
+          { id:6, mine:false, type:'text', text:'We need to refill chests', time:'11:03' },
+          { id:7, mine:true,  type:'text', text:'Tuesday maybe idkk', time:'11:04' },
+          { id:8, mine:true,  type:'text', text:'We will see loll', time:'11:05' },
+          { id:9, mine:false, type:'text', text:'Yooo hi moon!!', time:'11:06', reaction:'❤️' },
+        ]
+      },
+      {
+        id: 'mochi', name: 'Mochi',
+        avatar: 'https://i.pinimg.com/736x/fc/56/8e/fc568e1fc2445b8af18cc4e050ca13cf.jpg',
+        online: false, unread: false, preview: 'Do u have any vault..', time: '5m',
+        messages: [
+          { id:1, mine:false, type:'text', text:'Do u have any vault keys left?', time:'10:55' },
+          { id:2, mine:true,  type:'text', text:'yeah i got 3, need one?', time:'10:56' },
+        ]
+      },
+      {
+        id: 'jhon', name: 'Jhon',
+        avatar: 'https://i.pinimg.com/736x/f7/d8/f2/f7d8f2df2827bd6f8e0e95b12434ceab.jpg',
+        online: true, unread: false, preview: 'me: Join my game b..', time: '8m',
+        messages: [
+          { id:1, mine:true,  type:'text', text:'Join my game bro', time:'10:45' },
+          { id:2, mine:false, type:'text', text:'in a sec let me finish this match', time:'10:46' },
+        ]
+      },
+      {
+        id: 'apple', name: 'Apple',
+        avatar: 'https://i.pinimg.com/1200x/db/fe/75/dbfe75990174020a7ebf8799999212d8.jpg',
+        online: false, unread: false, preview: 'Send ipad to me bro', time: '2h',
+        messages: [
+          { id:1, mine:false, type:'text', text:'Send ipad to me bro', time:'09:00' },
+          { id:2, mine:true,  type:'text', text:'lmaooo no 😂', time:'09:01' },
+        ]
+      },
+      {
+        id: 'sharp', name: 'Sharp',
+        avatar: 'https://api.dicebear.com/7.x/adventurer/svg?seed=sharp99',
+        online: false, unread: false, preview: 'Liked your Story', time: '8s',
+        messages: [
+          { id:1, mine:false, type:'text', text:'Liked your Story 🌟', time:'11:08' },
+        ]
+      },
+    ];
+
+    let currentConvId = null;
+    let replyingTo = null;
+    let pendingImages = [];
+    let mediaRecorder = null;
+    let audioChunks = [];
+    let recInterval = null;
+    let recSeconds = 0;
+    let recPaused = false;
+    let nextMsgId = 1000;
+
+    const inboxPopup    = document.getElementById('msgInboxPopup');
+    const chatPopup     = document.getElementById('msgChatPopup');
+    const inboxBtn      = document.getElementById('msgInboxBtn');
+    const inboxClose    = document.getElementById('msgInboxClose');
+    const chatClose     = document.getElementById('msgChatClose');
+    const chatBack      = document.getElementById('msgChatBack');
+    const inboxList     = document.getElementById('msgInboxList');
+    const chatMessages  = document.getElementById('msgChatMessages');
+    const chatInput     = document.getElementById('msgChatInput');
+    const micBtn        = document.getElementById('msgMicBtn');
+    const imageBtn      = document.getElementById('msgImageBtn');
+    const stickerBtn    = document.getElementById('msgStickerBtn');
+    const msgSendBtn    = document.getElementById('msgSendBtn');
+    const fileInput     = document.getElementById('msgFileInput');
+    const replyBar      = document.getElementById('msgReplyBar');
+    const replyText     = document.getElementById('msgReplyText');
+    const replyCancel   = document.getElementById('msgReplyCancel');
+    const imagePreviewBar = document.getElementById('msgImagePreviewBar');
+    const cancelImgBtn  = document.getElementById('msgCancelImgBtn');
+    const voiceRecState = document.getElementById('msgVoiceRecState');
+    const normalInput   = document.getElementById('msgNormalInput');
+    const recTimer      = document.getElementById('msgRecTimer');
+    const voicePauseBtn = document.getElementById('msgVoicePauseBtn');
+    const voicePauseIcon= document.getElementById('msgVoicePauseIcon');
+    const voiceStopBtn  = document.getElementById('msgVoiceStopBtn');
+    const voiceCancelBtn= document.getElementById('msgVoiceCancelBtn');
+    const emojiPicker   = document.getElementById('msgEmojiPicker');
+    const stickerPicker = document.getElementById('msgStickerPicker');
+
+    // Inbox toggle
+    inboxBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isOpen = inboxPopup.classList.contains('open');
+      closeAll();
+      if (!isOpen) { renderInbox(); inboxPopup.classList.add('open'); }
+    });
+
+    inboxClose.addEventListener('click', () => inboxPopup.classList.remove('open'));
+    chatClose.addEventListener('click',  () => chatPopup.classList.remove('open'));
+    chatBack.addEventListener('click', () => {
+      chatPopup.classList.remove('open');
+      renderInbox();
+      inboxPopup.classList.add('open');
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!inboxPopup.contains(e.target) && !chatPopup.contains(e.target) &&
+          !inboxBtn.contains(e.target) && !emojiPicker.contains(e.target) && !stickerPicker.contains(e.target)) {
+        closeAll();
+      }
+      if (!emojiPicker.contains(e.target)) emojiPicker.style.display = 'none';
+      if (!stickerPicker.contains(e.target) && e.target !== stickerBtn && !stickerBtn.contains(e.target)) stickerPicker.style.display = 'none';
+    });
+
+    function closeAll() {
+      inboxPopup.classList.remove('open');
+      chatPopup.classList.remove('open');
+      emojiPicker.style.display = 'none';
+      stickerPicker.style.display = 'none';
+    }
+
+    function renderInbox() {
+      inboxList.innerHTML = '';
+      conversations.forEach(conv => {
+        const item = document.createElement('div');
+        item.className = 'msg-conv-item';
+        item.innerHTML = `
+          <div class="msg-conv-avatar-wrap">
+            <img class="msg-conv-avatar" src="${conv.avatar}" alt="${conv.name}">
+            ${conv.online ? '<span class="msg-conv-online-dot"></span>' : ''}
+          </div>
+          <div class="msg-conv-info">
+            <div class="msg-conv-name">${conv.name}</div>
+            <div class="msg-conv-preview">${conv.preview} • ${conv.time}</div>
+          </div>
+          <div class="msg-conv-meta">
+            ${conv.unread ? '<span class="msg-conv-unread-dot"></span>' : ''}
+          </div>
+        `;
+        item.addEventListener('click', () => openChat(conv.id));
+        inboxList.appendChild(item);
+      });
+    }
+
+    function openChat(convId) {
+      currentConvId = convId;
+      const conv = conversations.find(c => c.id === convId);
+      conv.unread = false;
+      document.getElementById('msgChatAvatar').src = conv.avatar;
+      document.getElementById('msgChatName').textContent = conv.name;
+      const statusEl = document.getElementById('msgChatStatus');
+      statusEl.textContent = conv.online ? 'Online' : 'Last seen recently';
+      statusEl.style.color = conv.online ? '#22c55e' : 'rgba(255,255,255,0.45)';
+      renderMessages(conv);
+      inboxPopup.classList.remove('open');
+      chatPopup.classList.add('open');
+      replyingTo = null; pendingImages = [];
+      replyBar.style.display = 'none';
+      imagePreviewBar.style.display = 'none';
+      cancelImgBtn.style.display = 'none';
+      chatInput.value = '';
+      updateInputControls();
+    }
+
+    function renderMessages(conv) {
+      chatMessages.innerHTML = '';
+      conv.messages.forEach(msg => renderOneBubble(msg));
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    function renderOneBubble(msg) {
+      const wrap = document.createElement('div');
+      wrap.className = 'msg-bubble-wrap ' + (msg.mine ? 'mine' : 'theirs');
+      wrap.dataset.msgId = msg.id;
+      let html = '';
+
+      if (msg.replyTo) html += `<div class="msg-reply-ref">↩ ${escHtml(msg.replyTo)}</div>`;
+
+      const actionBtns = `<div class="msg-bubble-actions">
+        <button class="msg-action-icon msg-react-btn" title="React"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg></button>
+        <button class="msg-action-icon msg-reply-btn" title="Reply"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><polyline points="9 17 4 12 9 7"/><path d="M20 18v-2a4 4 0 0 0-4-4H4"/></svg></button>
+      </div>`;
+
+      if (msg.type === 'text') {
+        html += `<div class="msg-bubble" style="position:relative;">${escHtml(msg.text)}${actionBtns}</div>`;
+      } else if (msg.type === 'voice') {
+        html += `<div class="msg-bubble msg-voice-bubble" style="position:relative;">
+          <button class="msg-voice-play-btn" data-blob="${msg.blobUrl||''}">
+            <svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          </button>
+          <div class="msg-voice-waveform">${genWave()}</div>
+          <span class="msg-voice-dur">${msg.dur||'0:05'}</span>
+          ${actionBtns}
+        </div>`;
+      } else if (msg.type === 'image') {
+        html += `<div class="msg-image-msg" style="position:relative;"><img src="${msg.url}" alt="photo" loading="lazy">
+          <div class="msg-bubble-actions" style="top:8px;transform:none;">${actionBtns.match(/<button[\s\S]*?<\/button>/g).join('')}</div>
+        </div>`;
+      } else if (msg.type === 'sticker') {
+        html += `<div class="msg-bubble msg-sticker-msg">${msg.sticker}</div>`;
+      }
+
+      wrap.innerHTML = html;
+
+      if (msg.reaction) {
+        const rb = document.createElement('div');
+        rb.className = 'msg-reaction-wrap';
+        rb.innerHTML = `<span class="msg-reaction-badge">${msg.reaction}</span>`;
+        wrap.appendChild(rb);
+      }
+
+      const reactBtn = wrap.querySelector('.msg-react-btn');
+      const repBtn   = wrap.querySelector('.msg-reply-btn');
+      if (reactBtn) reactBtn.addEventListener('click', (e) => { e.stopPropagation(); showEmojiPicker(e, msg.id); });
+      if (repBtn)   repBtn.addEventListener('click', (e) => { e.stopPropagation(); startReply(msg); });
+
+      const playBtn = wrap.querySelector('.msg-voice-play-btn');
+      if (playBtn) playBtn.addEventListener('click', () => { if (playBtn.dataset.blob) { const a = new Audio(playBtn.dataset.blob); a.play().catch(()=>{}); }});
+
+      chatMessages.appendChild(wrap);
+    }
+
+    function genWave() {
+      let s = '';
+      for (let i=0;i<20;i++) { const h=Math.floor(Math.random()*16)+4; s+=`<div class="msg-voice-bar" style="height:${h}px;opacity:${(0.4+Math.random()*0.5).toFixed(2)}"></div>`; }
+      return s;
+    }
+
+    function escHtml(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+    function showEmojiPicker(e, msgId) {
+      const rect = e.currentTarget.getBoundingClientRect();
+      emojiPicker.style.display = 'flex';
+      emojiPicker.style.top  = (rect.top - 54) + 'px';
+      emojiPicker.style.left = Math.min(rect.left - 40, window.innerWidth - 250) + 'px';
+      emojiPicker.dataset.targetMsgId = msgId;
+    }
+
+    document.querySelectorAll('#msgEmojiPicker span').forEach(sp => {
+      sp.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const mid = parseInt(emojiPicker.dataset.targetMsgId);
+        const conv = conversations.find(c => c.id === currentConvId);
+        if (conv) { const m = conv.messages.find(x => x.id === mid); if (m) { m.reaction = sp.dataset.emoji; renderMessages(conv); }}
+        emojiPicker.style.display = 'none';
+      });
+    });
+
+    function startReply(msg) {
+      replyingTo = { id: msg.id, text: msg.type==='text' ? msg.text : msg.type==='voice' ? '🎤 Voice message' : '🖼️ Image' };
+      replyText.textContent = replyingTo.text;
+      replyBar.style.display = 'flex';
+      chatInput.focus();
+    }
+
+    replyCancel.addEventListener('click', () => { replyingTo=null; replyBar.style.display='none'; });
+
+    chatInput.addEventListener('input', updateInputControls);
+
+    function updateInputControls() {
+      const hasText   = chatInput.value.trim().length > 0;
+      const hasImages = pendingImages.length > 0;
+      if (hasText || hasImages) {
+        msgSendBtn.style.display = 'flex';
+        micBtn.style.display     = 'none';
+      } else {
+        msgSendBtn.style.display = 'none';
+        micBtn.style.display     = 'flex';
+      }
+    }
+
+    msgSendBtn.addEventListener('click', doSend);
+    chatInput.addEventListener('keydown', (e) => { if (e.key==='Enter' && !e.shiftKey) { e.preventDefault(); doSend(); }});
+
+    function doSend() {
+      const text = chatInput.value.trim();
+      const conv = conversations.find(c => c.id === currentConvId);
+      if (!conv) return;
+
+      if (pendingImages.length > 0) {
+        pendingImages.forEach(img => {
+          const m = { id: ++nextMsgId, mine:true, type:'image', url:img.url, time:nowTime(), replyTo: replyingTo ? replyingTo.text : null };
+          conv.messages.push(m); renderOneBubble(m);
+        });
+        pendingImages = []; imagePreviewBar.innerHTML = '';
+        imagePreviewBar.style.display = 'none'; cancelImgBtn.style.display = 'none';
+      }
+
+      if (text) {
+        const m = { id: ++nextMsgId, mine:true, type:'text', text, time:nowTime(), replyTo: replyingTo ? replyingTo.text : null };
+        conv.messages.push(m); renderOneBubble(m);
+        chatInput.value = '';
+        conv.preview = text;
+      }
+
+      replyingTo = null; replyBar.style.display = 'none';
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+      updateInputControls();
+    }
+
+    imageBtn.addEventListener('click', () => fileInput.click());
+    fileInput.addEventListener('change', () => {
+      Array.from(fileInput.files).forEach(f => {
+        const url = URL.createObjectURL(f);
+        pendingImages.push({ url });
+        const img = document.createElement('img');
+        img.src = url; img.className = 'msg-preview-thumb';
+        imagePreviewBar.appendChild(img);
+      });
+      if (pendingImages.length) { imagePreviewBar.style.display='flex'; cancelImgBtn.style.display='flex'; updateInputControls(); }
+      fileInput.value = '';
+    });
+
+    cancelImgBtn.addEventListener('click', () => {
+      pendingImages=[]; imagePreviewBar.innerHTML='';
+      imagePreviewBar.style.display='none'; cancelImgBtn.style.display='none';
+      updateInputControls();
+    });
+
+    stickerBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const rect = stickerBtn.getBoundingClientRect();
+      const showing = stickerPicker.style.display === 'block';
+      stickerPicker.style.display = showing ? 'none' : 'block';
+      stickerPicker.style.bottom  = (window.innerHeight - rect.top + 8) + 'px';
+      stickerPicker.style.right   = (window.innerWidth - rect.right + 0) + 'px';
+    });
+
+    document.querySelectorAll('.msg-sticker-item').forEach(it => {
+      it.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const conv = conversations.find(c => c.id === currentConvId);
+        if (!conv) return;
+        const m = { id: ++nextMsgId, mine:true, type:'sticker', sticker:it.dataset.sticker, time:nowTime() };
+        conv.messages.push(m); renderOneBubble(m);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+        stickerPicker.style.display = 'none';
+        conv.preview = it.dataset.sticker;
+      });
+    });
+
+    micBtn.addEventListener('click', async () => {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        startRec(stream);
+      } catch { alert('Mikrofon izni reddedildi.'); }
+    });
+
+    function startRec(stream) {
+      mediaRecorder = new MediaRecorder(stream);
+      audioChunks = []; recSeconds = 0; recPaused = false;
+      mediaRecorder.ondataavailable = (e) => { if (e.data.size>0) audioChunks.push(e.data); };
+      mediaRecorder.start(100);
+      normalInput.style.display = 'none';
+      voiceRecState.style.display = 'flex';
+      recInterval = setInterval(() => {
+        if (!recPaused) {
+          recSeconds++;
+          recTimer.textContent = Math.floor(recSeconds/60)+':'+String(recSeconds%60).padStart(2,'0');
+        }
+      }, 1000);
+    }
+
+    voicePauseBtn.addEventListener('click', () => {
+      if (!mediaRecorder) return;
+      if (mediaRecorder.state === 'recording') {
+        mediaRecorder.pause(); recPaused = true;
+        voicePauseIcon.innerHTML = '<polygon points="5 3 19 12 5 21 5 3"/>';
+      } else if (mediaRecorder.state === 'paused') {
+        mediaRecorder.resume(); recPaused = false;
+        voicePauseIcon.innerHTML = '<rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>';
+      }
+    });
+
+    voiceStopBtn.addEventListener('click', () => {
+      if (!mediaRecorder) return;
+      const dur = recTimer.textContent;
+      mediaRecorder.onstop = () => {
+        const blob = new Blob(audioChunks, { type:'audio/webm' });
+        const blobUrl = URL.createObjectURL(blob);
+        const conv = conversations.find(c => c.id === currentConvId);
+        if (conv) {
+          const m = { id:++nextMsgId, mine:true, type:'voice', blobUrl, dur, time:nowTime(), replyTo: replyingTo ? replyingTo.text : null };
+          conv.messages.push(m); renderOneBubble(m);
+          chatMessages.scrollTop = chatMessages.scrollHeight;
+          replyingTo = null; replyBar.style.display = 'none';
+          conv.preview = '🎤 Voice message';
+        }
+      };
+      mediaRecorder.stop(); mediaRecorder.stream.getTracks().forEach(t=>t.stop());
+      clearInterval(recInterval);
+      voiceRecState.style.display = 'none'; normalInput.style.display = 'flex';
+      updateInputControls();
+    });
+
+    voiceCancelBtn.addEventListener('click', () => {
+      if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+        mediaRecorder.stop(); mediaRecorder.stream.getTracks().forEach(t=>t.stop());
+      }
+      clearInterval(recInterval);
+      voiceRecState.style.display = 'none'; normalInput.style.display = 'flex';
+      recTimer.textContent = '0:00'; updateInputControls();
+    });
+
+    function nowTime() { const d=new Date(); return d.getHours()+':'+String(d.getMinutes()).padStart(2,'0'); }
+
+    updateInputControls();
+  })();
+
+
 
   /* ============================================================ */
   /*  STORIES SCROLL BEHAVIOR                                      */
