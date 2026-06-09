@@ -1,14 +1,19 @@
 const express = require('express');
 const app = express();
+
 app.use(express.json());
 
-// CORS — her yerden erişim için
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Headers', 'Content-Type');
-  res.header('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   if (req.method === 'OPTIONS') return res.sendStatus(200);
   next();
+});
+
+// Test endpoint — tarayıcıda /api/chat açınca çalışıyor mu görmek için
+app.get('/api/chat', (req, res) => {
+  res.json({ status: 'ok', message: 'Proxy is running. Use POST to send messages.' });
 });
 
 app.post('/api/chat', async (req, res) => {
@@ -16,7 +21,11 @@ app.post('/api/chat', async (req, res) => {
   const apiKey = process.env.GROQ_API_KEY;
 
   if (!apiKey) {
-    return res.status(500).json({ error: 'GROQ_API_KEY not set' });
+    return res.status(500).json({ error: 'GROQ_API_KEY not set in Railway environment variables.' });
+  }
+
+  if (!messages || !Array.isArray(messages)) {
+    return res.status(400).json({ error: 'messages array is required.' });
   }
 
   try {
