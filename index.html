@@ -1583,10 +1583,13 @@
   })();
 
   /* ============================================================ */
-  /*  AI CHAT — GROQ powered                                       */
+  /*  AI CHAT — Proxy üzerinden Groq                              */
   /* ============================================================ */
   (function() {
-    const GROQ_API_KEY = 'gsk_DemoKeyPleaseReplace';
+    // Railway'deki proxy URL'ini buraya yaz
+    // Örnek: 'https://groq-proxy-production.up.railway.app'
+    const PROXY_URL = 'https://emretuncblek-spec.github.io/website/';
+
     const fab = document.getElementById('aiFab');
     const panel = document.getElementById('aiChatPanel');
     const closeBtn = document.getElementById('aiCloseBtn');
@@ -1651,18 +1654,12 @@
       sendBtn.disabled = true;
 
       try {
-        const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+        const res = await fetch(PROXY_URL + '/api/chat', {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + GROQ_API_KEY
+            'Content-Type': 'application/json'
           },
-          body: JSON.stringify({
-            model: 'llama3-8b-8192',
-            messages: chatHistory,
-            max_tokens: 200,
-            temperature: 0.7
-          })
+          body: JSON.stringify({ messages: chatHistory })
         });
 
         const data = await res.json();
