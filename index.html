@@ -492,48 +492,7 @@
       background: linear-gradient(90deg, transparent, rgba(255,255,255,0.45), transparent);
     }
 
-    /* Date widget */
-    .date-month {
-      font-size: 13px;
-      font-weight: 700;
-      letter-spacing: 3px;
-      color: var(--text-dim);
-      text-transform: uppercase;
-    }
-
-    .date-day {
-      font-size: 64px;
-      font-weight: 900;
-      line-height: 1;
-      letter-spacing: -3px;
-      margin: 2px 0 6px;
-    }
-
-    .date-greeting {
-      font-size: 18px;
-      font-weight: 700;
-      color: rgba(255,255,255,0.9);
-    }
-
-    /* Weather widget */
-    .weather-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-    }
-
-    .weather-city { font-size: 18px; font-weight: 700; }
-    .weather-icon { font-size: 30px; }
-    .weather-condition { font-size: 12px; color: var(--text-dim); }
-
-    .weather-temp {
-      font-size: 52px;
-      font-weight: 900;
-      letter-spacing: -2px;
-      margin-top: 6px;
-    }
-
-    .weather-temp sup { font-size: 24px; font-weight: 700; vertical-align: super; letter-spacing: 0; }
+    /* (date/weather widgets removed) */
 
     /* Right panel top icons */
     .right-topbar {
@@ -608,6 +567,460 @@
     ::-webkit-scrollbar { width: 5px; }
     ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.18); border-radius: 10px; }
+
+    /* ============================================================ */
+    /*  BANNER SLIDER WIDGET                                         */
+    /* ============================================================ */
+    .banner-widget {
+      padding: 0;
+      overflow: hidden;
+      min-height: 170px;
+    }
+
+    .banner-slider {
+      position: relative;
+      width: 100%;
+      height: 170px;
+    }
+
+    .banner-slide {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      opacity: 0;
+      transition: opacity 0.6s ease;
+      pointer-events: none;
+    }
+
+    .banner-slide.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .banner-img-wrap {
+      position: absolute;
+      inset: 0;
+      border-radius: 20px;
+      overflow: hidden;
+    }
+
+    .banner-glow {
+      position: absolute;
+      inset: 0;
+    }
+
+    .banner-icon-decor {
+      position: absolute;
+      right: 14px;
+      top: 14px;
+      font-size: 48px;
+      filter: drop-shadow(0 0 20px rgba(200,160,255,0.7));
+      animation: floatIcon 3s ease-in-out infinite;
+    }
+
+    @keyframes floatIcon {
+      0%,100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
+    }
+
+    .banner-content {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 14px 16px;
+      background: linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 100%);
+      border-radius: 0 0 20px 20px;
+    }
+
+    .banner-new-tag {
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      color: #ff6b6b;
+      text-transform: uppercase;
+      margin-bottom: 2px;
+    }
+
+    .banner-title {
+      font-size: 16px;
+      font-weight: 800;
+      color: #fff;
+      line-height: 1.2;
+    }
+
+    .banner-desc {
+      font-size: 11px;
+      color: rgba(255,255,255,0.75);
+      margin: 2px 0 8px;
+    }
+
+    .banner-read-more {
+      background: rgba(255,255,255,0.18);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.35);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+      font-family: 'Outfit', sans-serif;
+      padding: 4px 12px;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .banner-read-more:hover { background: rgba(255,255,255,0.28); }
+
+    .banner-dots {
+      position: absolute;
+      bottom: 10px;
+      right: 14px;
+      display: flex;
+      gap: 5px;
+      z-index: 10;
+    }
+
+    .banner-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.35);
+      cursor: pointer;
+      transition: background 0.3s, width 0.3s;
+    }
+
+    .banner-dot.active {
+      background: #fff;
+      width: 16px;
+      border-radius: 4px;
+    }
+
+    /* ============================================================ */
+    /*  FRIENDS WIDGET                                               */
+    /* ============================================================ */
+    .friends-widget {
+      padding: 0;
+      max-height: 260px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .friends-header-sticky {
+      padding: 16px 18px 10px;
+      background: var(--glass);
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+      border-radius: 20px 20px 0 0;
+      position: relative;
+      z-index: 2;
+      flex-shrink: 0;
+    }
+
+    .friends-header-sticky::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 12px; right: 12px;
+      height: 1px;
+      background: rgba(255,255,255,0.12);
+    }
+
+    .friends-title {
+      font-size: 16px;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .friends-scroll-area {
+      overflow-y: auto;
+      flex: 1;
+      padding: 6px 10px 10px;
+      scrollbar-width: none;
+    }
+
+    .friends-scroll-area::-webkit-scrollbar { display: none; }
+
+    .friend-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 7px 8px;
+      border-radius: 12px;
+      transition: background 0.18s;
+      cursor: pointer;
+    }
+
+    .friend-item:hover { background: rgba(255,255,255,0.08); }
+
+    .friend-avatar-wrap {
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .friend-avatar-wrap img {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid rgba(255,255,255,0.2);
+    }
+
+    .friend-status {
+      position: absolute;
+      bottom: 1px; right: 1px;
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      border: 2px solid #000;
+    }
+
+    .friend-status.online { background: #22c55e; }
+    .friend-status.away   { background: #eab308; }
+    .friend-status.offline{ background: rgba(255,255,255,0.3); }
+
+    .friend-info { flex: 1; min-width: 0; }
+    .friend-name { font-size: 13px; font-weight: 700; color: #fff; }
+    .friend-activity { font-size: 11px; color: var(--text-dim); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+    /* ============================================================ */
+    /*  AI FLOATING BUTTON & CHAT                                    */
+    /* ============================================================ */
+    .ai-fab-wrap {
+      position: fixed;
+      bottom: 28px;
+      right: 28px;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 10px;
+    }
+
+    .ai-welcome-bubble {
+      background: var(--liquid-bg);
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+      border: 1px solid var(--liquid-border);
+      box-shadow: var(--liquid-shadow);
+      border-radius: 18px 18px 4px 18px;
+      padding: 10px 16px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #fff;
+      max-width: 200px;
+      opacity: 0;
+      transform: translateY(8px) scale(0.95);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+      pointer-events: none;
+    }
+
+    .ai-welcome-bubble.show {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    /* AI Chat Panel */
+    .ai-chat-panel {
+      background: rgba(15,15,25,0.85);
+      backdrop-filter: blur(30px) saturate(1.8);
+      -webkit-backdrop-filter: blur(30px) saturate(1.8);
+      border: 1px solid rgba(255,255,255,0.22);
+      box-shadow: 0 12px 50px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.18);
+      border-radius: 22px;
+      width: 300px;
+      display: none;
+      flex-direction: column;
+      overflow: hidden;
+      transform-origin: bottom right;
+      animation: panelIn 0.3s cubic-bezier(0.17,0.89,0.32,1.28) forwards;
+    }
+
+    .ai-chat-panel.open {
+      display: flex;
+    }
+
+    @keyframes panelIn {
+      from { opacity:0; transform: scale(0.85); }
+      to   { opacity:1; transform: scale(1); }
+    }
+
+    .ai-chat-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 16px 12px;
+      border-bottom: 1px solid rgba(255,255,255,0.10);
+    }
+
+    .ai-chat-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .ai-avatar-small {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #7c3aed, #3b82f6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+    }
+
+    .ai-close-btn {
+      background: none;
+      border: none;
+      color: var(--text-dim);
+      cursor: pointer;
+      font-size: 14px;
+      line-height: 1;
+      padding: 4px;
+      border-radius: 6px;
+      transition: background 0.2s;
+    }
+
+    .ai-close-btn:hover { background: rgba(255,255,255,0.1); color: #fff; }
+
+    .ai-chat-messages {
+      padding: 12px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-height: 240px;
+      overflow-y: auto;
+      scrollbar-width: none;
+    }
+
+    .ai-chat-messages::-webkit-scrollbar { display: none; }
+
+    .ai-msg {
+      max-width: 88%;
+      padding: 8px 12px;
+      border-radius: 14px;
+      font-size: 13px;
+      line-height: 1.45;
+      word-break: break-word;
+    }
+
+    .ai-msg-bot {
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.14);
+      align-self: flex-start;
+      border-radius: 4px 14px 14px 14px;
+      color: #fff;
+    }
+
+    .ai-msg-user {
+      background: linear-gradient(135deg, #7c3aed, #3b82f6);
+      align-self: flex-end;
+      border-radius: 14px 14px 4px 14px;
+      color: #fff;
+    }
+
+    .ai-typing {
+      display: flex;
+      gap: 4px;
+      align-items: center;
+      padding: 10px 14px;
+    }
+
+    .ai-typing span {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.5);
+      animation: typingDot 1.2s infinite;
+    }
+
+    .ai-typing span:nth-child(2) { animation-delay: 0.2s; }
+    .ai-typing span:nth-child(3) { animation-delay: 0.4s; }
+
+    @keyframes typingDot {
+      0%,60%,100% { transform: translateY(0); opacity: 0.4; }
+      30% { transform: translateY(-5px); opacity: 1; }
+    }
+
+    .ai-chat-input-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 12px;
+      border-top: 1px solid rgba(255,255,255,0.10);
+    }
+
+    .ai-chat-input {
+      flex: 1;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 20px;
+      padding: 8px 14px;
+      color: #fff;
+      font-size: 13px;
+      font-family: 'Outfit', sans-serif;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .ai-chat-input::placeholder { color: rgba(255,255,255,0.4); }
+    .ai-chat-input:focus { border-color: rgba(255,255,255,0.35); }
+
+    .ai-send-btn {
+      width: 34px; height: 34px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #7c3aed, #3b82f6);
+      border: none;
+      color: #fff;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: opacity 0.2s, transform 0.15s;
+    }
+
+    .ai-send-btn:hover { opacity: 0.85; transform: scale(1.05); }
+    .ai-send-btn svg { width: 15px; height: 15px; }
+
+    /* FAB button */
+    .ai-fab {
+      width: 54px; height: 54px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.14);
+      backdrop-filter: blur(16px) saturate(1.6);
+      -webkit-backdrop-filter: blur(16px) saturate(1.6);
+      border: 1.5px solid rgba(255,255,255,0.42);
+      box-shadow: 0 6px 24px rgba(100,60,255,0.30), inset 0 2px 6px rgba(255,255,255,0.50), inset 0 -2px 4px rgba(0,0,0,0.12);
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      padding: 0;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .ai-fab:hover { transform: scale(1.07); box-shadow: 0 8px 32px rgba(100,60,255,0.45), inset 0 2px 6px rgba(255,255,255,0.55); }
+
+    .ai-fab-avatar {
+      width: 100%; height: 100%;
+      border-radius: 50%;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .ai-fab-avatar img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+    }
+
+    .ai-fab-glow {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      background: linear-gradient(135deg, rgba(150,100,255,0.35) 0%, transparent 60%);
+      pointer-events: none;
+    }
 
     /* ============================================================ */
     /*  DOUBLE-TAP HEART ANIMATION (Instagram style)                 */
@@ -947,7 +1360,7 @@
     <!-- RIGHT PANEL -->
     <div class="right-panel">
       <div class="right-sticky">
-        <!-- 4 icon buttons — sticky together with widgets -->
+        <!-- 4 icon buttons -->
         <div class="right-topbar">
           <button class="top-icon-btn">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
@@ -964,40 +1377,316 @@
             <span class="badge-dot"></span>
           </button>
         </div>
-        <!-- Date Widget -->
-        <div class="widget-card">
-          <div class="date-month" id="dateMonth">JUN</div>
-          <div class="date-day" id="dateDay">8</div>
-          <div class="date-greeting">Have A Good Day!</div>
-        </div>
 
-        <!-- Weather Widget -->
-        <div class="widget-card">
-          <div class="weather-header">
-            <div>
-              <div class="weather-city">Mainz</div>
-              <div class="weather-condition">Sunny</div>
+        <!-- Banner Slider Widget -->
+        <div class="widget-card banner-widget">
+          <div class="banner-slider" id="bannerSlider">
+            <!-- Banner 1 -->
+            <div class="banner-slide active">
+              <div class="banner-img-wrap" style="background: linear-gradient(135deg, #1a0a2e 0%, #16213e 50%, #0f3460 100%);">
+                <div class="banner-glow" style="background: radial-gradient(circle at 70% 30%, rgba(200,130,255,0.6) 0%, transparent 60%);"></div>
+                <div class="banner-icon-decor">⚔️</div>
+              </div>
+              <div class="banner-content">
+                <div class="banner-new-tag">NEW!</div>
+                <div class="banner-title">Elden Ring</div>
+                <div class="banner-desc">Added to our game market, don't miss!</div>
+                <button class="banner-read-more">Read more</button>
+              </div>
             </div>
-            <div>
-              <div class="weather-icon">☀️</div>
+            <!-- Banner 2 -->
+            <div class="banner-slide">
+              <div class="banner-img-wrap" style="background: linear-gradient(135deg, #0d1b2a 0%, #1b2838 50%, #2a475e 100%);">
+                <div class="banner-glow" style="background: radial-gradient(circle at 30% 60%, rgba(100,200,255,0.5) 0%, transparent 60%);"></div>
+                <div class="banner-icon-decor">🎮</div>
+              </div>
+              <div class="banner-content">
+                <div class="banner-new-tag" style="color:#4ade80;">SALE!</div>
+                <div class="banner-title">Weekend Sale</div>
+                <div class="banner-desc">Up to 70% off on top titles this weekend!</div>
+                <button class="banner-read-more">Read more</button>
+              </div>
+            </div>
+            <!-- Banner 3 -->
+            <div class="banner-slide">
+              <div class="banner-img-wrap" style="background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #533483 100%);">
+                <div class="banner-glow" style="background: radial-gradient(circle at 50% 50%, rgba(150,100,255,0.55) 0%, transparent 65%);"></div>
+                <div class="banner-icon-decor">🏆</div>
+              </div>
+              <div class="banner-content">
+                <div class="banner-new-tag" style="color:#facc15;">EVENT!</div>
+                <div class="banner-title">Tournament</div>
+                <div class="banner-desc">Weekly esports tournament starts Friday!</div>
+                <button class="banner-read-more">Read more</button>
+              </div>
             </div>
           </div>
-          <div class="weather-temp">17<sup>°</sup></div>
+          <!-- Dots -->
+          <div class="banner-dots">
+            <span class="banner-dot active" data-idx="0"></span>
+            <span class="banner-dot" data-idx="1"></span>
+            <span class="banner-dot" data-idx="2"></span>
+          </div>
         </div>
+
+        <!-- Friends Widget -->
+        <div class="widget-card friends-widget">
+          <div class="friends-header-sticky">
+            <div class="friends-title">Friends</div>
+          </div>
+          <div class="friends-scroll-area">
+            <!-- Friend 1 -->
+            <div class="friend-item">
+              <div class="friend-avatar-wrap">
+                <img src="https://i.pinimg.com/736x/f7/d8/f2/f7d8f2df2827bd6f8e0e95b12434ceab.jpg" alt="Jhon">
+                <span class="friend-status online"></span>
+              </div>
+              <div class="friend-info">
+                <div class="friend-name">Jhon</div>
+                <div class="friend-activity">Red dead redemtion 2</div>
+              </div>
+            </div>
+            <!-- Friend 2 -->
+            <div class="friend-item">
+              <div class="friend-avatar-wrap">
+                <img src="https://i.pinimg.com/736x/98/df/69/98df6949fce8c87f15b03b306fc89fb0.jpg" alt="Moony">
+                <span class="friend-status away"></span>
+              </div>
+              <div class="friend-info">
+                <div class="friend-name">Moony</div>
+                <div class="friend-activity">Minecraft Bedrock edition...</div>
+              </div>
+            </div>
+            <!-- Friend 3 -->
+            <div class="friend-item">
+              <div class="friend-avatar-wrap">
+                <img src="https://i.pinimg.com/1200x/61/5b/13/615b13791d3c1c8568d36a64195181d4.jpg" alt="Yeerzy">
+                <span class="friend-status offline"></span>
+              </div>
+              <div class="friend-info">
+                <div class="friend-name">Yeerzy</div>
+                <div class="friend-activity">seen 30 min before</div>
+              </div>
+            </div>
+            <!-- Friend 4 -->
+            <div class="friend-item">
+              <div class="friend-avatar-wrap">
+                <img src="https://i.pinimg.com/736x/bc/b3/61/bcb3612bebc2b5dfee3044600ea93700.jpg" alt="Mino">
+                <span class="friend-status online"></span>
+              </div>
+              <div class="friend-info">
+                <div class="friend-name">Mino</div>
+                <div class="friend-activity">Fortnite Chapter 5</div>
+              </div>
+            </div>
+            <!-- Friend 5 -->
+            <div class="friend-item">
+              <div class="friend-avatar-wrap">
+                <img src="https://i.pinimg.com/736x/fc/56/8e/fc568e1fc2445b8af18cc4e050ca13cf.jpg" alt="Mochi">
+                <span class="friend-status online"></span>
+              </div>
+              <div class="friend-info">
+                <div class="friend-name">Mochi</div>
+                <div class="friend-activity">Valorant — Competitive</div>
+              </div>
+            </div>
+            <!-- Friend 6 -->
+            <div class="friend-item">
+              <div class="friend-avatar-wrap">
+                <img src="https://i.pinimg.com/1200x/db/fe/75/dbfe75990174020a7ebf8799999212d8.jpg" alt="Apple">
+                <span class="friend-status away"></span>
+              </div>
+              <div class="friend-info">
+                <div class="friend-name">Apple</div>
+                <div class="friend-activity">seen 5 min before</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- end right-sticky -->
+    </div>
+
+  </div><!-- end main-content -->
+</div><!-- end app-layout -->
+
+<!-- AI Floating Button -->
+<div class="ai-fab-wrap">
+  <!-- Welcome bubble -->
+  <div class="ai-welcome-bubble" id="aiBubble">
+    <span>Hi, how can I help you today?</span>
+  </div>
+  <!-- Chat panel -->
+  <div class="ai-chat-panel" id="aiChatPanel">
+    <div class="ai-chat-header">
+      <div class="ai-chat-title">
+        <div class="ai-avatar-small">✦</div>
+        <span>Aurelia AI</span>
+      </div>
+      <button class="ai-close-btn" id="aiCloseBtn">✕</button>
+    </div>
+    <div class="ai-chat-messages" id="aiMessages">
+      <div class="ai-msg ai-msg-bot">
+        <span>Hey! How can I help you today? 🎮</span>
       </div>
     </div>
+    <div class="ai-chat-input-wrap">
+      <input class="ai-chat-input" id="aiInput" type="text" placeholder="Ask me anything..." maxlength="300">
+      <button class="ai-send-btn" id="aiSendBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+      </button>
+    </div>
+  </div>
+  <!-- FAB button -->
+  <button class="ai-fab" id="aiFab">
+    <div class="ai-fab-avatar">
+      <img src="https://i.pinimg.com/736x/fc/56/8e/fc568e1fc2445b8af18cc4e050ca13cf.jpg" alt="AI">
+      <div class="ai-fab-glow"></div>
+    </div>
+  </button>
+</div>
 
   </div><!-- end main-content -->
 </div><!-- end app-layout -->
 
 <script>
   /* ============================================================ */
-  /*  DATE                                                         */
+  /*  BANNER SLIDER — 12s auto loop                                */
   /* ============================================================ */
-  const months = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
-  const now = new Date();
-  document.getElementById('dateMonth').textContent = months[now.getMonth()];
-  document.getElementById('dateDay').textContent = now.getDate();
+  (function() {
+    const slides = document.querySelectorAll('.banner-slide');
+    const dots = document.querySelectorAll('.banner-dot');
+    let current = 0;
+    let timer;
+
+    function goTo(idx) {
+      slides[current].classList.remove('active');
+      dots[current].classList.remove('active');
+      current = (idx + slides.length) % slides.length;
+      slides[current].classList.add('active');
+      dots[current].classList.add('active');
+    }
+
+    function startLoop() {
+      timer = setInterval(() => goTo(current + 1), 12000);
+    }
+
+    dots.forEach(dot => {
+      dot.addEventListener('click', () => {
+        clearInterval(timer);
+        goTo(parseInt(dot.dataset.idx));
+        startLoop();
+      });
+    });
+
+    startLoop();
+  })();
+
+  /* ============================================================ */
+  /*  AI CHAT — GROQ powered                                       */
+  /* ============================================================ */
+  (function() {
+    const GROQ_API_KEY = 'gsk_DemoKeyPleaseReplace';
+    const fab = document.getElementById('aiFab');
+    const panel = document.getElementById('aiChatPanel');
+    const closeBtn = document.getElementById('aiCloseBtn');
+    const sendBtn = document.getElementById('aiSendBtn');
+    const input = document.getElementById('aiInput');
+    const messages = document.getElementById('aiMessages');
+    const bubble = document.getElementById('aiBubble');
+
+    let chatHistory = [
+      { role: 'system', content: 'You are Aurelia AI, a friendly gaming assistant for the AureliaGames platform. Keep responses short, helpful and gaming-focused. Use emojis occasionally.' }
+    ];
+
+    // Show welcome bubble on load
+    setTimeout(() => {
+      bubble.classList.add('show');
+      setTimeout(() => {
+        bubble.classList.remove('show');
+      }, 5000);
+    }, 800);
+
+    fab.addEventListener('click', () => {
+      bubble.classList.remove('show');
+      if (panel.classList.contains('open')) {
+        panel.classList.remove('open');
+      } else {
+        panel.classList.add('open');
+        input.focus();
+      }
+    });
+
+    closeBtn.addEventListener('click', () => {
+      panel.classList.remove('open');
+    });
+
+    function appendMsg(role, text) {
+      const div = document.createElement('div');
+      div.className = 'ai-msg ' + (role === 'user' ? 'ai-msg-user' : 'ai-msg-bot');
+      div.textContent = text;
+      messages.appendChild(div);
+      messages.scrollTop = messages.scrollHeight;
+      return div;
+    }
+
+    function showTyping() {
+      const div = document.createElement('div');
+      div.className = 'ai-msg ai-msg-bot ai-typing';
+      div.innerHTML = '<span></span><span></span><span></span>';
+      messages.appendChild(div);
+      messages.scrollTop = messages.scrollHeight;
+      return div;
+    }
+
+    async function sendMessage() {
+      const text = input.value.trim();
+      if (!text) return;
+      input.value = '';
+
+      appendMsg('user', text);
+      chatHistory.push({ role: 'user', content: text });
+
+      const typing = showTyping();
+      sendBtn.disabled = true;
+
+      try {
+        const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + GROQ_API_KEY
+          },
+          body: JSON.stringify({
+            model: 'llama3-8b-8192',
+            messages: chatHistory,
+            max_tokens: 200,
+            temperature: 0.7
+          })
+        });
+
+        const data = await res.json();
+        typing.remove();
+
+        if (data.choices && data.choices[0]) {
+          const reply = data.choices[0].message.content;
+          chatHistory.push({ role: 'assistant', content: reply });
+          appendMsg('assistant', reply);
+        } else {
+          appendMsg('assistant', 'Sorry, I had a connection issue. Try again! 🎮');
+        }
+      } catch (err) {
+        typing.remove();
+        appendMsg('assistant', 'Oops, something went wrong. Check your API key! 🔑');
+      }
+
+      sendBtn.disabled = false;
+      input.focus();
+    }
+
+    sendBtn.addEventListener('click', sendMessage);
+    input.addEventListener('keydown', e => { if (e.key === 'Enter') sendMessage(); });
+  })();
 
   /* ============================================================ */
   /*  STORIES SCROLL BEHAVIOR                                      */
