@@ -1654,13 +1654,11 @@
       sendBtn.disabled = true;
 
       try {
-        const res = await fetch(PROXY_URL + '/api/chat', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ messages: chatHistory })
-        });
+        const res = await fetch('https://website-production-c8f8.up.railway.app/api/chat', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ messages: chatHistory })
+});
 
         const data = await res.json();
         typing.remove();
