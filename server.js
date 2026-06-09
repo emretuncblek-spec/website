@@ -1,33 +1,45 @@
 const express = require('express');
-const path = require('path');
 const app = express();
+app.use(express.json());
 
-// 1. ADIM: Tek satırda CSS, JS ve tüm dosyaları otomatik dışarı aç
-app.use(express.static(__dirname));
-
-// 2. ADIM: Sayfa Yönlendirmeleri (Routing)
-// Ana sayfa (index.html)
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'index.html'));
+// CORS — her yerden erişim için
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Headers', 'Content-Type');
+  res.header('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  if (req.method === 'OPTIONS') return res.sendStatus(200);
+  next();
 });
 
-// Profil Sayfası (profile.html)
-app.get('/profile', (req, res) => {
-    res.sendFile(path.join(__dirname, 'profile.html'));
+app.post('/api/chat', async (req, res) => {
+  const { messages } = req.body;
+  const apiKey = process.env.GROQ_API_KEY;
+
+  if (!apiKey) {
+    return res.status(500).json({ error: 'GROQ_API_KEY not set' });
+  }
+
+  try {
+    const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiKey}`
+      },
+      body: JSON.stringify({
+        model: 'llama3-8b-8192',
+        messages,
+        max_tokens: 200,
+        temperature: 0.7
+      })
+    });
+
+    const data = await response.json();
+    res.json(data);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
-// Odaklanma Sayfası (focus.html)
-app.get('/focus', (req, res) => {
-    res.sendFile(path.join(__dirname, 'focus.html'));
-});
-
-// PDF Okuyucu Sayfası (pdfreader.html)
-app.get('/pdfreader', (req, res) => {
-    res.sendFile(path.join(__dirname, 'pdfreader.html'));
-});
-
-// 3. ADIM: Port Ayarı (Railway için zorunlu)
-const PORT = process.env.PORT || 8080;
-app.listen(PORT, () => {
-    console.log(`Sunucu ${PORT} portunda tıkır tıkır çalışıyor!`);
-});
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`Proxy running on port ${PORT}`));
