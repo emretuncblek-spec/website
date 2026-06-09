@@ -1663,6 +1663,7 @@
         });
 
         const data = await res.json();
+        console.log(JSON.stringify(data));
         typing.remove();
 
         if (data.choices && data.choices[0]) {
