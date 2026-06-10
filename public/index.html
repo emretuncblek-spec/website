@@ -1904,7 +1904,7 @@
     .like-hint-bubble {
       position: fixed;
       top: 74px;
-      right: 30px;
+      right: 120px;
       background: rgba(255,255,255,0.13);
       backdrop-filter: blur(28px) saturate(1.8);
       -webkit-backdrop-filter: blur(28px) saturate(1.8);
@@ -1971,7 +1971,7 @@
       color: #fff;
       letter-spacing: 0.3px;
     }
-  
+  </style>
 </head>
 <body>
 
@@ -3359,6 +3359,11 @@
 
     // Show hint bubble on page load after 1s, hide after 5s
     setTimeout(() => {
+      // Position hint bubble under the like button
+      const btnRect = likeNotifBtn.getBoundingClientRect();
+      likeHintBubble.style.top = (btnRect.bottom + 8) + 'px';
+      likeHintBubble.style.right = (window.innerWidth - btnRect.right - 4) + 'px';
+      likeHintBubble.style.left = 'auto';
       likeHintBubble.classList.add('show');
       setTimeout(() => {
         likeHintBubble.classList.remove('show');
@@ -3374,6 +3379,16 @@
       if (msgPopup) msgPopup.classList.remove('open');
 
       const isOpen = likeNotifPopup.classList.contains('open');
+
+      if (!isOpen) {
+        // Position popup under the button
+        const btnRect = likeNotifBtn.getBoundingClientRect();
+        likeNotifPopup.style.top  = (btnRect.bottom + 8) + 'px';
+        const popupRight = window.innerWidth - btnRect.right - 4;
+        likeNotifPopup.style.right = Math.max(8, popupRight) + 'px';
+        likeNotifPopup.style.left = 'auto';
+      }
+
       likeNotifPopup.classList.toggle('open', !isOpen);
 
       if (!isOpen) {
