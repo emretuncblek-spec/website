@@ -1655,16 +1655,323 @@
       100% { transform: scale(1); }
     }
 
-    .post-action-btn.like-btn.unlike-pop {
-      animation: unlikePop 0.28s ease;
+    /* ============================================================ */
+    /*  NOTIFICATION COUNT BADGE                                     */
+    /* ============================================================ */
+    .notif-count-badge {
+      position: absolute;
+      top: 3px; right: 3px;
+      min-width: 16px; height: 16px;
+      border-radius: 8px;
+      background: #ef4444;
+      border: 1.5px solid #000;
+      color: #fff;
+      font-size: 9px;
+      font-weight: 800;
+      font-family: 'Outfit', sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 3px;
+      line-height: 1;
+    }
+    .notif-count-badge.hidden { display: none; }
+
+    /* ============================================================ */
+    /*  LIKE NOTIFICATIONS POPUP                                     */
+    /* ============================================================ */
+    .like-notif-popup {
+      position: fixed;
+      top: 70px;
+      right: 28px;
+      width: 340px;
+      border-radius: 22px;
+      background: rgba(12,14,28,0.82);
+      backdrop-filter: blur(32px) saturate(1.8);
+      -webkit-backdrop-filter: blur(32px) saturate(1.8);
+      border: 1px solid rgba(255,255,255,0.18);
+      box-shadow: 0 16px 60px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.16), inset 0 0 0 1px rgba(255,255,255,0.06);
+      z-index: 3000;
+      display: none;
+      flex-direction: column;
+      overflow: hidden;
+      max-height: 520px;
+      animation: msgPopupIn 0.28s cubic-bezier(0.17,0.89,0.32,1.28) forwards;
     }
 
-    @keyframes unlikePop {
-      0%   { transform: scale(1); }
-      50%  { transform: scale(0.7); }
-      100% { transform: scale(1); }
+    .like-notif-popup.open { display: flex; }
+
+    .like-notif-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 15px 16px 12px;
+      border-bottom: 1px solid rgba(255,255,255,0.09);
+      flex-shrink: 0;
     }
-  </style>
+
+    .like-notif-title {
+      font-size: 15px;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .like-notif-close {
+      background: none;
+      border: none;
+      color: rgba(255,255,255,0.5);
+      cursor: pointer;
+      padding: 4px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      transition: background 0.15s;
+    }
+    .like-notif-close:hover { background: rgba(255,255,255,0.1); color: #fff; }
+
+    .like-notif-scroll {
+      overflow-y: auto;
+      flex: 1;
+      padding: 4px 0 8px;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(255,255,255,0.15) transparent;
+    }
+
+    .like-notif-scroll::-webkit-scrollbar { width: 4px; }
+    .like-notif-scroll::-webkit-scrollbar-track { background: transparent; }
+    .like-notif-scroll::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 4px; }
+
+    .like-notif-section-label {
+      font-size: 11px;
+      font-weight: 800;
+      color: rgba(255,255,255,0.45);
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      padding: 10px 16px 4px;
+    }
+
+    .like-notif-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 14px;
+      cursor: pointer;
+      transition: background 0.15s;
+      position: relative;
+    }
+
+    .like-notif-item:hover { background: rgba(255,255,255,0.05); }
+
+    .like-notif-item.unread {
+      background: rgba(126,184,255,0.06);
+    }
+    .like-notif-item.unread:hover { background: rgba(126,184,255,0.1); }
+
+    /* Avatar area */
+    .like-notif-avatars {
+      flex-shrink: 0;
+      position: relative;
+      width: 44px;
+      height: 36px;
+    }
+
+    .lna-img {
+      width: 34px; height: 34px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid rgba(0,0,0,0.8);
+      position: absolute;
+    }
+
+    .like-notif-avatars.stacked .lna-back { left: 0; top: 0; width: 28px; height: 28px; opacity: 0.8; }
+    .like-notif-avatars.stacked .lna-front { right: 0; bottom: 0; width: 28px; height: 28px; }
+    .like-notif-avatars .lna-single { left: 0; top: 1px; }
+
+    /* Text */
+    .like-notif-text {
+      flex: 1;
+      min-width: 0;
+      font-size: 12.5px;
+      color: rgba(255,255,255,0.75);
+      line-height: 1.4;
+    }
+
+    .lnt-bold { font-weight: 700; color: #fff; }
+
+    .lnt-time {
+      font-size: 10.5px;
+      color: rgba(255,255,255,0.38);
+      margin-top: 2px;
+    }
+
+    .lnt-comment-preview {
+      font-size: 11px;
+      color: rgba(255,255,255,0.45);
+      margin-top: 2px;
+      font-style: italic;
+    }
+
+    .lnt-actions {
+      display: flex;
+      gap: 6px;
+      margin-top: 5px;
+    }
+
+    .lnt-act-btn {
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 12px;
+      color: rgba(255,255,255,0.75);
+      font-size: 11px;
+      font-weight: 600;
+      font-family: 'Outfit', sans-serif;
+      padding: 3px 10px;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+    }
+
+    .lnt-act-btn:hover { background: rgba(255,255,255,0.18); color: #fff; }
+
+    .lnt-act-reply {
+      background: rgba(126,184,255,0.15);
+      border-color: rgba(126,184,255,0.3);
+      color: var(--accent);
+    }
+
+    .lnt-act-reply:hover { background: rgba(126,184,255,0.25); }
+
+    /* Follow back button */
+    .lnt-follow-back-btn {
+      flex-shrink: 0;
+      background: rgba(255,255,255,0.15);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.28);
+      border-radius: 14px;
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+      font-family: 'Outfit', sans-serif;
+      padding: 5px 12px;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+      white-space: nowrap;
+    }
+
+    .lnt-follow-back-btn:hover { background: rgba(255,255,255,0.25); }
+
+    .lnt-follow-back-btn.lnt-followed {
+      background: rgba(255,255,255,0.07);
+      border-color: rgba(255,255,255,0.14);
+      color: rgba(255,255,255,0.45);
+      cursor: default;
+    }
+
+    /* Post thumbnail on right */
+    .like-notif-post-thumb {
+      flex-shrink: 0;
+      width: 42px;
+      height: 42px;
+      border-radius: 8px;
+      overflow: hidden;
+      position: relative;
+      border: 1px solid rgba(255,255,255,0.12);
+      cursor: pointer;
+    }
+
+    .like-notif-post-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .lnpt-icon {
+      position: absolute;
+      bottom: 3px; right: 3px;
+      width: 16px; height: 16px;
+      border-radius: 50%;
+      background: rgba(0,0,0,0.65);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #ef4444;
+    }
+
+    /* ============================================================ */
+    /*  LIQUID GLASS HINT BUBBLE                                     */
+    /* ============================================================ */
+    .like-hint-bubble {
+      position: fixed;
+      top: 74px;
+      right: 30px;
+      background: rgba(255,255,255,0.13);
+      backdrop-filter: blur(28px) saturate(1.8);
+      -webkit-backdrop-filter: blur(28px) saturate(1.8);
+      border: 1px solid rgba(255,255,255,0.38);
+      box-shadow: 0 8px 32px rgba(100,160,255,0.18), inset 0 2px 10px rgba(255,255,255,0.55), inset 0 -2px 6px rgba(0,0,0,0.10);
+      border-radius: 20px;
+      padding: 10px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      z-index: 2990;
+      pointer-events: none;
+      opacity: 0;
+      transform: translateY(-6px) scale(0.94);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+
+    .like-hint-bubble.show {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    .like-hint-bubble.hide {
+      opacity: 0;
+      transform: translateY(-6px) scale(0.94);
+    }
+
+    .lhb-row {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .lhb-icon {
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .lhb-heart {
+      background: rgba(239,68,68,0.22);
+      color: #ef4444;
+      border: 1px solid rgba(239,68,68,0.35);
+    }
+
+    .lhb-follow {
+      background: rgba(126,184,255,0.18);
+      color: #7eb8ff;
+      border: 1px solid rgba(126,184,255,0.3);
+    }
+
+    .lhb-comment {
+      background: rgba(255,255,255,0.12);
+      color: rgba(255,255,255,0.8);
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+
+    .lhb-text {
+      font-size: 12px;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: 0.3px;
+    }
+  
 </head>
 <body>
 
@@ -1950,9 +2257,9 @@
           <button class="top-icon-btn">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
           </button>
-          <button class="top-icon-btn">
+          <button class="top-icon-btn" id="likeNotifBtn">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-            <span class="badge-dot"></span>
+            <span class="notif-count-badge" id="likeNotifBadge">5</span>
           </button>
           <button class="top-icon-btn" id="msgInboxBtn">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
@@ -2088,6 +2395,208 @@
 
   </div><!-- end main-content -->
 </div><!-- end app-layout -->
+
+<!-- ==================== LIKE NOTIFICATIONS POPUP ==================== -->
+<div id="likeNotifPopup" class="like-notif-popup">
+  <div class="like-notif-header">
+    <span class="like-notif-title">Notifications</span>
+    <div style="flex:1"></div>
+    <button class="like-notif-close" id="likeNotifClose">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="like-notif-scroll" id="likeNotifScroll">
+
+    <!-- NEW section -->
+    <div class="like-notif-section-label">New</div>
+
+    <!-- Post like - multiple people -->
+    <div class="like-notif-item unread" data-post-img="https://i.pinimg.com/736x/35/5f/a0/355fa00b82d4b0ac718b849a0d9a512f.jpg">
+      <div class="like-notif-avatars stacked">
+        <img src="https://i.pinimg.com/736x/bc/b3/61/bcb3612bebc2b5dfee3044600ea93700.jpg" class="lna-img lna-back">
+        <img src="https://i.pinimg.com/736x/fc/56/8e/fc568e1fc2445b8af18cc4e050ca13cf.jpg" class="lna-img lna-front">
+      </div>
+      <div class="like-notif-text">
+        <span class="lnt-bold">Minocials</span> and <span class="lnt-bold">Mochi</span> liked your post
+        <div class="lnt-time">8m ago</div>
+      </div>
+      <div class="like-notif-post-thumb" data-href="#">
+        <img src="https://i.pinimg.com/736x/35/5f/a0/355fa00b82d4b0ac718b849a0d9a512f.jpg" alt="">
+        <div class="lnpt-icon">
+          <svg viewBox="0 0 24 24" fill="currentColor" width="10" height="10"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- Comment like - multiple -->
+    <div class="like-notif-item unread" data-post-img="https://i.pinimg.com/736x/35/5f/a0/355fa00b82d4b0ac718b849a0d9a512f.jpg">
+      <div class="like-notif-avatars stacked">
+        <img src="https://i.pinimg.com/736x/f7/d8/f2/f7d8f2df2827bd6f8e0e95b12434ceab.jpg" class="lna-img lna-back">
+        <img src="https://i.pinimg.com/736x/bc/b3/61/bcb3612bebc2b5dfee3044600ea93700.jpg" class="lna-img lna-front">
+      </div>
+      <div class="like-notif-text">
+        <span class="lnt-bold">Minocials</span> and <span class="lnt-bold">Eckk</span> liked your comment
+        <div class="lnt-time">5m ago</div>
+      </div>
+      <div class="like-notif-post-thumb" data-href="#">
+        <img src="https://i.pinimg.com/736x/35/5f/a0/355fa00b82d4b0ac718b849a0d9a512f.jpg" alt="">
+        <div class="lnpt-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="10" height="10"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- Follow - single person -->
+    <div class="like-notif-item unread">
+      <div class="like-notif-avatars">
+        <img src="https://i.pinimg.com/736x/fc/56/8e/fc568e1fc2445b8af18cc4e050ca13cf.jpg" class="lna-img lna-single">
+      </div>
+      <div class="like-notif-text">
+        <span class="lnt-bold">Mochi</span> started following you
+        <div class="lnt-time">23 June</div>
+      </div>
+      <button class="lnt-follow-back-btn" id="followBackMochi">Follow back</button>
+    </div>
+
+    <!-- Comment reply - single person -->
+    <div class="like-notif-item unread" data-post-img="https://i.pinimg.com/736x/67/b9/58/67b95875d67570821f5e5a194ab033b2.jpg">
+      <div class="like-notif-avatars">
+        <img src="https://i.pinimg.com/736x/f7/d8/f2/f7d8f2df2827bd6f8e0e95b12434ceab.jpg" class="lna-img lna-single">
+      </div>
+      <div class="like-notif-text">
+        <span class="lnt-bold">Jhon</span> replied to your comment
+        <div class="lnt-comment-preview">@moon do u p ...</div>
+        <div class="lnt-actions">
+          <button class="lnt-act-btn">Like</button>
+          <button class="lnt-act-btn lnt-act-reply" onclick="">Reply</button>
+        </div>
+        <div class="lnt-time">15m ago</div>
+      </div>
+      <div class="like-notif-post-thumb" data-href="#">
+        <img src="https://i.pinimg.com/736x/67/b9/58/67b95875d67570821f5e5a194ab033b2.jpg" alt="">
+        <div class="lnpt-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="10" height="10"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- TODAY section -->
+    <div class="like-notif-section-label">Today</div>
+
+    <!-- Comment like - many people -->
+    <div class="like-notif-item" data-post-img="https://i.pinimg.com/736x/4e/3c/5a/4e3c5a133d8b2a1176c0df6110f02562.jpg">
+      <div class="like-notif-avatars stacked">
+        <img src="https://i.pinimg.com/736x/98/df/69/98df6949fce8c87f15b03b306fc89fb0.jpg" class="lna-img lna-back">
+        <img src="https://i.pinimg.com/1200x/61/5b/13/615b13791d3c1c8568d36a64195181d4.jpg" class="lna-img lna-front">
+      </div>
+      <div class="like-notif-text">
+        <span class="lnt-bold">Jabez, Moony</span> and 58 others liked your comment
+        <div class="lnt-time">2h ago</div>
+      </div>
+      <div class="like-notif-post-thumb" data-href="#">
+        <img src="https://i.pinimg.com/736x/4e/3c/5a/4e3c5a133d8b2a1176c0df6110f02562.jpg" alt="">
+        <div class="lnpt-icon">
+          <svg viewBox="0 0 24 24" fill="currentColor" width="10" height="10"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- Post comment -->
+    <div class="like-notif-item" data-post-img="https://i.pinimg.com/736x/95/84/95/9584955de5c130fbcce2b57b8a817716.jpg">
+      <div class="like-notif-avatars">
+        <img src="https://i.pinimg.com/1200x/db/fe/75/dbfe75990174020a7ebf8799999212d8.jpg" class="lna-img lna-single">
+      </div>
+      <div class="like-notif-text">
+        <span class="lnt-bold">Apple</span> commented on your post
+        <div class="lnt-comment-preview">Nice shot! 🔥</div>
+        <div class="lnt-actions">
+          <button class="lnt-act-btn">Like</button>
+          <button class="lnt-act-btn lnt-act-reply">Reply</button>
+        </div>
+        <div class="lnt-time">4h ago</div>
+      </div>
+      <div class="like-notif-post-thumb" data-href="#">
+        <img src="https://i.pinimg.com/736x/95/84/95/9584955de5c130fbcce2b57b8a817716.jpg" alt="">
+        <div class="lnpt-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="10" height="10"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- YESTERDAY section -->
+    <div class="like-notif-section-label">Yesterday</div>
+
+    <!-- Follow - single -->
+    <div class="like-notif-item">
+      <div class="like-notif-avatars">
+        <img src="https://i.pinimg.com/1200x/db/fe/75/dbfe75990174020a7ebf8799999212d8.jpg" class="lna-img lna-single">
+      </div>
+      <div class="like-notif-text">
+        <span class="lnt-bold">Emre</span> and <span class="lnt-bold">Film</span> liked your comment
+        <div class="lnt-time">5m ago</div>
+      </div>
+      <div class="like-notif-post-thumb" data-href="#">
+        <img src="https://i.pinimg.com/736x/4e/3c/5a/4e3c5a133d8b2a1176c0df6110f02562.jpg" alt="">
+        <div class="lnpt-icon">
+          <svg viewBox="0 0 24 24" fill="currentColor" width="10" height="10"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- THIS WEEK section -->
+    <div class="like-notif-section-label">This Week</div>
+
+    <div class="like-notif-item" data-post-img="https://i.pinimg.com/736x/35/5f/a0/355fa00b82d4b0ac718b849a0d9a512f.jpg">
+      <div class="like-notif-avatars">
+        <img src="https://i.pinimg.com/736x/98/df/69/98df6949fce8c87f15b03b306fc89fb0.jpg" class="lna-img lna-single">
+      </div>
+      <div class="like-notif-text">
+        <span class="lnt-bold">Moony</span> liked your post
+        <div class="lnt-time">3 days ago</div>
+      </div>
+      <div class="like-notif-post-thumb" data-href="#">
+        <img src="https://i.pinimg.com/736x/35/5f/a0/355fa00b82d4b0ac718b849a0d9a512f.jpg" alt="">
+        <div class="lnpt-icon">
+          <svg viewBox="0 0 24 24" fill="currentColor" width="10" height="10"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        </div>
+      </div>
+    </div>
+
+    <div class="like-notif-item">
+      <div class="like-notif-avatars">
+        <img src="https://i.pinimg.com/1200x/61/5b/13/615b13791d3c1c8568d36a64195181d4.jpg" class="lna-img lna-single">
+      </div>
+      <div class="like-notif-text">
+        <span class="lnt-bold">Yeerzy</span> started following you
+        <div class="lnt-time">4 days ago</div>
+      </div>
+      <button class="lnt-follow-back-btn lnt-followed" id="followBackYeerzy">Following</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- Liquid Glass Hint Bubble for Like Notifications -->
+<div class="like-hint-bubble" id="likeHintBubble">
+  <div class="lhb-row">
+    <div class="lhb-icon lhb-heart">
+      <svg viewBox="0 0 24 24" fill="currentColor" width="13" height="13"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+    </div>
+    <span class="lhb-text">+12</span>
+  </div>
+  <div class="lhb-row">
+    <div class="lhb-icon lhb-follow">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="13" height="13"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+    </div>
+    <span class="lhb-text">+3</span>
+  </div>
+  <div class="lhb-row">
+    <div class="lhb-icon lhb-comment">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="13" height="13"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+    </div>
+    <span class="lhb-text">+8</span>
+  </div>
+</div>
 
 <!-- ==================== MESSAGES POPUP SYSTEM ==================== -->
 
@@ -2820,6 +3329,100 @@
     function nowTime() { const d=new Date(); return d.getHours()+':'+String(d.getMinutes()).padStart(2,'0'); }
 
     updateInputControls();
+  })();
+
+  /* ============================================================ */
+  /*  LIKE NOTIFICATIONS SYSTEM                                    */
+  /* ============================================================ */
+  (function() {
+    const likeNotifBtn   = document.getElementById('likeNotifBtn');
+    const likeNotifPopup = document.getElementById('likeNotifPopup');
+    const likeNotifClose = document.getElementById('likeNotifClose');
+    const likeNotifBadge = document.getElementById('likeNotifBadge');
+    const likeHintBubble = document.getElementById('likeHintBubble');
+
+    // Count unread
+    function countUnread() {
+      return document.querySelectorAll('.like-notif-item.unread').length;
+    }
+
+    function updateBadge() {
+      const n = countUnread();
+      if (n > 0) {
+        likeNotifBadge.textContent = n > 9 ? '9+' : n;
+        likeNotifBadge.classList.remove('hidden');
+      } else {
+        likeNotifBadge.classList.add('hidden');
+      }
+    }
+    updateBadge();
+
+    // Show hint bubble on page load after 1s, hide after 5s
+    setTimeout(() => {
+      likeHintBubble.classList.add('show');
+      setTimeout(() => {
+        likeHintBubble.classList.remove('show');
+        likeHintBubble.classList.add('hide');
+      }, 5000);
+    }, 1000);
+
+    // Toggle popup
+    likeNotifBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      // Close messages popup if open
+      const msgPopup = document.getElementById('msgInboxPopup');
+      if (msgPopup) msgPopup.classList.remove('open');
+
+      const isOpen = likeNotifPopup.classList.contains('open');
+      likeNotifPopup.classList.toggle('open', !isOpen);
+
+      if (!isOpen) {
+        // Mark all as read and hide badge
+        likeNotifBadge.classList.add('hidden');
+        // Hide hint if showing
+        likeHintBubble.classList.remove('show');
+        likeHintBubble.classList.add('hide');
+      }
+    });
+
+    likeNotifClose.addEventListener('click', (e) => {
+      e.stopPropagation();
+      likeNotifPopup.classList.remove('open');
+    });
+
+    // Close on outside click
+    document.addEventListener('click', (e) => {
+      if (!likeNotifPopup.contains(e.target) && e.target !== likeNotifBtn && !likeNotifBtn.contains(e.target)) {
+        likeNotifPopup.classList.remove('open');
+      }
+    });
+
+    // Follow back toggle
+    document.querySelectorAll('.lnt-follow-back-btn').forEach(btn => {
+      if (btn.classList.contains('lnt-followed')) return;
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        btn.textContent = 'Following';
+        btn.classList.add('lnt-followed');
+      });
+    });
+
+    // Post thumbnail click (placeholder - opens nothing for now)
+    document.querySelectorAll('.like-notif-post-thumb').forEach(thumb => {
+      thumb.addEventListener('click', (e) => {
+        e.stopPropagation();
+        // placeholder: would navigate to post
+      });
+    });
+
+    // Reply button opens post (placeholder)
+    document.querySelectorAll('.lnt-act-reply').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        likeNotifPopup.classList.remove('open');
+        // placeholder: would open post
+      });
+    });
   })();
 
 
