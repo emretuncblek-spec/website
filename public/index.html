@@ -522,14 +522,7 @@
     .top-icon-btn:hover { background: rgba(255,255,255,0.22); color: #fff; }
     .top-icon-btn svg { width: 18px; height: 18px; }
 
-    .badge-dot {
-      position: absolute;
-      top: 5px; right: 5px;
-      width: 8px; height: 8px;
-      border-radius: 50%;
-      background: #ef4444;
-      border: 1.5px solid #000;
-    }
+    .badge-dot { display: none; } /* replaced by notif-count-badge */
 
     /* ============================================================ */
     /*  SCROLL ANIMATIONS                                            */
@@ -2265,7 +2258,7 @@
           </button>
           <button class="top-icon-btn" id="msgInboxBtn">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-            <span class="badge-dot"></span>
+            <span class="notif-count-badge" id="msgUnreadBadge">2</span>
           </button>
         </div>
 
@@ -2449,7 +2442,7 @@
     </div>
 
     <!-- Follow - single person -->
-    <div class="like-notif-item unread">
+    <div class="like-notif-item unread" data-new-hidden="true" style="display:none">
       <div class="like-notif-avatars">
         <img src="https://i.pinimg.com/736x/fc/56/8e/fc568e1fc2445b8af18cc4e050ca13cf.jpg" class="lna-img lna-single">
       </div>
@@ -2461,7 +2454,7 @@
     </div>
 
     <!-- Comment reply - single person -->
-    <div class="like-notif-item unread" data-post-img="https://i.pinimg.com/736x/67/b9/58/67b95875d67570821f5e5a194ab033b2.jpg">
+    <div class="like-notif-item unread" data-new-hidden="true" style="display:none" data-post-img="https://i.pinimg.com/736x/67/b9/58/67b95875d67570821f5e5a194ab033b2.jpg">
       <div class="like-notif-avatars">
         <img src="https://i.pinimg.com/736x/f7/d8/f2/f7d8f2df2827bd6f8e0e95b12434ceab.jpg" class="lna-img lna-single">
       </div>
@@ -3021,8 +3014,27 @@
       if (likePopup) likePopup.classList.remove('open');
       const isOpen = inboxPopup.classList.contains('open');
       closeAll();
-      if (!isOpen) { renderInbox(); inboxPopup.classList.add('open'); }
+      if (!isOpen) {
+        renderInbox();
+        inboxPopup.classList.add('open');
+        // Mark all conversations as read and hide badge
+        conversations.forEach(c => c.unread = false);
+        updateMsgBadge();
+      }
     });
+
+    function updateMsgBadge() {
+      const badge = document.getElementById('msgUnreadBadge');
+      if (!badge) return;
+      const n = conversations.filter(c => c.unread).length;
+      if (n > 0) {
+        badge.textContent = n > 9 ? '9+' : n;
+        badge.classList.remove('hidden');
+      } else {
+        badge.classList.add('hidden');
+      }
+    }
+    updateMsgBadge();
 
     inboxClose.addEventListener('click', () => inboxPopup.classList.remove('open'));
     chatClose.addEventListener('click',  () => chatPopup.classList.remove('open'));
@@ -3367,7 +3379,6 @@
       const scroll = document.getElementById('likeNotifScroll');
       if (!scroll) return;
 
-      // Find "New" label
       const labels = scroll.querySelectorAll('.like-notif-section-label');
       let newLabel = null;
       let todayLabel = null;
@@ -3377,7 +3388,7 @@
       });
       if (!newLabel) return;
 
-      // Collect items under "New" (siblings until next section label or end)
+      // Collect ALL items under "New" — visible and hidden
       const newItems = [];
       let el = newLabel.nextElementSibling;
       while (el && !el.classList.contains('like-notif-section-label')) {
@@ -3385,17 +3396,17 @@
         el = el.nextElementSibling;
       }
 
-      // Remove unread class
-      newItems.forEach(item => item.classList.remove('unread'));
+      // Remove unread styling, make all visible, move to Today
+      newItems.forEach(item => {
+        item.classList.remove('unread');
+        item.removeAttribute('data-new-hidden');
+        item.style.display = '';
+      });
 
-      // Insert them after the "Today" label (at the top of Today section)
       if (todayLabel) {
-        newItems.reverse().forEach(item => {
-          todayLabel.after(item);
-        });
+        newItems.reverse().forEach(item => todayLabel.after(item));
       }
 
-      // Remove "New" label
       newLabel.remove();
     }
 
