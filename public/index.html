@@ -1660,11 +1660,11 @@
     /* ============================================================ */
     .notif-count-badge {
       position: absolute;
-      top: 3px; right: 3px;
-      min-width: 16px; height: 16px;
-      border-radius: 8px;
+      top: -5px; right: -5px;
+      min-width: 18px; height: 18px;
+      border-radius: 9px;
       background: #ef4444;
-      border: 1.5px solid #000;
+      border: 2px solid rgba(0,0,0,0.85);
       color: #fff;
       font-size: 9px;
       font-weight: 800;
@@ -1672,8 +1672,10 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 0 3px;
+      padding: 0 4px;
       line-height: 1;
+      z-index: 2;
+      pointer-events: none;
     }
     .notif-count-badge.hidden { display: none; }
 
@@ -1905,11 +1907,11 @@
       position: fixed;
       top: 74px;
       right: 120px;
-      background: rgba(255,255,255,0.13);
+      background: rgba(10,12,30,0.72);
       backdrop-filter: blur(28px) saturate(1.8);
       -webkit-backdrop-filter: blur(28px) saturate(1.8);
-      border: 1px solid rgba(255,255,255,0.38);
-      box-shadow: 0 8px 32px rgba(100,160,255,0.18), inset 0 2px 10px rgba(255,255,255,0.55), inset 0 -2px 6px rgba(0,0,0,0.10);
+      border: 1px solid rgba(255,255,255,0.22);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.18);
       border-radius: 20px;
       padding: 10px 14px;
       display: flex;
@@ -3014,6 +3016,9 @@
     // Inbox toggle
     inboxBtn.addEventListener('click', (e) => {
       e.stopPropagation();
+      // Close like notifications popup if open
+      const likePopup = document.getElementById('likeNotifPopup');
+      if (likePopup) likePopup.classList.remove('open');
       const isOpen = inboxPopup.classList.contains('open');
       closeAll();
       if (!isOpen) { renderInbox(); inboxPopup.classList.add('open'); }
@@ -3357,9 +3362,45 @@
     }
     updateBadge();
 
+    // Move "New" items into "Today" section and remove "New" label
+    function mergeNewIntoToday() {
+      const scroll = document.getElementById('likeNotifScroll');
+      if (!scroll) return;
+
+      // Find "New" label
+      const labels = scroll.querySelectorAll('.like-notif-section-label');
+      let newLabel = null;
+      let todayLabel = null;
+      labels.forEach(l => {
+        if (l.textContent.trim() === 'New') newLabel = l;
+        if (l.textContent.trim() === 'Today') todayLabel = l;
+      });
+      if (!newLabel) return;
+
+      // Collect items under "New" (siblings until next section label or end)
+      const newItems = [];
+      let el = newLabel.nextElementSibling;
+      while (el && !el.classList.contains('like-notif-section-label')) {
+        newItems.push(el);
+        el = el.nextElementSibling;
+      }
+
+      // Remove unread class
+      newItems.forEach(item => item.classList.remove('unread'));
+
+      // Insert them after the "Today" label (at the top of Today section)
+      if (todayLabel) {
+        newItems.reverse().forEach(item => {
+          todayLabel.after(item);
+        });
+      }
+
+      // Remove "New" label
+      newLabel.remove();
+    }
+
     // Show hint bubble on page load after 1s, hide after 5s
     setTimeout(() => {
-      // Position hint bubble under the like button
       const btnRect = likeNotifBtn.getBoundingClientRect();
       likeHintBubble.style.top = (btnRect.bottom + 8) + 'px';
       likeHintBubble.style.right = (window.innerWidth - btnRect.right - 4) + 'px';
@@ -3374,9 +3415,11 @@
     // Toggle popup
     likeNotifBtn.addEventListener('click', (e) => {
       e.stopPropagation();
-      // Close messages popup if open
+      // Close messages popups if open
       const msgPopup = document.getElementById('msgInboxPopup');
       if (msgPopup) msgPopup.classList.remove('open');
+      const chatPopup = document.getElementById('msgChatPopup');
+      if (chatPopup) chatPopup.classList.remove('open');
 
       const isOpen = likeNotifPopup.classList.contains('open');
 
@@ -3392,7 +3435,9 @@
       likeNotifPopup.classList.toggle('open', !isOpen);
 
       if (!isOpen) {
-        // Mark all as read and hide badge
+        // Move "New" items into "Today" since user has now seen them
+        mergeNewIntoToday();
+        // Hide badge
         likeNotifBadge.classList.add('hidden');
         // Hide hint if showing
         likeHintBubble.classList.remove('show');
@@ -3412,30 +3457,54 @@
       }
     });
 
-    // Follow back toggle
+    // Follow back toggle — clicking "Following" brings back "Follow back"
     document.querySelectorAll('.lnt-follow-back-btn').forEach(btn => {
-      if (btn.classList.contains('lnt-followed')) return;
       btn.addEventListener('click', (e) => {
         e.stopPropagation();
-        btn.textContent = 'Following';
-        btn.classList.add('lnt-followed');
+        if (btn.classList.contains('lnt-followed')) {
+          // Unfollow → show Follow back again
+          btn.textContent = 'Follow back';
+          btn.classList.remove('lnt-followed');
+        } else {
+          // Follow
+          btn.textContent = 'Following';
+          btn.classList.add('lnt-followed');
+        }
       });
     });
 
-    // Post thumbnail click (placeholder - opens nothing for now)
+    // Post thumbnail click (placeholder)
     document.querySelectorAll('.like-notif-post-thumb').forEach(thumb => {
       thumb.addEventListener('click', (e) => {
         e.stopPropagation();
-        // placeholder: would navigate to post
       });
     });
 
-    // Reply button opens post (placeholder)
+    // Like button toggle on comment notifications
+    document.querySelectorAll('.lnt-act-btn:not(.lnt-act-reply)').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (btn.classList.contains('lnt-liked')) {
+          btn.classList.remove('lnt-liked');
+          btn.textContent = 'Like';
+          btn.style.color = '';
+          btn.style.borderColor = '';
+          btn.style.background = '';
+        } else {
+          btn.classList.add('lnt-liked');
+          btn.textContent = 'Liked';
+          btn.style.color = '#ef4444';
+          btn.style.borderColor = 'rgba(239,68,68,0.4)';
+          btn.style.background = 'rgba(239,68,68,0.12)';
+        }
+      });
+    });
+
+    // Reply button (placeholder)
     document.querySelectorAll('.lnt-act-reply').forEach(btn => {
       btn.addEventListener('click', (e) => {
         e.stopPropagation();
         likeNotifPopup.classList.remove('open');
-        // placeholder: would open post
       });
     });
   })();
