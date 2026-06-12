@@ -1,0 +1,2053 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nimes - Gamepass</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    /* ============================================================ */
+    /*  CSS VARIABLES & RESET                                        */
+    /* ============================================================ */
+    :root {
+      --glass:         rgba(255,255,255,0.13);
+      --glass-border:  rgba(255,255,255,0.28);
+      --glass-blur:    blur(22px) saturate(1.6);
+      --glass-shadow:  0 8px 40px rgba(0,0,0,0.22), inset 0 1px 0 rgba(255,255,255,0.35), inset 0 0 0 1px rgba(255,255,255,0.12);
+      --liquid-bg:     rgba(255,255,255,0.16);
+      --liquid-border: rgba(255,255,255,0.50);
+      --liquid-shadow: 0 6px 20px rgba(100,160,255,0.18), inset 0 2px 8px rgba(255,255,255,0.70), inset 0 -2px 4px rgba(0,0,0,0.10);
+      --accent:        #7eb8ff;
+      --text:          #ffffff;
+      --text-dim:      rgba(255,255,255,0.65);
+      --sidebar-w:     240px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Outfit', sans-serif;
+      min-height: 100vh;
+      background: #000000;
+      color: var(--text);
+      overflow-x: hidden;
+    }
+
+    /* Animated aura layer */
+    .aura-layer {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    .aura-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(100px);
+    }
+    .aura-orb-1 {
+      width: 600px; height: 600px;
+      top: -150px; left: 5%;
+      background: radial-gradient(circle, rgba(30,60,200,0.50) 0%, transparent 70%);
+      animation: aura1 9s ease-in-out infinite;
+    }
+    .aura-orb-2 {
+      width: 450px; height: 450px;
+      bottom: 0; right: 5%;
+      background: radial-gradient(circle, rgba(50,20,170,0.40) 0%, transparent 70%);
+      animation: aura2 12s ease-in-out infinite 3s;
+    }
+    .aura-orb-3 {
+      width: 350px; height: 350px;
+      top: 40%; left: 38%;
+      background: radial-gradient(circle, rgba(20,50,180,0.28) 0%, transparent 70%);
+      animation: aura3 15s ease-in-out infinite 6s;
+    }
+    @keyframes aura1 {
+      0%,100% { opacity:0.45; transform:scale(1) translate(0,0); }
+      50%      { opacity:0.65; transform:scale(1.12) translate(18px,28px); }
+    }
+    @keyframes aura2 {
+      0%,100% { opacity:0.35; transform:scale(1) translate(0,0); }
+      50%      { opacity:0.52; transform:scale(1.10) translate(-22px,-18px); }
+    }
+    @keyframes aura3 {
+      0%,100% { opacity:0.20; transform:scale(1); }
+      50%      { opacity:0.36; transform:scale(1.14); }
+    }
+
+    /* ============================================================ */
+    /*  APP LAYOUT                                                   */
+    /* ============================================================ */
+    .app-layout {
+      display: flex;
+      min-height: 100vh;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ============================================================ */
+    /*  LEFT SIDEBAR — Fixed always                                  */
+    /* ============================================================ */
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: var(--sidebar-w);
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      padding: 0px 16px 20px;
+      gap: 0;
+      z-index: 100;
+      background: transparent;
+    }
+
+    .sidebar-logo {
+      font-size: 24px;
+      font-weight: 900;
+      letter-spacing: -0.5px;
+      color: #fff;
+      padding: 0 4px 0;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: flex-end;
+      min-height: 80px;
+    }
+
+    /* Nav items wrapped in a glass rounded-rect box */
+    .sidebar-nav-box {
+      background: var(--glass);
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+      border: 1px solid var(--glass-border);
+      box-shadow: var(--glass-shadow);
+      border-radius: 20px;
+      padding: 10px 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      font-size: 15px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.70);
+      text-decoration: none;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+      user-select: none;
+    }
+
+    .nav-item:hover {
+      background: rgba(255,255,255,0.10);
+      color: #fff;
+    }
+
+    .nav-item.active {
+      background: rgba(255,255,255,0.16);
+      color: #fff;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.22);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.25);
+    }
+
+    .nav-icon {
+      width: 22px;
+      height: 22px;
+      flex-shrink: 0;
+      opacity: 0.85;
+    }
+
+    .nav-item.active .nav-icon { opacity: 1; }
+
+    .sidebar-avatar {
+      margin-top: auto;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 10px;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.14);
+    }
+
+    .sidebar-avatar img {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid rgba(255,255,255,0.3);
+    }
+
+    .sidebar-avatar-info { flex: 1; min-width: 0; }
+    .sidebar-avatar-name { font-size: 13px; font-weight: 700; }
+    .sidebar-avatar-handle { font-size: 11px; color: var(--text-dim); }
+
+    /* ============================================================ */
+    /*  MAIN CONTENT AREA                                            */
+    /* ============================================================ */
+    .main-content {
+      margin-left: var(--sidebar-w);
+      flex: 1;
+      display: flex;
+      gap: 0;
+      min-height: 100vh;
+      position: relative;
+    }
+
+    /* ============================================================ */
+    /*  RIGHT TOP ICON BUTTONS                                       */
+    /* ============================================================ */
+    .right-topbar {
+      position: fixed;
+      top: 24px;
+      right: 28px;
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      z-index: 150;
+    }
+
+    .top-icon-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 1px solid var(--glass-border);
+      background: var(--glass);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--text-dim);
+      position: relative;
+      transition: background 0.2s;
+    }
+
+    .top-icon-btn:hover { background: rgba(255,255,255,0.22); color: #fff; }
+    .top-icon-btn svg { width: 18px; height: 18px; }
+
+    /* ============================================================ */
+    /*  LIQUID GLASS HELPER                                          */
+    /* ============================================================ */
+    .liquid-glass {
+      background: var(--glass);
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+      border: 1px solid var(--glass-border);
+      box-shadow: var(--glass-shadow);
+    }
+
+    /* ============================================================ */
+    /*  SCROLLBAR                                                    */
+    /* ============================================================ */
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.18); border-radius: 10px; }
+
+    /* ============================================================ */
+    /*  ROTATING BACKGROUND GAME-CARD GRID                           */
+    /* ============================================================ */
+    .gamepass-bg {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      overflow: hidden;
+      background: #04050a;
+    }
+
+    .gamepass-bg::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.55) 55%, rgba(0,0,0,0.80) 100%);
+      z-index: 2;
+    }
+
+    .card-grid-rotor {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 220vw;
+      height: 220vh;
+      transform: translate(-50%, -50%) rotate(-12deg);
+      display: grid;
+      grid-template-columns: repeat(9, 1fr);
+      gap: 14px;
+      animation: gridLoop 60s linear infinite;
+    }
+
+    @keyframes gridLoop {
+      0%   { background-position: 0 0; }
+      100% { background-position: 0 -2400px; }
+    }
+
+    .card-grid-col {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      animation: colScroll linear infinite;
+    }
+
+    .card-grid-col.up   { animation-name: colScrollUp; }
+    .card-grid-col.down { animation-name: colScrollDown; }
+
+    @keyframes colScrollUp {
+      0%   { transform: translateY(0); }
+      100% { transform: translateY(-50%); }
+    }
+    @keyframes colScrollDown {
+      0%   { transform: translateY(-50%); }
+      100% { transform: translateY(0); }
+    }
+
+    .card-grid-col img {
+      width: 100%;
+      aspect-ratio: 2/3;
+      object-fit: cover;
+      border-radius: 10px;
+      opacity: 0.9;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+    }
+
+    /* ============================================================ */
+    /*  GAMEPASS HERO CONTENT                                        */
+    /* ============================================================ */
+    .gamepass-stage {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 60px;
+      min-height: 100vh;
+      text-align: center;
+    }
+
+    .gamepass-title {
+      font-size: 56px;
+      font-weight: 900;
+      letter-spacing: 6px;
+      color: #fff;
+      text-shadow: 0 4px 30px rgba(0,0,0,0.6);
+      margin-bottom: 36px;
+      white-space: nowrap;
+    }
+
+    .gamepass-card {
+      max-width: 760px;
+      width: 100%;
+      border-radius: 26px;
+      padding: 38px 44px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 22px;
+    }
+
+    .gamepass-desc {
+      font-size: 18px;
+      font-weight: 700;
+      line-height: 1.6;
+      color: #fff;
+    }
+
+    .gamepass-coming-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 14px 38px;
+      border-radius: 50px;
+      border: 1px solid var(--liquid-border);
+      background: var(--liquid-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      color: #fff;
+      font-family: 'Outfit', sans-serif;
+      font-size: 15px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      cursor: pointer;
+      box-shadow: var(--liquid-shadow);
+      transition: background 0.2s, transform 0.15s;
+    }
+
+    .gamepass-coming-btn:hover { background: rgba(255,255,255,0.25); transform: translateY(-1px); }
+
+    .gamepass-fine {
+      font-size: 14px;
+      line-height: 1.6;
+      color: rgba(255,255,255,0.85);
+      font-weight: 600;
+    }
+
+    .gamepass-fine u { text-decoration: underline; cursor: pointer; }
+
+    @media (max-width: 900px) {
+      .gamepass-title { font-size: 34px; letter-spacing: 3px; }
+      .gamepass-card { padding: 26px 22px; }
+      .gamepass-stage { padding: 24px 16px; }
+    }
+
+    /* ============================================================ */
+    /*  AI FLOATING BUTTON & CHAT                                    */
+    /* ============================================================ */
+    .ai-fab-wrap {
+      position: fixed;
+      bottom: 28px;
+      right: 28px;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 10px;
+    }
+
+    .ai-welcome-bubble {
+      background: var(--liquid-bg);
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+      border: 1px solid var(--liquid-border);
+      box-shadow: var(--liquid-shadow);
+      border-radius: 18px 18px 4px 18px;
+      padding: 10px 16px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #fff;
+      max-width: 200px;
+      opacity: 0;
+      transform: translateY(8px) scale(0.95);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+      pointer-events: none;
+    }
+
+    .ai-welcome-bubble.show {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    /* AI Chat Panel */
+    .ai-chat-panel {
+      background: rgba(15,15,25,0.85);
+      backdrop-filter: blur(30px) saturate(1.8);
+      -webkit-backdrop-filter: blur(30px) saturate(1.8);
+      border: 1px solid rgba(255,255,255,0.22);
+      box-shadow: 0 12px 50px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.18);
+      border-radius: 22px;
+      width: 300px;
+      display: none;
+      flex-direction: column;
+      overflow: hidden;
+      transform-origin: bottom right;
+      animation: panelIn 0.3s cubic-bezier(0.17,0.89,0.32,1.28) forwards;
+    }
+
+    .ai-chat-panel.open {
+      display: flex;
+    }
+
+    @keyframes panelIn {
+      from { opacity:0; transform: scale(0.85); }
+      to   { opacity:1; transform: scale(1); }
+    }
+
+    .ai-chat-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 16px 12px;
+      border-bottom: 1px solid rgba(255,255,255,0.10);
+    }
+
+    .ai-chat-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .ai-avatar-small {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #7c3aed, #3b82f6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+    }
+
+    .ai-close-btn {
+      background: none;
+      border: none;
+      color: var(--text-dim);
+      cursor: pointer;
+      font-size: 14px;
+      line-height: 1;
+      padding: 4px;
+      border-radius: 6px;
+      transition: background 0.2s;
+    }
+
+    .ai-close-btn:hover { background: rgba(255,255,255,0.1); color: #fff; }
+
+    .ai-chat-messages {
+      padding: 12px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-height: 240px;
+      overflow-y: auto;
+      scrollbar-width: none;
+    }
+
+    .ai-chat-messages::-webkit-scrollbar { display: none; }
+
+    .ai-msg {
+      max-width: 88%;
+      padding: 8px 12px;
+      border-radius: 14px;
+      font-size: 13px;
+      line-height: 1.45;
+      word-break: break-word;
+    }
+
+    .ai-msg-bot {
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.14);
+      align-self: flex-start;
+      border-radius: 4px 14px 14px 14px;
+      color: #fff;
+    }
+
+    .ai-msg-user {
+      background: linear-gradient(135deg, #7c3aed, #3b82f6);
+      align-self: flex-end;
+      border-radius: 14px 14px 4px 14px;
+      color: #fff;
+    }
+
+    .ai-typing {
+      display: flex;
+      gap: 4px;
+      align-items: center;
+      padding: 10px 14px;
+    }
+
+    .ai-typing span {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.5);
+      animation: typingDot 1.2s infinite;
+    }
+
+    .ai-typing span:nth-child(2) { animation-delay: 0.2s; }
+    .ai-typing span:nth-child(3) { animation-delay: 0.4s; }
+
+    @keyframes typingDot {
+      0%,60%,100% { transform: translateY(0); opacity: 0.4; }
+      30% { transform: translateY(-5px); opacity: 1; }
+    }
+
+    .ai-chat-input-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 12px;
+      border-top: 1px solid rgba(255,255,255,0.10);
+    }
+
+    .ai-chat-input {
+      flex: 1;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 20px;
+      padding: 8px 14px;
+      color: #fff;
+      font-size: 13px;
+      font-family: 'Outfit', sans-serif;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .ai-chat-input::placeholder { color: rgba(255,255,255,0.4); }
+    .ai-chat-input:focus { border-color: rgba(255,255,255,0.35); }
+
+    .ai-send-btn {
+      width: 34px; height: 34px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #7c3aed, #3b82f6);
+      border: none;
+      color: #fff;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: opacity 0.2s, transform 0.15s;
+    }
+
+    .ai-send-btn:hover { opacity: 0.85; transform: scale(1.05); }
+    .ai-send-btn svg { width: 15px; height: 15px; }
+
+    /* FAB button */
+    .ai-fab {
+      width: 54px; height: 54px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.14);
+      backdrop-filter: blur(16px) saturate(1.6);
+      -webkit-backdrop-filter: blur(16px) saturate(1.6);
+      border: 1.5px solid rgba(255,255,255,0.42);
+      box-shadow: 0 6px 24px rgba(100,60,255,0.30), inset 0 2px 6px rgba(255,255,255,0.50), inset 0 -2px 4px rgba(0,0,0,0.12);
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      padding: 0;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .ai-fab:hover { transform: scale(1.07); box-shadow: 0 8px 32px rgba(100,60,255,0.45), inset 0 2px 6px rgba(255,255,255,0.55); }
+
+    .ai-fab-avatar {
+      width: 100%; height: 100%;
+      border-radius: 50%;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .ai-fab-avatar img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+    }
+
+    .ai-fab-glow {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      background: linear-gradient(135deg, rgba(150,100,255,0.35) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    /* ============================================================ */
+    /*  NOTIFICATION COUNT BADGE                                     */
+    /* ============================================================ */
+    .notif-count-badge {
+      position: absolute;
+      top: -5px; right: -5px;
+      min-width: 18px; height: 18px;
+      border-radius: 9px;
+      background: #ef4444;
+      border: 2px solid rgba(0,0,0,0.85);
+      color: #fff;
+      font-size: 9px;
+      font-weight: 800;
+      font-family: 'Outfit', sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 4px;
+      line-height: 1;
+      z-index: 2;
+      pointer-events: none;
+    }
+    .notif-count-badge.hidden { display: none; }
+
+    /* ============================================================ */
+    /*  LIKE NOTIFICATIONS POPUP                                     */
+    /* ============================================================ */
+    .like-notif-popup {
+      position: fixed;
+      top: 70px;
+      right: 28px;
+      width: 340px;
+      border-radius: 22px;
+      background: rgba(12,14,28,0.82);
+      backdrop-filter: blur(32px) saturate(1.8);
+      -webkit-backdrop-filter: blur(32px) saturate(1.8);
+      border: 1px solid rgba(255,255,255,0.18);
+      box-shadow: 0 16px 60px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.16), inset 0 0 0 1px rgba(255,255,255,0.06);
+      z-index: 3000;
+      display: none;
+      flex-direction: column;
+      overflow: hidden;
+      max-height: 520px;
+      animation: msgPopupIn 0.28s cubic-bezier(0.17,0.89,0.32,1.28) forwards;
+    }
+
+    .like-notif-popup.open { display: flex; }
+
+    .like-notif-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 15px 16px 12px;
+      border-bottom: 1px solid rgba(255,255,255,0.09);
+      flex-shrink: 0;
+    }
+
+    .like-notif-title {
+      font-size: 15px;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .like-notif-close {
+      background: none;
+      border: none;
+      color: rgba(255,255,255,0.5);
+      cursor: pointer;
+      padding: 4px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      transition: background 0.15s;
+    }
+    .like-notif-close:hover { background: rgba(255,255,255,0.1); color: #fff; }
+
+    .like-notif-scroll {
+      overflow-y: auto;
+      flex: 1;
+      padding: 4px 0 8px;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(255,255,255,0.15) transparent;
+    }
+
+    .like-notif-scroll::-webkit-scrollbar { width: 4px; }
+    .like-notif-scroll::-webkit-scrollbar-track { background: transparent; }
+    .like-notif-scroll::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 4px; }
+
+    .like-notif-section-label {
+      font-size: 11px;
+      font-weight: 800;
+      color: rgba(255,255,255,0.45);
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      padding: 10px 16px 4px;
+    }
+
+    .like-notif-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 14px;
+      cursor: pointer;
+      transition: background 0.15s;
+      position: relative;
+    }
+
+    .like-notif-item:hover { background: rgba(255,255,255,0.05); }
+
+    .like-notif-item.unread {
+      background: rgba(126,184,255,0.06);
+    }
+    .like-notif-item.unread:hover { background: rgba(126,184,255,0.1); }
+
+    /* Avatar area */
+    .like-notif-avatars {
+      flex-shrink: 0;
+      position: relative;
+      width: 44px;
+      height: 36px;
+    }
+
+    .lna-img {
+      width: 34px; height: 34px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid rgba(0,0,0,0.8);
+      position: absolute;
+    }
+
+    .like-notif-avatars.stacked .lna-back { left: 0; top: 0; width: 28px; height: 28px; opacity: 0.8; }
+    .like-notif-avatars.stacked .lna-front { right: 0; bottom: 0; width: 28px; height: 28px; }
+    .like-notif-avatars .lna-single { left: 0; top: 1px; }
+
+    /* Text */
+    .like-notif-text {
+      flex: 1;
+      min-width: 0;
+      font-size: 12.5px;
+      color: rgba(255,255,255,0.75);
+      line-height: 1.4;
+    }
+
+    .lnt-bold { font-weight: 700; color: #fff; }
+
+    .lnt-time {
+      font-size: 10.5px;
+      color: rgba(255,255,255,0.38);
+      margin-top: 2px;
+    }
+
+    .lnt-comment-preview {
+      font-size: 11px;
+      color: rgba(255,255,255,0.45);
+      margin-top: 2px;
+      font-style: italic;
+    }
+
+    .lnt-actions {
+      display: flex;
+      gap: 6px;
+      margin-top: 5px;
+    }
+
+    .lnt-act-btn {
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 12px;
+      color: rgba(255,255,255,0.75);
+      font-size: 11px;
+      font-weight: 600;
+      font-family: 'Outfit', sans-serif;
+      padding: 3px 10px;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+    }
+
+    .lnt-act-btn:hover { background: rgba(255,255,255,0.18); color: #fff; }
+
+    .lnt-act-reply {
+      background: rgba(126,184,255,0.15);
+      border-color: rgba(126,184,255,0.3);
+      color: var(--accent);
+    }
+
+    .lnt-act-reply:hover { background: rgba(126,184,255,0.25); }
+
+    /* Follow back button */
+    .lnt-follow-back-btn {
+      flex-shrink: 0;
+      background: rgba(255,255,255,0.15);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.28);
+      border-radius: 14px;
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+      font-family: 'Outfit', sans-serif;
+      padding: 5px 12px;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+      white-space: nowrap;
+    }
+
+    .lnt-follow-back-btn:hover { background: rgba(255,255,255,0.25); }
+
+    .lnt-follow-back-btn.lnt-followed {
+      background: rgba(255,255,255,0.07);
+      border-color: rgba(255,255,255,0.14);
+      color: rgba(255,255,255,0.45);
+      cursor: default;
+    }
+
+    /* Post thumbnail on right */
+    .like-notif-post-thumb {
+      flex-shrink: 0;
+      width: 42px;
+      height: 42px;
+      border-radius: 8px;
+      overflow: hidden;
+      position: relative;
+      border: 1px solid rgba(255,255,255,0.12);
+      cursor: pointer;
+    }
+
+    .like-notif-post-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .lnpt-icon {
+      position: absolute;
+      bottom: 3px; right: 3px;
+      width: 16px; height: 16px;
+      border-radius: 50%;
+      background: rgba(0,0,0,0.65);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #ef4444;
+    }
+
+    /* ============================================================ */
+    /*  LIQUID GLASS HINT BUBBLE                                     */
+    /* ============================================================ */
+    .like-hint-bubble {
+      position: fixed;
+      top: 74px;
+      right: 120px;
+      background: rgba(10,12,30,0.72);
+      backdrop-filter: blur(28px) saturate(1.8);
+      -webkit-backdrop-filter: blur(28px) saturate(1.8);
+      border: 1px solid rgba(255,255,255,0.22);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.18);
+      border-radius: 20px;
+      padding: 10px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      z-index: 2990;
+      pointer-events: none;
+      opacity: 0;
+      transform: translateY(-6px) scale(0.94);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+
+    .like-hint-bubble.show {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    .like-hint-bubble.hide {
+      opacity: 0;
+      transform: translateY(-6px) scale(0.94);
+    }
+
+    .lhb-row {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .lhb-icon {
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .lhb-heart {
+      background: rgba(239,68,68,0.22);
+      color: #ef4444;
+      border: 1px solid rgba(239,68,68,0.35);
+    }
+
+    .lhb-follow {
+      background: rgba(126,184,255,0.18);
+      color: #7eb8ff;
+      border: 1px solid rgba(126,184,255,0.3);
+    }
+
+    .lhb-comment {
+      background: rgba(255,255,255,0.12);
+      color: rgba(255,255,255,0.8);
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+
+    .lhb-text {
+      font-size: 12px;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: 0.3px;
+    }
+
+    /* ============================================================ */
+    /*  MESSAGES POPUP SYSTEM (base styles)                          */
+    /* ============================================================ */
+    .msg-inbox-popup,
+    .msg-chat-popup {
+      position: fixed;
+      top: 70px;
+      right: 28px;
+      width: 360px;
+      border-radius: 22px;
+      background: rgba(12,14,28,0.82);
+      backdrop-filter: blur(32px) saturate(1.8);
+      -webkit-backdrop-filter: blur(32px) saturate(1.8);
+      border: 1px solid rgba(255,255,255,0.18);
+      box-shadow: 0 16px 60px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.16), inset 0 0 0 1px rgba(255,255,255,0.06);
+      z-index: 3000;
+      display: none;
+      flex-direction: column;
+      overflow: hidden;
+      max-height: 540px;
+      animation: msgPopupIn 0.28s cubic-bezier(0.17,0.89,0.32,1.28) forwards;
+    }
+
+    @keyframes msgPopupIn {
+      from { opacity: 0; transform: translateY(-8px) scale(0.96); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .msg-inbox-popup.open,
+    .msg-chat-popup.open { display: flex; }
+
+    .msg-popup-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 15px 16px 12px;
+      border-bottom: 1px solid rgba(255,255,255,0.09);
+      flex-shrink: 0;
+    }
+
+    .msg-popup-title {
+      font-size: 15px;
+      font-weight: 800;
+      color: #fff;
+      flex: 1;
+    }
+
+    .msg-popup-close,
+    .msg-popup-back {
+      background: none;
+      border: none;
+      color: rgba(255,255,255,0.5);
+      cursor: pointer;
+      padding: 4px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      transition: background 0.15s;
+    }
+    .msg-popup-close:hover,
+    .msg-popup-back:hover { background: rgba(255,255,255,0.1); color: #fff; }
+
+    .msg-popup-scroll {
+      overflow-y: auto;
+      flex: 1;
+      padding: 4px 0 8px;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(255,255,255,0.15) transparent;
+    }
+
+    .msg-popup-scroll::-webkit-scrollbar { width: 4px; }
+    .msg-popup-scroll::-webkit-scrollbar-track { background: transparent; }
+    .msg-popup-scroll::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 4px; }
+
+    /* Conversation list items */
+    .msg-conv-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 14px;
+      cursor: pointer;
+      transition: background 0.15s;
+      position: relative;
+    }
+
+    .msg-conv-item:hover { background: rgba(255,255,255,0.05); }
+
+    .msg-conv-item.unread { background: rgba(126,184,255,0.06); }
+    .msg-conv-item.unread:hover { background: rgba(126,184,255,0.1); }
+
+    .msg-conv-avatar-wrap { position: relative; flex-shrink: 0; }
+
+    .msg-conv-avatar {
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid rgba(255,255,255,0.15);
+    }
+
+    .msg-conv-status {
+      position: absolute;
+      bottom: -1px; right: -1px;
+      width: 11px; height: 11px;
+      border-radius: 50%;
+      border: 2px solid rgba(12,14,28,1);
+    }
+    .msg-conv-status.online { background: #22c55e; }
+    .msg-conv-status.away { background: #eab308; }
+    .msg-conv-status.offline { background: rgba(255,255,255,0.3); }
+
+    .msg-conv-info { flex: 1; min-width: 0; }
+    .msg-conv-name { font-size: 13.5px; font-weight: 700; color: #fff; }
+    .msg-conv-preview {
+      font-size: 12px;
+      color: rgba(255,255,255,0.5);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      margin-top: 2px;
+    }
+    .msg-conv-item.unread .msg-conv-preview { color: rgba(255,255,255,0.85); font-weight: 600; }
+
+    .msg-conv-meta {
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 4px;
+    }
+    .msg-conv-time { font-size: 10.5px; color: rgba(255,255,255,0.38); }
+    .msg-conv-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--accent);
+    }
+
+    /* Chat popup */
+    .msg-chat-popup-user {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex: 1;
+    }
+    .msg-chat-popup-avatar {
+      width: 34px; height: 34px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid rgba(255,255,255,0.15);
+    }
+    .msg-chat-popup-name { font-size: 14px; font-weight: 800; color: #fff; }
+    .msg-chat-popup-status { font-size: 10.5px; color: rgba(255,255,255,0.45); }
+
+    .msg-chat-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 12px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(255,255,255,0.15) transparent;
+      max-height: 320px;
+    }
+    .msg-chat-body::-webkit-scrollbar { width: 4px; }
+    .msg-chat-body::-webkit-scrollbar-track { background: transparent; }
+    .msg-chat-body::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 4px; }
+
+    .msg-bubble {
+      max-width: 80%;
+      padding: 8px 12px;
+      border-radius: 14px;
+      font-size: 13px;
+      line-height: 1.45;
+      word-break: break-word;
+    }
+    .msg-bubble.in {
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.14);
+      align-self: flex-start;
+      border-radius: 4px 14px 14px 14px;
+      color: #fff;
+    }
+    .msg-bubble.out {
+      background: linear-gradient(135deg, #7c3aed, #3b82f6);
+      align-self: flex-end;
+      border-radius: 14px 14px 4px 14px;
+      color: #fff;
+    }
+    .msg-bubble-time {
+      font-size: 10px;
+      color: rgba(255,255,255,0.4);
+      margin-top: 2px;
+    }
+
+    .msg-sticker-msg {
+      font-size: 38px;
+      padding: 4px;
+      background: none;
+      border: none;
+    }
+
+    .msg-chat-input-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 12px;
+      border-top: 1px solid rgba(255,255,255,0.10);
+      position: relative;
+    }
+
+    .msg-chat-input {
+      flex: 1;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 20px;
+      padding: 8px 14px;
+      color: #fff;
+      font-size: 13px;
+      font-family: 'Outfit', sans-serif;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .msg-chat-input::placeholder { color: rgba(255,255,255,0.4); }
+    .msg-chat-input:focus { border-color: rgba(255,255,255,0.35); }
+
+    .msg-chat-icon-btn {
+      width: 34px; height: 34px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.15);
+      color: #fff;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .msg-chat-icon-btn:hover { background: rgba(255,255,255,0.2); }
+    .msg-chat-icon-btn svg { width: 15px; height: 15px; }
+
+    .msg-chat-send-btn {
+      background: linear-gradient(135deg, #7c3aed, #3b82f6);
+      border: none;
+    }
+
+    /* Sticker picker */
+    .msg-sticker-picker {
+      position: absolute;
+      bottom: 56px;
+      right: 12px;
+      width: 220px;
+      background: rgba(12,14,28,0.92);
+      backdrop-filter: blur(24px) saturate(1.8);
+      -webkit-backdrop-filter: blur(24px) saturate(1.8);
+      border: 1px solid rgba(255,255,255,0.18);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+      border-radius: 16px;
+      padding: 10px;
+      z-index: 3010;
+    }
+
+    .msg-sticker-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+    }
+
+    .msg-sticker-item {
+      font-size: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 6px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.15s;
+    }
+    .msg-sticker-item:hover { background: rgba(255,255,255,0.12); transform: scale(1.15); }
+
+    .msg-empty-state {
+      padding: 40px 20px;
+      text-align: center;
+      color: rgba(255,255,255,0.4);
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Animated aura background -->
+<div class="aura-layer">
+  <div class="aura-orb aura-orb-1"></div>
+  <div class="aura-orb aura-orb-2"></div>
+  <div class="aura-orb aura-orb-3"></div>
+</div>
+
+<!-- Rotating game-card grid background -->
+<div class="gamepass-bg">
+  <div class="card-grid-rotor" id="cardGridRotor"></div>
+</div>
+
+<div class="app-layout">
+
+  <!-- ==================== LEFT SIDEBAR ==================== -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">NIMES</div>
+
+    <div class="sidebar-nav-box">
+    <a class="nav-item" href="#">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+      Profile
+    </a>
+    <a class="nav-item" href="#">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+      Home
+    </a>
+    <a class="nav-item" href="#">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      Search
+    </a>
+    <a class="nav-item" href="#">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+      Reels
+    </a>
+    <a class="nav-item active" href="#">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+      Games
+    </a>
+    <a class="nav-item" href="#">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+      Explore
+    </a>
+    <a class="nav-item" href="#">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>
+      Settings
+    </a>
+    <a class="nav-item" href="#">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+      Your Activity
+    </a>
+    <a class="nav-item" href="#">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+      Saved
+    </a>
+    <a class="nav-item" href="#">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3M12 17h.01"/></svg>
+      Support
+    </a>
+
+    <div class="sidebar-avatar">
+      <img src="https://i.pinimg.com/1200x/f3/23/33/f323338233ea1ef3e83ad205919f7a3a.jpg" alt="avatar">
+      <div class="sidebar-avatar-info">
+        <div class="sidebar-avatar-name">moonbreaker</div>
+        <div class="sidebar-avatar-handle">@moonbreaker_07</div>
+      </div>
+    </div>
+    </div><!-- end sidebar-nav-box -->
+  </aside>
+
+  <!-- ==================== RIGHT TOP ICON BUTTONS ==================== -->
+  <div class="right-topbar">
+    <button class="top-icon-btn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+    </button>
+    <button class="top-icon-btn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+    </button>
+    <button class="top-icon-btn" id="likeNotifBtn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+      <span class="notif-count-badge" id="likeNotifBadge">5</span>
+    </button>
+    <button class="top-icon-btn" id="msgInboxBtn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      <span class="notif-count-badge" id="msgUnreadBadge">2</span>
+    </button>
+  </div>
+
+  <!-- ==================== MAIN CONTENT ==================== -->
+  <div class="main-content">
+
+    <div class="gamepass-stage">
+      <div class="gamepass-title">NIMES&nbsp;&nbsp;GAMEPASS</div>
+
+      <div class="gamepass-card liquid-glass">
+        <div class="gamepass-desc">
+          Play over 100 high-quality games on Windows PC. Includes iconic NIMES games, new day one titles and the other games on PC catalogue. Join now to get your first one month for 2$.
+        </div>
+
+        <button class="gamepass-coming-btn" id="comingSoonBtn">Coming soon..</button>
+
+        <div class="gamepass-fine">
+          Subscription continues automatically at 2$/month unless cancelled through your NIMES Account. See <u>terms</u>. Requires Windows 10/11 (version 22H1 or higher) and the NIMES app to play PC games. <u>Get help here</u>.
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end main-content -->
+</div><!-- end app-layout -->
+
+<!-- ==================== LIKE NOTIFICATIONS POPUP ==================== -->
+<div id="likeNotifPopup" class="like-notif-popup">
+  <div class="like-notif-header">
+    <span class="like-notif-title">Notifications</span>
+    <div style="flex:1"></div>
+    <button class="like-notif-close" id="likeNotifClose">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="like-notif-scroll" id="likeNotifScroll">
+
+    <div class="like-notif-section-label">New</div>
+
+    <div class="like-notif-item unread" data-post-img="https://i.pinimg.com/736x/35/5f/a0/355fa00b82d4b0ac718b849a0d9a512f.jpg">
+      <div class="like-notif-avatars stacked">
+        <img src="https://i.pinimg.com/736x/bc/b3/61/bcb3612bebc2b5dfee3044600ea93700.jpg" class="lna-img lna-back">
+        <img src="https://i.pinimg.com/736x/fc/56/8e/fc568e1fc2445b8af18cc4e050ca13cf.jpg" class="lna-img lna-front">
+      </div>
+      <div class="like-notif-text">
+        <span class="lnt-bold">Mino</span> and <span class="lnt-bold">Mochi</span> liked your post.
+        <div class="lnt-time">2m</div>
+      </div>
+      <div class="like-notif-post-thumb">
+        <img src="https://i.pinimg.com/736x/35/5f/a0/355fa00b82d4b0ac718b849a0d9a512f.jpg" alt="post">
+        <div class="lnpt-icon">
+          <svg viewBox="0 0 24 24" fill="currentColor" width="9" height="9"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        </div>
+      </div>
+    </div>
+
+    <div class="like-notif-item unread">
+      <div class="like-notif-avatars">
+        <img src="https://i.pinimg.com/1200x/61/5b/13/615b13791d3c1c8568d36a64195181d4.jpg" class="lna-img lna-single">
+      </div>
+      <div class="like-notif-text">
+        <span class="lnt-bold">Reru</span> started following you.
+        <div class="lnt-time">14m</div>
+      </div>
+      <button class="lnt-follow-back-btn">Follow back</button>
+    </div>
+
+    <div class="like-notif-item unread" data-post-img="https://i.pinimg.com/736x/4e/3c/5a/4e3c5a133d8b2a1176c0df6110f02562.jpg">
+      <div class="like-notif-avatars">
+        <img src="https://api.dicebear.com/7.x/adventurer/svg?seed=baggy77" class="lna-img lna-single">
+      </div>
+      <div class="like-notif-text">
+        <span class="lnt-bold">Baggy</span> commented on your post.
+        <div class="lnt-comment-preview">"This setup is insane 🔥"</div>
+        <div class="lnt-actions">
+          <button class="lnt-act-btn">Like</button>
+          <button class="lnt-act-btn lnt-act-reply">Reply</button>
+        </div>
+      </div>
+      <div class="like-notif-post-thumb">
+        <img src="https://i.pinimg.com/736x/4e/3c/5a/4e3c5a133d8b2a1176c0df6110f02562.jpg" alt="post">
+        <div class="lnpt-icon">
+          <svg viewBox="0 0 24 24" fill="currentColor" width="9" height="9"><path d="M21.99 4c0-1.1-.89-2-1.99-2H4C2.9 2 2 2.9 2 4v12c0 1.1.9 2 2 2h14l4 4-.01-18z"/></svg>
+        </div>
+      </div>
+    </div>
+
+    <div class="like-notif-item unread">
+      <div class="like-notif-avatars">
+        <img src="https://api.dicebear.com/7.x/adventurer/svg?seed=tedy33" class="lna-img lna-single">
+      </div>
+      <div class="like-notif-text">
+        <span class="lnt-bold">Tedy</span> started following you.
+        <div class="lnt-time">28m</div>
+      </div>
+      <button class="lnt-follow-back-btn">Follow back</button>
+    </div>
+
+    <div class="like-notif-item unread" data-post-img="https://i.pinimg.com/736x/67/b9/58/67b95875d67570821f5e5a194ab033b2.jpg">
+      <div class="like-notif-avatars stacked">
+        <img src="https://i.pinimg.com/1200x/db/fe/75/dbfe75990174020a7ebf8799999212d8.jpg" class="lna-img lna-back">
+        <img src="https://i.pinimg.com/736x/f7/d8/f2/f7d8f2df2827bd6f8e0e95b12434ceab.jpg" class="lna-img lna-front">
+      </div>
+      <div class="like-notif-text">
+        <span class="lnt-bold">Apple</span> and <span class="lnt-bold">Jhon</span> liked your post.
+        <div class="lnt-time">41m</div>
+      </div>
+      <div class="like-notif-post-thumb">
+        <img src="https://i.pinimg.com/736x/67/b9/58/67b95875d67570821f5e5a194ab033b2.jpg" alt="post">
+        <div class="lnpt-icon">
+          <svg viewBox="0 0 24 24" fill="currentColor" width="9" height="9"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        </div>
+      </div>
+    </div>
+
+    <div class="like-notif-section-label">Today</div>
+
+    <div class="like-notif-item">
+      <div class="like-notif-avatars">
+        <img src="https://i.pinimg.com/1200x/f3/23/33/f323338233ea1ef3e83ad205919f7a3a.jpg" class="lna-img lna-single">
+      </div>
+      <div class="like-notif-text">
+        <span class="lnt-bold">moonbreaker</span> achievement unlocked: <span class="lnt-bold">First Win!</span>
+        <div class="lnt-time">3h</div>
+      </div>
+    </div>
+
+    <div class="like-notif-item" data-post-img="https://i.pinimg.com/736x/98/df/69/98df6949fce8c87f15b03b306fc89fb0.jpg">
+      <div class="like-notif-avatars">
+        <img src="https://i.pinimg.com/736x/98/df/69/98df6949fce8c87f15b03b306fc89fb0.jpg" class="lna-img lna-single">
+      </div>
+      <div class="like-notif-text">
+        <span class="lnt-bold">Moon</span> liked your comment.
+        <div class="lnt-time">5h</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Liquid glass hint bubble -->
+<div class="like-hint-bubble" id="likeHintBubble">
+  <div class="lhb-row">
+    <div class="lhb-icon lhb-heart">
+      <svg viewBox="0 0 24 24" fill="currentColor" width="11" height="11"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+    </div>
+    <div class="lhb-text">You have 5 new notifications</div>
+  </div>
+</div>
+
+<!-- ==================== MESSAGES POPUP SYSTEM ==================== -->
+<div id="msgInboxPopup" class="msg-inbox-popup">
+  <div class="msg-popup-header">
+    <span class="msg-popup-title">Messages</span>
+    <button class="msg-popup-close" id="msgInboxClose">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="msg-popup-scroll" id="msgConvList"></div>
+</div>
+
+<div id="msgChatPopup" class="msg-chat-popup">
+  <div class="msg-popup-header">
+    <button class="msg-popup-back" id="msgChatBack">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><polyline points="15 18 9 12 15 6"/></svg>
+    </button>
+    <div class="msg-chat-popup-user">
+      <img class="msg-chat-popup-avatar" id="msgChatAvatar" src="" alt="">
+      <div>
+        <div class="msg-chat-popup-name" id="msgChatName"></div>
+        <div class="msg-chat-popup-status" id="msgChatStatus"></div>
+      </div>
+    </div>
+    <button class="msg-popup-close" id="msgChatClose">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="msg-chat-body" id="msgChatBody"></div>
+  <div class="msg-chat-input-wrap">
+    <button class="msg-chat-icon-btn" id="msgStickerBtn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9" y2="9"/><line x1="15" y1="9" x2="15" y2="9"/></svg>
+    </button>
+    <input class="msg-chat-input" id="msgChatInput" type="text" placeholder="Message...">
+    <button class="msg-chat-icon-btn msg-chat-send-btn" id="msgChatSendBtn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+    </button>
+    <div id="msgStickerPicker" class="msg-sticker-picker" style="display:none">
+      <div class="msg-sticker-grid">
+        <span class="msg-sticker-item" data-sticker="🎮">🎮</span>
+        <span class="msg-sticker-item" data-sticker="🔥">🔥</span>
+        <span class="msg-sticker-item" data-sticker="💎">💎</span>
+        <span class="msg-sticker-item" data-sticker="🏆">🏆</span>
+        <span class="msg-sticker-item" data-sticker="⚔️">⚔️</span>
+        <span class="msg-sticker-item" data-sticker="🛡️">🛡️</span>
+        <span class="msg-sticker-item" data-sticker="👾">👾</span>
+        <span class="msg-sticker-item" data-sticker="🚀">🚀</span>
+        <span class="msg-sticker-item" data-sticker="💀">💀</span>
+        <span class="msg-sticker-item" data-sticker="⭐">⭐</span>
+        <span class="msg-sticker-item" data-sticker="🎯">🎯</span>
+        <span class="msg-sticker-item" data-sticker="💥">💥</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- AI Floating Button -->
+<div class="ai-fab-wrap">
+  <!-- Welcome bubble -->
+  <div class="ai-welcome-bubble" id="aiBubble">
+    <span>Hi, how can I help you today?</span>
+  </div>
+  <!-- Chat panel -->
+  <div class="ai-chat-panel" id="aiChatPanel">
+    <div class="ai-chat-header">
+      <div class="ai-chat-title">
+        <div class="ai-avatar-small">✦</div>
+        <span>Aurelia AI</span>
+      </div>
+      <button class="ai-close-btn" id="aiCloseBtn">✕</button>
+    </div>
+    <div class="ai-chat-messages" id="aiMessages">
+      <div class="ai-msg ai-msg-bot">
+        <span>Hey! How can I help you today? 🎮</span>
+      </div>
+    </div>
+    <div class="ai-chat-input-wrap">
+      <input class="ai-chat-input" id="aiInput" type="text" placeholder="Ask me anything..." maxlength="300">
+      <button class="ai-send-btn" id="aiSendBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+      </button>
+    </div>
+  </div>
+  <!-- FAB button -->
+  <button class="ai-fab" id="aiFab">
+    <div class="ai-fab-avatar">
+      <img src="https://i.pinimg.com/736x/75/06/71/750671109df71ce4eec2705e6dca540d.jpg" alt="AI">
+      <div class="ai-fab-glow"></div>
+    </div>
+  </button>
+</div>
+
+<script>
+  /* ============================================================ */
+  /*  ROTATING GAME-CARD GRID BACKGROUND                           */
+  /* ============================================================ */
+  (function() {
+    const covers = [
+      'https://i.pinimg.com/736x/35/5f/a0/355fa00b82d4b0ac718b849a0d9a512f.jpg',
+      'https://i.pinimg.com/736x/4e/3c/5a/4e3c5a133d8b2a1176c0df6110f02562.jpg',
+      'https://i.pinimg.com/736x/67/b9/58/67b95875d67570821f5e5a194ab033b2.jpg',
+      'https://i.pinimg.com/1200x/db/fe/75/dbfe75990174020a7ebf8799999212d8.jpg',
+      'https://i.pinimg.com/736x/f7/d8/f2/f7d8f2df2827bd6f8e0e95b12434ceab.jpg',
+      'https://i.pinimg.com/736x/fc/56/8e/fc568e1fc2445b8af18cc4e050ca13cf.jpg',
+      'https://i.pinimg.com/736x/98/df/69/98df6949fce8c87f15b03b306fc89fb0.jpg',
+      'https://i.pinimg.com/736x/bc/b3/61/bcb3612bebc2b5dfee3044600ea93700.jpg',
+      'https://i.pinimg.com/1200x/61/5b/13/615b13791d3c1c8568d36a64195181d4.jpg',
+      'https://api.dicebear.com/7.x/adventurer/svg?seed=baggy77',
+      'https://api.dicebear.com/7.x/adventurer/svg?seed=tedy33',
+      'https://i.pinimg.com/1200x/f3/23/33/f323338233ea1ef3e83ad205919f7a3a.jpg'
+    ];
+
+    const rotor = document.getElementById('cardGridRotor');
+    const COLS = 9;
+    const ROWS_PER_COL = 7; // enough to fill, will be duplicated for seamless loop
+
+    for (let c = 0; c < COLS; c++) {
+      const col = document.createElement('div');
+      col.className = 'card-grid-col ' + (c % 2 === 0 ? 'up' : 'down');
+      col.style.animationDuration = (40 + (c % 3) * 8) + 's';
+
+      // Build images twice for seamless vertical loop
+      for (let rep = 0; rep < 2; rep++) {
+        for (let r = 0; r < ROWS_PER_COL; r++) {
+          const img = document.createElement('img');
+          const idx = (c * ROWS_PER_COL + r) % covers.length;
+          img.src = covers[idx];
+          img.loading = 'lazy';
+          col.appendChild(img);
+        }
+      }
+      rotor.appendChild(col);
+    }
+  })();
+
+  /* ============================================================ */
+  /*  COMING SOON BUTTON                                           */
+  /* ============================================================ */
+  document.getElementById('comingSoonBtn').addEventListener('click', () => {
+    // Intentionally inert for now
+  });
+
+  /* ============================================================ */
+  /*  AI CHAT — Proxy üzerinden Groq                              */
+  /* ============================================================ */
+  (function() {
+    const PROXY_URL = '';
+
+    const fab = document.getElementById('aiFab');
+    const panel = document.getElementById('aiChatPanel');
+    const closeBtn = document.getElementById('aiCloseBtn');
+    const sendBtn = document.getElementById('aiSendBtn');
+    const input = document.getElementById('aiInput');
+    const messages = document.getElementById('aiMessages');
+    const bubble = document.getElementById('aiBubble');
+
+    let chatHistory = [
+      { role: 'system', content: 'You are Aurelia AI, a friendly gaming assistant for the AureliaGames platform. Keep responses short, helpful and gaming-focused. Use emojis occasionally.' }
+    ];
+
+    setTimeout(() => {
+      bubble.classList.add('show');
+      setTimeout(() => {
+        bubble.classList.remove('show');
+      }, 5000);
+    }, 800);
+
+    fab.addEventListener('click', () => {
+      bubble.classList.remove('show');
+      if (panel.classList.contains('open')) {
+        panel.classList.remove('open');
+      } else {
+        panel.classList.add('open');
+        input.focus();
+      }
+    });
+
+    closeBtn.addEventListener('click', () => {
+      panel.classList.remove('open');
+    });
+
+    function appendMsg(role, text) {
+      const div = document.createElement('div');
+      div.className = 'ai-msg ' + (role === 'user' ? 'ai-msg-user' : 'ai-msg-bot');
+      div.textContent = text;
+      messages.appendChild(div);
+      messages.scrollTop = messages.scrollHeight;
+      return div;
+    }
+
+    function showTyping() {
+      const div = document.createElement('div');
+      div.className = 'ai-msg ai-msg-bot ai-typing';
+      div.innerHTML = '<span></span><span></span><span></span>';
+      messages.appendChild(div);
+      messages.scrollTop = messages.scrollHeight;
+      return div;
+    }
+
+    async function sendMessage() {
+      const text = input.value.trim();
+      if (!text) return;
+      input.value = '';
+
+      appendMsg('user', text);
+      chatHistory.push({ role: 'user', content: text });
+
+      const typing = showTyping();
+      sendBtn.disabled = true;
+
+      try {
+        const res = await fetch(PROXY_URL + '/api/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ messages: chatHistory })
+        });
+
+        const data = await res.json();
+        typing.remove();
+
+        if (data.choices && data.choices[0]) {
+          const reply = data.choices[0].message.content;
+          chatHistory.push({ role: 'assistant', content: reply });
+          appendMsg('assistant', reply);
+        } else {
+          appendMsg('assistant', 'Sorry, I had a connection issue. Try again! 🎮');
+        }
+      } catch (err) {
+        typing.remove();
+        appendMsg('assistant', 'Oops, something went wrong. Check your API key! 🔑');
+      }
+
+      sendBtn.disabled = false;
+      input.focus();
+    }
+
+    sendBtn.addEventListener('click', sendMessage);
+    input.addEventListener('keydown', e => { if (e.key === 'Enter') sendMessage(); });
+  })();
+
+  /* ============================================================ */
+  /*  MESSAGES SYSTEM                                              */
+  /* ============================================================ */
+  (function() {
+    const conversations = [
+      {
+        id: 'yeerzy', name: 'Yeerzy',
+        avatar: 'https://i.pinimg.com/1200x/61/5b/13/615b13791d3c1c8568d36a64195181d4.jpg',
+        online: true, unread: true, preview: 'Liked your message', time: '8m',
+        messages: [
+          { from: 'them', text: 'yo, gg on that last match 🔥', time: '10m' },
+          { from: 'me', text: 'thanks man, you carried tbh', time: '9m' },
+          { from: 'them', text: 'Liked your message', time: '8m' }
+        ]
+      },
+      {
+        id: 'mino', name: 'Mino',
+        avatar: 'https://i.pinimg.com/736x/bc/b3/61/bcb3612bebc2b5dfee3044600ea93700.jpg',
+        online: true, unread: true, preview: 'wanna queue up?', time: '22m',
+        messages: [
+          { from: 'them', text: 'wanna queue up?', time: '22m' }
+        ]
+      },
+      {
+        id: 'apple', name: 'Apple',
+        avatar: 'https://i.pinimg.com/1200x/db/fe/75/dbfe75990174020a7ebf8799999212d8.jpg',
+        online: false, unread: false, preview: 'sent a sticker', time: '1h',
+        messages: [
+          { from: 'them', sticker: '🎮', time: '1h' }
+        ]
+      },
+      {
+        id: 'jhon', name: 'Jhon',
+        avatar: 'https://i.pinimg.com/736x/f7/d8/f2/f7d8f2df2827bd6f8e0e95b12434ceab.jpg',
+        online: false, unread: false, preview: 'see you online later', time: '3h',
+        messages: [
+          { from: 'me', text: 'see you online later', time: '3h' }
+        ]
+      },
+      {
+        id: 'moon', name: 'Moon',
+        avatar: 'https://i.pinimg.com/736x/98/df/69/98df6949fce8c87f15b03b306fc89fb0.jpg',
+        online: true, unread: false, preview: 'nice clip 😂', time: '5h',
+        messages: [
+          { from: 'them', text: 'nice clip 😂', time: '5h' }
+        ]
+      }
+    ];
+
+    const inboxBtn      = document.getElementById('msgInboxBtn');
+    const inboxPopup    = document.getElementById('msgInboxPopup');
+    const inboxClose    = document.getElementById('msgInboxClose');
+    const convList      = document.getElementById('msgConvList');
+    const msgUnreadBadge= document.getElementById('msgUnreadBadge');
+
+    const chatPopup     = document.getElementById('msgChatPopup');
+    const chatBack      = document.getElementById('msgChatBack');
+    const chatClose     = document.getElementById('msgChatClose');
+    const chatAvatar    = document.getElementById('msgChatAvatar');
+    const chatName      = document.getElementById('msgChatName');
+    const chatStatus    = document.getElementById('msgChatStatus');
+    const chatBody      = document.getElementById('msgChatBody');
+    const chatInput     = document.getElementById('msgChatInput');
+    const chatSendBtn   = document.getElementById('msgChatSendBtn');
+    const stickerBtn    = document.getElementById('msgStickerBtn');
+    const stickerPicker = document.getElementById('msgStickerPicker');
+
+    let activeConvId = null;
+
+    function renderConvList() {
+      convList.innerHTML = '';
+      if (conversations.length === 0) {
+        convList.innerHTML = '<div class="msg-empty-state">No messages yet</div>';
+        return;
+      }
+      conversations.forEach(conv => {
+        const item = document.createElement('div');
+        item.className = 'msg-conv-item' + (conv.unread ? ' unread' : '');
+        item.innerHTML = `
+          <div class="msg-conv-avatar-wrap">
+            <img class="msg-conv-avatar" src="${conv.avatar}" alt="${conv.name}">
+            <span class="msg-conv-status ${conv.online ? 'online' : 'offline'}"></span>
+          </div>
+          <div class="msg-conv-info">
+            <div class="msg-conv-name">${conv.name}</div>
+            <div class="msg-conv-preview">${conv.preview}</div>
+          </div>
+          <div class="msg-conv-meta">
+            <div class="msg-conv-time">${conv.time}</div>
+            ${conv.unread ? '<span class="msg-conv-dot"></span>' : ''}
+          </div>
+        `;
+        item.addEventListener('click', () => openChat(conv.id));
+        convList.appendChild(item);
+      });
+    }
+
+    function updateUnreadBadge() {
+      const unreadCount = conversations.filter(c => c.unread).length;
+      if (unreadCount > 0) {
+        msgUnreadBadge.textContent = unreadCount;
+        msgUnreadBadge.classList.remove('hidden');
+      } else {
+        msgUnreadBadge.classList.add('hidden');
+      }
+    }
+
+    function renderChatBody(conv) {
+      chatBody.innerHTML = '';
+      conv.messages.forEach(msg => {
+        const wrap = document.createElement('div');
+        if (msg.sticker) {
+          wrap.className = 'msg-bubble msg-sticker-msg ' + (msg.from === 'me' ? 'out' : 'in');
+          wrap.textContent = msg.sticker;
+        } else {
+          wrap.className = 'msg-bubble ' + (msg.from === 'me' ? 'out' : 'in');
+          wrap.textContent = msg.text;
+        }
+        chatBody.appendChild(wrap);
+      });
+      chatBody.scrollTop = chatBody.scrollHeight;
+    }
+
+    function openChat(id) {
+      const conv = conversations.find(c => c.id === id);
+      if (!conv) return;
+      activeConvId = id;
+      conv.unread = false;
+      updateUnreadBadge();
+
+      chatAvatar.src = conv.avatar;
+      chatName.textContent = conv.name;
+      chatStatus.textContent = conv.online ? 'Online' : 'Offline';
+      renderChatBody(conv);
+
+      inboxPopup.classList.remove('open');
+      chatPopup.classList.add('open');
+      positionPopup(chatPopup);
+    }
+
+    function positionPopup(popup) {
+      const btnRect = inboxBtn.getBoundingClientRect();
+      popup.style.top = (btnRect.bottom + 8) + 'px';
+      const popupRight = window.innerWidth - btnRect.right - 4;
+      popup.style.right = Math.max(8, popupRight) + 'px';
+      popup.style.left = 'auto';
+    }
+
+    inboxBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const likePopup = document.getElementById('likeNotifPopup');
+      if (likePopup) likePopup.classList.remove('open');
+      chatPopup.classList.remove('open');
+
+      const isOpen = inboxPopup.classList.contains('open');
+      if (!isOpen) {
+        renderConvList();
+        positionPopup(inboxPopup);
+      }
+      inboxPopup.classList.toggle('open', !isOpen);
+    });
+
+    inboxClose.addEventListener('click', (e) => {
+      e.stopPropagation();
+      inboxPopup.classList.remove('open');
+    });
+
+    chatBack.addEventListener('click', (e) => {
+      e.stopPropagation();
+      chatPopup.classList.remove('open');
+      stickerPicker.style.display = 'none';
+      renderConvList();
+      positionPopup(inboxPopup);
+      inboxPopup.classList.add('open');
+    });
+
+    chatClose.addEventListener('click', (e) => {
+      e.stopPropagation();
+      chatPopup.classList.remove('open');
+      stickerPicker.style.display = 'none';
+    });
+
+    function sendChatMessage() {
+      const text = chatInput.value.trim();
+      if (!text || !activeConvId) return;
+      const conv = conversations.find(c => c.id === activeConvId);
+      conv.messages.push({ from: 'me', text, time: 'now' });
+      chatInput.value = '';
+      renderChatBody(conv);
+    }
+
+    chatSendBtn.addEventListener('click', sendChatMessage);
+    chatInput.addEventListener('keydown', e => { if (e.key === 'Enter') sendChatMessage(); });
+
+    stickerBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      stickerPicker.style.display = stickerPicker.style.display === 'none' ? 'block' : 'none';
+    });
+
+    document.querySelectorAll('.msg-sticker-item').forEach(it => {
+      it.addEventListener('click', () => {
+        if (!activeConvId) return;
+        const conv = conversations.find(c => c.id === activeConvId);
+        conv.messages.push({ from: 'me', sticker: it.dataset.sticker, time: 'now' });
+        renderChatBody(conv);
+        stickerPicker.style.display = 'none';
+      });
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!inboxPopup.contains(e.target) && e.target !== inboxBtn && !inboxBtn.contains(e.target)) {
+        inboxPopup.classList.remove('open');
+      }
+      if (!chatPopup.contains(e.target)) {
+        stickerPicker.style.display = 'none';
+      }
+      if (!chatPopup.contains(e.target) && e.target !== inboxBtn && !inboxBtn.contains(e.target)) {
+        chatPopup.classList.remove('open');
+      }
+    });
+
+    updateUnreadBadge();
+  })();
+
+  /* ============================================================ */
+  /*  LIKE NOTIFICATIONS SYSTEM                                    */
+  /* ============================================================ */
+  (function() {
+    const likeNotifBtn   = document.getElementById('likeNotifBtn');
+    const likeNotifPopup = document.getElementById('likeNotifPopup');
+    const likeNotifClose = document.getElementById('likeNotifClose');
+    const likeNotifBadge = document.getElementById('likeNotifBadge');
+    const likeHintBubble = document.getElementById('likeHintBubble');
+
+    setTimeout(() => {
+      const btnRect = likeNotifBtn.getBoundingClientRect();
+      likeHintBubble.style.top = (btnRect.bottom + 8) + 'px';
+      likeHintBubble.style.right = (window.innerWidth - btnRect.right - 4) + 'px';
+      likeHintBubble.style.left = 'auto';
+      likeHintBubble.classList.add('show');
+      setTimeout(() => {
+        likeHintBubble.classList.remove('show');
+        likeHintBubble.classList.add('hide');
+      }, 5000);
+    }, 1000);
+
+    likeNotifBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const msgPopup = document.getElementById('msgInboxPopup');
+      if (msgPopup) msgPopup.classList.remove('open');
+      const chatPopup = document.getElementById('msgChatPopup');
+      if (chatPopup) chatPopup.classList.remove('open');
+
+      const isOpen = likeNotifPopup.classList.contains('open');
+
+      if (!isOpen) {
+        const btnRect = likeNotifBtn.getBoundingClientRect();
+        likeNotifPopup.style.top  = (btnRect.bottom + 8) + 'px';
+        const popupRight = window.innerWidth - btnRect.right - 4;
+        likeNotifPopup.style.right = Math.max(8, popupRight) + 'px';
+        likeNotifPopup.style.left = 'auto';
+      }
+
+      likeNotifPopup.classList.toggle('open', !isOpen);
+
+      if (!isOpen) {
+        likeNotifBadge.classList.add('hidden');
+        likeHintBubble.classList.remove('show');
+        likeHintBubble.classList.add('hide');
+      }
+    });
+
+    likeNotifClose.addEventListener('click', (e) => {
+      e.stopPropagation();
+      likeNotifPopup.classList.remove('open');
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!likeNotifPopup.contains(e.target) && e.target !== likeNotifBtn && !likeNotifBtn.contains(e.target)) {
+        likeNotifPopup.classList.remove('open');
+      }
+    });
+
+    document.querySelectorAll('.lnt-follow-back-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (btn.classList.contains('lnt-followed')) {
+          btn.textContent = 'Follow back';
+          btn.classList.remove('lnt-followed');
+        } else {
+          btn.textContent = 'Following';
+          btn.classList.add('lnt-followed');
+        }
+      });
+    });
+
+    document.querySelectorAll('.lnt-act-btn:not(.lnt-act-reply)').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (btn.classList.contains('lnt-liked')) {
+          btn.classList.remove('lnt-liked');
+          btn.textContent = 'Like';
+          btn.style.color = '';
+          btn.style.borderColor = '';
+          btn.style.background = '';
+        } else {
+          btn.classList.add('lnt-liked');
+          btn.textContent = 'Liked';
+          btn.style.color = '#ef4444';
+          btn.style.borderColor = 'rgba(239,68,68,0.4)';
+          btn.style.background = 'rgba(239,68,68,0.12)';
+        }
+      });
+    });
+
+    document.querySelectorAll('.lnt-act-reply').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        likeNotifPopup.classList.remove('open');
+      });
+    });
+  })();
+</script>
+</body>
+</html>
