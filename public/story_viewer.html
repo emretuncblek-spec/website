@@ -193,12 +193,28 @@
       z-index: 5;
     }
 
-    .sv-header-avatar {
-      width: 36px; height: 36px;
-      border-radius: 50%;
-      border: 2px solid rgba(255,255,255,0.8);
-      object-fit: cover;
+    .sv-header-avatar-wrap {
+      position: relative;
+      width: 40px; height: 40px;
       flex-shrink: 0;
+    }
+    .sv-header-avatar-ring {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      padding: 2px;
+      background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+      -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 2.5px), #000 calc(100% - 2.5px));
+      mask: radial-gradient(farthest-side, transparent calc(100% - 2.5px), #000 calc(100% - 2.5px));
+    }
+    .sv-header-avatar {
+      width: 34px; height: 34px;
+      border-radius: 50%;
+      border: 2px solid #111;
+      object-fit: cover;
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
     }
 
     .sv-header-info { flex: 1; min-width: 0; }
@@ -589,13 +605,13 @@
 
         <!-- Header -->
         <div class="sv-story-header">
-          <img class="sv-header-avatar" src="${user.avatar}" alt="${user.username}" onerror="this.src='https://i.pinimg.com/736x/35/5f/a0/355fa00b82d4b0ac718b849a0d9a512f.jpg'">
+          <div class="sv-header-avatar-wrap">
+            <div class="sv-header-avatar-ring"></div>
+            <img class="sv-header-avatar" src="${user.avatar}" alt="${user.username}" onerror="this.src='https://i.pinimg.com/736x/35/5f/a0/355fa00b82d4b0ac718b849a0d9a512f.jpg'">
+          </div>
           <div class="sv-header-info">
             <div class="sv-header-name">${user.username}</div>
-            <div class="sv-header-sub">
-              <span style="width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,0.4);display:inline-block;margin-right:4px;"></span>
-              See translation
-            </div>
+            <div class="sv-header-sub">${slide.time}</div>
           </div>
           <div class="sv-header-controls">
             <button class="sv-ctrl-btn" id="svPlayPauseBtn" title="Duraklat">
