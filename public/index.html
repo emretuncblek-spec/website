@@ -3524,6 +3524,23 @@
 
 
   /* ============================================================ */
+  /*  STORY ITEM CLICK — open story viewer page                    */
+  /* ============================================================ */
+  (function() {
+    // Story items (skip "Your story" which has no story index)
+    const storyItems = document.querySelectorAll('.story-item');
+    storyItems.forEach((item, idx) => {
+      // idx 0 = "Your story", skip navigation for it
+      if (idx === 0) return;
+      item.style.cursor = 'pointer';
+      item.addEventListener('click', () => {
+        // idx - 1 because idx 0 is "Your story"
+        window.location.href = 'story_viewer.html?story=' + (idx - 1);
+      });
+    });
+  })();
+
+  /* ============================================================ */
   /*  STORIES SCROLL BEHAVIOR                                      */
   /* ============================================================ */
   const storiesCard = document.getElementById('storiesCard');
