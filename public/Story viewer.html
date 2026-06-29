@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nimes - Stories</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      width: 100%; height: 100%;
+      font-family: 'Outfit', sans-serif;
+      background: #111;
+      color: #fff;
+      overflow: hidden;
+    }
+
+    /* ============================================================ */
+    /*  FULL-SCREEN STORY VIEWER (Instagram style)                   */
+    /* ============================================================ */
+    .story-viewer-overlay {
+      position: fixed;
+      inset: 0;
+      background: #111;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10000;
+    }
+
+    /* Close button top right */
+    .sv-close-btn {
+      position: fixed;
+      top: 22px;
+      right: 28px;
+      z-index: 10010;
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.22);
+      border-radius: 50%;
+      width: 40px; height: 40px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      color: #fff;
+      backdrop-filter: blur(12px);
+      transition: background 0.2s;
+    }
+    .sv-close-btn:hover { background: rgba(255,255,255,0.25); }
+    .sv-close-btn svg { width: 20px; height: 20px; }
+
+    /* Prev / Next nav arrows */
+    .sv-nav-btn {
+      position: fixed;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 10009;
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.22);
+      border-radius: 50%;
+      width: 44px; height: 44px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      color: #fff;
+      backdrop-filter: blur(12px);
+      transition: background 0.2s, opacity 0.2s;
+    }
+    .sv-nav-btn:hover { background: rgba(255,255,255,0.28); }
+    .sv-nav-btn svg { width: 22px; height: 22px; }
+    .sv-nav-prev { left: calc(50% - 340px - 60px); }
+    .sv-nav-next { right: calc(50% - 340px - 60px); }
+    .sv-nav-btn.hidden { opacity: 0; pointer-events: none; }
+
+    /* Center story card */
+    .sv-center-card {
+      position: relative;
+      width: 340px;
+      height: 600px;
+      border-radius: 16px;
+      overflow: hidden;
+      flex-shrink: 0;
+      box-shadow: 0 8px 60px rgba(0,0,0,0.7);
+      z-index: 2;
+    }
+
+    /* Side preview cards */
+    .sv-side-card {
+      width: 200px;
+      height: 360px;
+      border-radius: 14px;
+      overflow: hidden;
+      flex-shrink: 0;
+      position: relative;
+      cursor: pointer;
+      transition: transform 0.3s ease, opacity 0.3s ease;
+      opacity: 0.55;
+      margin: 0 18px;
+    }
+    .sv-side-card:hover { opacity: 0.75; transform: scale(1.02); }
+
+    .sv-side-card img,
+    .sv-center-card img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* Side card gradient overlay */
+    .sv-side-card::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.2) 60%, rgba(0,0,0,0.5) 100%);
+    }
+
+    .sv-side-card-info {
+      position: absolute;
+      bottom: 14px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 2;
+      text-align: center;
+      width: 100%;
+      padding: 0 10px;
+    }
+
+    .sv-side-avatar {
+      width: 42px; height: 42px;
+      border-radius: 50%;
+      border: 2px solid rgba(255,255,255,0.7);
+      object-fit: cover;
+      display: block;
+      margin: 0 auto 6px;
+    }
+
+    .sv-side-name {
+      font-size: 12px;
+      font-weight: 700;
+      color: #fff;
+      text-shadow: 0 1px 4px rgba(0,0,0,0.6);
+    }
+
+    .sv-side-time {
+      font-size: 11px;
+      color: rgba(255,255,255,0.7);
+      margin-top: 2px;
+    }
+
+    /* ---- Center card UI ---- */
+    /* Progress bars at top */
+    .sv-progress-bars {
+      position: absolute;
+      top: 14px;
+      left: 12px;
+      right: 12px;
+      display: flex;
+      gap: 4px;
+      z-index: 5;
+    }
+
+    .sv-prog-bar {
+      flex: 1;
+      height: 2.5px;
+      background: rgba(255,255,255,0.30);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .sv-prog-fill {
+      height: 100%;
+      background: #fff;
+      border-radius: 2px;
+      width: 0%;
+      transition: none;
+    }
+
+    .sv-prog-fill.done { width: 100%; }
+    .sv-prog-fill.active { animation: progFill var(--story-duration, 5s) linear forwards; }
+
+    @keyframes progFill {
+      from { width: 0%; }
+      to   { width: 100%; }
+    }
+
+    /* Story header (avatar + name + time + controls) */
+    .sv-story-header {
+      position: absolute;
+      top: 28px;
+      left: 0; right: 0;
+      padding: 10px 14px 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      z-index: 5;
+    }
+
+    .sv-header-avatar {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      border: 2px solid rgba(255,255,255,0.8);
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+
+    .sv-header-info { flex: 1; min-width: 0; }
+    .sv-header-name {
+      font-size: 13px;
+      font-weight: 700;
+      color: #fff;
+      text-shadow: 0 1px 4px rgba(0,0,0,0.5);
+    }
+    .sv-header-sub {
+      font-size: 11px;
+      color: rgba(255,255,255,0.75);
+      margin-top: 1px;
+    }
+
+    .sv-header-controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .sv-ctrl-btn {
+      background: none;
+      border: none;
+      color: rgba(255,255,255,0.85);
+      cursor: pointer;
+      padding: 4px;
+      display: flex;
+      align-items: center;
+    }
+    .sv-ctrl-btn svg { width: 18px; height: 18px; }
+    .sv-ctrl-btn:hover { color: #fff; }
+
+    /* Story image */
+    .sv-center-card .sv-story-img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* Dark gradient overlay on center */
+    .sv-center-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        to bottom,
+        rgba(0,0,0,0.35) 0%,
+        transparent 25%,
+        transparent 65%,
+        rgba(0,0,0,0.55) 100%
+      );
+      pointer-events: none;
+    }
+
+    /* Tap zones for prev/next within center card */
+    .sv-tap-left, .sv-tap-right {
+      position: absolute;
+      top: 0; bottom: 0;
+      width: 40%;
+      z-index: 4;
+      cursor: pointer;
+    }
+    .sv-tap-left  { left: 0; }
+    .sv-tap-right { right: 0; }
+
+    /* Bottom text label */
+    .sv-story-label {
+      position: absolute;
+      bottom: 80px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 5;
+      background: rgba(0,0,0,0.72);
+      color: #fff;
+      font-size: 14px;
+      font-weight: 800;
+      padding: 8px 20px;
+      border-radius: 30px;
+      white-space: nowrap;
+      max-width: 90%;
+      text-align: center;
+    }
+
+    /* Reply bar at bottom */
+    .sv-reply-bar {
+      position: absolute;
+      bottom: 16px;
+      left: 14px;
+      right: 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      z-index: 5;
+    }
+
+    .sv-reply-input {
+      flex: 1;
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.30);
+      border-radius: 30px;
+      color: rgba(255,255,255,0.85);
+      font-family: 'Outfit', sans-serif;
+      font-size: 13px;
+      padding: 9px 18px;
+      outline: none;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      transition: background 0.2s, border-color 0.2s;
+    }
+    .sv-reply-input::placeholder { color: rgba(255,255,255,0.55); }
+    .sv-reply-input:focus {
+      background: rgba(255,255,255,0.18);
+      border-color: rgba(255,255,255,0.50);
+    }
+
+    .sv-reply-action {
+      background: none;
+      border: none;
+      color: rgba(255,255,255,0.75);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      padding: 4px;
+    }
+    .sv-reply-action:hover { color: #fff; }
+    .sv-reply-action svg { width: 22px; height: 22px; }
+
+    /* "See translation" badge */
+    .sv-translate-badge {
+      position: absolute;
+      top: 88px;
+      left: 14px;
+      z-index: 5;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(0,0,0,0.45);
+      border-radius: 12px;
+      padding: 4px 10px;
+      font-size: 11px;
+      color: rgba(255,255,255,0.8);
+      cursor: pointer;
+      backdrop-filter: blur(8px);
+    }
+    .sv-translate-badge svg { width: 12px; height: 12px; opacity: 0.7; }
+
+    /* Layout wrapper for center + sides */
+    .sv-layout {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+      gap: 0;
+    }
+
+    /* Background color that follows active story */
+    .story-viewer-overlay {
+      transition: background 0.5s ease;
+    }
+
+    /* ============================================================ */
+    /*  STORY DATA — each story has slides                           */
+    /* ============================================================ */
+  </style>
+</head>
+<body>
+
+<div class="story-viewer-overlay" id="storyViewerOverlay">
+
+  <!-- Close -->
+  <button class="sv-close-btn" id="svCloseBtn" title="Kapat">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+  </button>
+
+  <!-- Prev user -->
+  <button class="sv-nav-btn sv-nav-prev" id="svNavPrev" title="Önceki">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+  </button>
+
+  <!-- Next user -->
+  <button class="sv-nav-btn sv-nav-next" id="svNavNext" title="Sonraki">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+  </button>
+
+  <div class="sv-layout" id="svLayout">
+    <!-- Rendered by JS -->
+  </div>
+
+</div>
+
+<script>
+  // ============================================================
+  //  STORY DATA
+  // ============================================================
+  const stories = [
+    {
+      username: 'Apple',
+      handle: '@apple_nimes',
+      avatar: 'https://i.pinimg.com/1200x/db/fe/75/dbfe75990174020a7ebf8799999212d8.jpg',
+      slides: [
+        {
+          img: 'https://i.pinimg.com/736x/4e/3c/5a/4e3c5a133d8b2a1176c0df6110f02562.jpg',
+          label: '🍎 new drop is here ✨',
+          time: '16h',
+          bg: '#1a1218'
+        },
+        {
+          img: 'https://i.pinimg.com/736x/35/5f/a0/355fa00b82d4b0ac718b849a0d9a512f.jpg',
+          label: 'game mode on 🎮',
+          time: '16h',
+          bg: '#0d1520'
+        }
+      ]
+    },
+    {
+      username: 'Jhon',
+      handle: '@jhon_nimes',
+      avatar: 'https://i.pinimg.com/736x/f7/d8/f2/f7d8f2df2827bd6f8e0e95b12434ceab.jpg',
+      slides: [
+        {
+          img: 'https://i.pinimg.com/736x/67/b9/58/67b95875d67570821f5e5a194ab033b2.jpg',
+          label: 'vibes only 🌙',
+          time: '20h',
+          bg: '#10121e'
+        }
+      ]
+    },
+    {
+      username: 'Mochi',
+      handle: '@mochi_nimes',
+      avatar: 'https://i.pinimg.com/736x/fc/56/8e/fc568e1fc2445b8af18cc4e050ca13cf.jpg',
+      slides: [
+        {
+          img: 'https://i.pinimg.com/736x/fc/56/8e/fc568e1fc2445b8af18cc4e050ca13cf.jpg',
+          label: '🐱 mochi days~',
+          time: '22h',
+          bg: '#1a1028'
+        }
+      ]
+    },
+    {
+      username: 'Moon',
+      handle: '@moon_nimes',
+      avatar: 'https://i.pinimg.com/736x/98/df/69/98df6949fce8c87f15b03b306fc89fb0.jpg',
+      slides: [
+        {
+          img: 'https://i.pinimg.com/736x/98/df/69/98df6949fce8c87f15b03b306fc89fb0.jpg',
+          label: '🌕 moonrise tonight',
+          time: '1h',
+          bg: '#0a0e1a'
+        },
+        {
+          img: 'https://i.pinimg.com/736x/35/5f/a0/355fa00b82d4b0ac718b849a0d9a512f.jpg',
+          label: 'late night session 🎧',
+          time: '1h',
+          bg: '#0d1520'
+        }
+      ]
+    },
+    {
+      username: 'Mino',
+      handle: '@minocials',
+      avatar: 'https://i.pinimg.com/736x/bc/b3/61/bcb3612bebc2b5dfee3044600ea93700.jpg',
+      slides: [
+        {
+          img: 'https://i.pinimg.com/736x/bc/b3/61/bcb3612bebc2b5dfee3044600ea93700.jpg',
+          label: 'just chilling 😌',
+          time: '3h',
+          bg: '#12100e'
+        }
+      ]
+    },
+    {
+      username: 'Reru',
+      handle: '@reru_nimes',
+      avatar: 'https://i.pinimg.com/1200x/61/5b/13/615b13791d3c1c8568d36a64195181d4.jpg',
+      slides: [
+        {
+          img: 'https://i.pinimg.com/1200x/61/5b/13/615b13791d3c1c8568d36a64195181d4.jpg',
+          label: 'weekend mood 🌸',
+          time: '5h',
+          bg: '#120a14'
+        }
+      ]
+    },
+    {
+      username: 'Baggy',
+      handle: '@baggy77',
+      avatar: 'https://api.dicebear.com/7.x/adventurer/svg?seed=baggy77',
+      slides: [
+        {
+          img: 'https://i.pinimg.com/736x/4e/3c/5a/4e3c5a133d8b2a1176c0df6110f02562.jpg',
+          label: 'baggy gang 🎒',
+          time: '8h',
+          bg: '#101820'
+        }
+      ]
+    },
+    {
+      username: 'Tedy',
+      handle: '@tedy33',
+      avatar: 'https://api.dicebear.com/7.x/adventurer/svg?seed=tedy33',
+      slides: [
+        {
+          img: 'https://i.pinimg.com/736x/67/b9/58/67b95875d67570821f5e5a194ab033b2.jpg',
+          label: 'tedy in the house 🏠',
+          time: '12h',
+          bg: '#181020'
+        }
+      ]
+    }
+  ];
+
+  // ============================================================
+  //  STATE
+  // ============================================================
+  const STORY_DURATION = 5000; // ms per slide
+
+  let currentUserIdx = 0;
+  let currentSlideIdx = 0;
+  let paused = false;
+  let timerHandle = null;
+
+  // Read start index from URL param ?story=N
+  const urlParams = new URLSearchParams(window.location.search);
+  const startIdx = parseInt(urlParams.get('story') || '0', 10);
+  if (startIdx >= 0 && startIdx < stories.length) currentUserIdx = startIdx;
+
+  // ============================================================
+  //  RENDER
+  // ============================================================
+  function render() {
+    const layout = document.getElementById('svLayout');
+    const overlay = document.getElementById('storyViewerOverlay');
+    const prevBtn = document.getElementById('svNavPrev');
+    const nextBtn = document.getElementById('svNavNext');
+
+    const user   = stories[currentUserIdx];
+    const slide  = user.slides[currentSlideIdx];
+
+    // Background tint
+    overlay.style.background = slide.bg || '#111';
+
+    // Prev / Next visibility
+    prevBtn.classList.toggle('hidden', currentUserIdx === 0);
+    nextBtn.classList.toggle('hidden', currentUserIdx === stories.length - 1);
+
+    // Build progress bars HTML
+    let progressHTML = '';
+    for (let i = 0; i < user.slides.length; i++) {
+      let fillClass = '';
+      if (i < currentSlideIdx) fillClass = 'done';
+      else if (i === currentSlideIdx) fillClass = 'active';
+      progressHTML += `<div class="sv-prog-bar"><div class="sv-prog-fill ${fillClass}" id="progFill_${i}" style="--story-duration:${STORY_DURATION/1000}s"></div></div>`;
+    }
+
+    // Build side cards
+    const prevUser = currentUserIdx > 0 ? stories[currentUserIdx - 1] : null;
+    const nextUser = currentUserIdx < stories.length - 1 ? stories[currentUserIdx + 1] : null;
+
+    function sideCard(u, dir) {
+      if (!u) return `<div style="width:200px;margin:0 18px;flex-shrink:0;"></div>`;
+      const slideImg = u.slides[0].img;
+      return `
+        <div class="sv-side-card" data-dir="${dir}">
+          <img src="${slideImg}" alt="${u.username}" onerror="this.src='https://i.pinimg.com/736x/35/5f/a0/355fa00b82d4b0ac718b849a0d9a512f.jpg'">
+          <div class="sv-side-card-info">
+            <img class="sv-side-avatar" src="${u.avatar}" alt="${u.username}" onerror="this.src='https://i.pinimg.com/736x/35/5f/a0/355fa00b82d4b0ac718b849a0d9a512f.jpg'">
+            <div class="sv-side-name">${u.username}</div>
+            <div class="sv-side-time">${u.slides[0].time}</div>
+          </div>
+        </div>`;
+    }
+
+    layout.innerHTML = `
+      ${sideCard(prevUser, 'prev')}
+
+      <div class="sv-center-card" id="svCenterCard">
+        <!-- Progress bars -->
+        <div class="sv-progress-bars">${progressHTML}</div>
+
+        <!-- Story image -->
+        <img class="sv-story-img" src="${slide.img}" alt="${user.username}" onerror="this.src='https://i.pinimg.com/736x/35/5f/a0/355fa00b82d4b0ac718b849a0d9a512f.jpg'">
+
+        <!-- Gradient overlay -->
+        <div class="sv-center-overlay"></div>
+
+        <!-- Header -->
+        <div class="sv-story-header">
+          <img class="sv-header-avatar" src="${user.avatar}" alt="${user.username}" onerror="this.src='https://i.pinimg.com/736x/35/5f/a0/355fa00b82d4b0ac718b849a0d9a512f.jpg'">
+          <div class="sv-header-info">
+            <div class="sv-header-name">${user.username}</div>
+            <div class="sv-header-sub">
+              <span style="width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,0.4);display:inline-block;margin-right:4px;"></span>
+              See translation
+            </div>
+          </div>
+          <div class="sv-header-controls">
+            <button class="sv-ctrl-btn" id="svPlayPauseBtn" title="Duraklat">
+              <svg viewBox="0 0 24 24" fill="currentColor" id="svPlayPauseIcon">
+                <rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/>
+              </svg>
+            </button>
+            <button class="sv-ctrl-btn" title="Daha fazla">
+              <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Bottom label -->
+        ${slide.label ? `<div class="sv-story-label">${slide.label}</div>` : ''}
+
+        <!-- Reply bar -->
+        <div class="sv-reply-bar">
+          <input class="sv-reply-input" type="text" placeholder="Reply to ${user.username}...">
+          <button class="sv-reply-action" title="Like">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          </button>
+          <button class="sv-reply-action" title="Gönder">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          </button>
+        </div>
+
+        <!-- Tap zones -->
+        <div class="sv-tap-left"  id="svTapLeft"></div>
+        <div class="sv-tap-right" id="svTapRight"></div>
+      </div>
+
+      ${sideCard(nextUser, 'next')}
+    `;
+
+    bindCenterEvents();
+    startTimer();
+  }
+
+  // ============================================================
+  //  TIMER
+  // ============================================================
+  function startTimer() {
+    clearTimeout(timerHandle);
+    if (paused) return;
+    timerHandle = setTimeout(() => {
+      goNextSlide();
+    }, STORY_DURATION);
+  }
+
+  function stopTimer() {
+    clearTimeout(timerHandle);
+  }
+
+  // ============================================================
+  //  NAVIGATION
+  // ============================================================
+  function goNextSlide() {
+    const user = stories[currentUserIdx];
+    if (currentSlideIdx < user.slides.length - 1) {
+      currentSlideIdx++;
+      render();
+    } else {
+      goNextUser();
+    }
+  }
+
+  function goPrevSlide() {
+    if (currentSlideIdx > 0) {
+      currentSlideIdx--;
+      render();
+    } else {
+      goPrevUser();
+    }
+  }
+
+  function goNextUser() {
+    if (currentUserIdx < stories.length - 1) {
+      currentUserIdx++;
+      currentSlideIdx = 0;
+      render();
+    }
+  }
+
+  function goPrevUser() {
+    if (currentUserIdx > 0) {
+      currentUserIdx--;
+      currentSlideIdx = 0;
+      render();
+    }
+  }
+
+  // ============================================================
+  //  BIND CENTER CARD EVENTS
+  // ============================================================
+  function bindCenterEvents() {
+    // Tap left/right
+    document.getElementById('svTapLeft').addEventListener('click', () => {
+      goPrevSlide();
+    });
+    document.getElementById('svTapRight').addEventListener('click', () => {
+      goNextSlide();
+    });
+
+    // Play/Pause
+    const ppBtn = document.getElementById('svPlayPauseBtn');
+    const ppIcon = document.getElementById('svPlayPauseIcon');
+    ppBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      paused = !paused;
+      if (paused) {
+        stopTimer();
+        ppIcon.innerHTML = `<polygon points="5 3 19 12 5 21 5 3"/>`;
+      } else {
+        ppIcon.innerHTML = `<rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/>`;
+        startTimer();
+      }
+    });
+
+    // Like button toggle on reply bar
+    const likeBtn = document.querySelector('.sv-reply-action');
+    if (likeBtn) {
+      likeBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const svg = likeBtn.querySelector('svg');
+        if (likeBtn.classList.contains('liked')) {
+          likeBtn.classList.remove('liked');
+          svg.setAttribute('fill', 'none');
+          svg.style.color = '';
+        } else {
+          likeBtn.classList.add('liked');
+          svg.setAttribute('fill', '#ef4444');
+          svg.style.color = '#ef4444';
+        }
+      });
+    }
+
+    // Reply input — pause story when typing
+    const replyInput = document.querySelector('.sv-reply-input');
+    if (replyInput) {
+      replyInput.addEventListener('focus', () => {
+        if (!paused) { paused = true; stopTimer(); }
+      });
+      replyInput.addEventListener('blur', () => {
+        if (paused) {
+          paused = false;
+          startTimer();
+          const ppIcon2 = document.getElementById('svPlayPauseIcon');
+          if (ppIcon2) ppIcon2.innerHTML = `<rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/>`;
+        }
+      });
+    }
+
+    // Side cards click
+    document.querySelectorAll('.sv-side-card').forEach(card => {
+      card.addEventListener('click', () => {
+        const dir = card.dataset.dir;
+        if (dir === 'prev') goPrevUser();
+        else goNextUser();
+      });
+    });
+  }
+
+  // ============================================================
+  //  GLOBAL EVENTS
+  // ============================================================
+  // Close
+  document.getElementById('svCloseBtn').addEventListener('click', () => {
+    // Go back to homepage
+    window.location.href = 'anasayfa_story.html';
+  });
+
+  // Nav prev/next user
+  document.getElementById('svNavPrev').addEventListener('click', () => goPrevUser());
+  document.getElementById('svNavNext').addEventListener('click', () => goNextUser());
+
+  // Keyboard
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight') goNextSlide();
+    else if (e.key === 'ArrowLeft') goPrevSlide();
+    else if (e.key === 'Escape') window.location.href = 'anasayfa_story.html';
+    else if (e.key === ' ') {
+      e.preventDefault();
+      paused = !paused;
+      const ppBtn = document.getElementById('svPlayPauseBtn');
+      if (ppBtn) ppBtn.click();
+    }
+  });
+
+  // ============================================================
+  //  INIT
+  // ============================================================
+  render();
+</script>
+</body>
+</html>
