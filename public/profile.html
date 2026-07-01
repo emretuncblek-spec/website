@@ -1,1 +1,711 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <link rel="icon" type="image/png" href="/nimes.png">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nimes - Profil</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    /* ============================================================ */
+    /*  CSS VARIABLES & RESET  (aynı sistem indeximm.html ile ortak)  */
+    /* ============================================================ */
+    :root {
+      --glass:         rgba(255,255,255,0.13);
+      --glass-border:  rgba(255,255,255,0.28);
+      --glass-blur:    blur(22px) saturate(1.6);
+      --glass-shadow:  0 8px 40px rgba(0,0,0,0.22), inset 0 1px 0 rgba(255,255,255,0.35), inset 0 0 0 1px rgba(255,255,255,0.12);
+      --liquid-bg:     rgba(255,255,255,0.16);
+      --liquid-border: rgba(255,255,255,0.50);
+      --liquid-shadow: 0 6px 20px rgba(100,160,255,0.18), inset 0 2px 8px rgba(255,255,255,0.70), inset 0 -2px 4px rgba(0,0,0,0.10);
+      --accent:        #7eb8ff;
+      --text:          #ffffff;
+      --text-dim:      rgba(255,255,255,0.65);
+      --sidebar-w:     240px;
+    }
 
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Outfit', sans-serif;
+      min-height: 100vh;
+      background: #000000;
+      color: var(--text);
+      overflow-x: hidden;
+    }
+
+    /* Animated aura layer — indeximm.html ile birebir aynı arka plan */
+    .aura-layer { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+    .aura-orb { position: absolute; border-radius: 50%; filter: blur(100px); }
+    .aura-orb-1 {
+      width: 600px; height: 600px; top: -150px; left: 5%;
+      background: radial-gradient(circle, rgba(30,60,200,0.50) 0%, transparent 70%);
+      animation: aura1 9s ease-in-out infinite;
+    }
+    .aura-orb-2 {
+      width: 450px; height: 450px; bottom: 0; right: 5%;
+      background: radial-gradient(circle, rgba(50,20,170,0.40) 0%, transparent 70%);
+      animation: aura2 12s ease-in-out infinite 3s;
+    }
+    .aura-orb-3 {
+      width: 350px; height: 350px; top: 40%; left: 38%;
+      background: radial-gradient(circle, rgba(20,50,180,0.28) 0%, transparent 70%);
+      animation: aura3 15s ease-in-out infinite 6s;
+    }
+    @keyframes aura1 { 0%,100% { opacity:0.45; transform:scale(1) translate(0,0); } 50% { opacity:0.65; transform:scale(1.12) translate(18px,28px); } }
+    @keyframes aura2 { 0%,100% { opacity:0.35; transform:scale(1) translate(0,0); } 50% { opacity:0.52; transform:scale(1.10) translate(-22px,-18px); } }
+    @keyframes aura3 { 0%,100% { opacity:0.20; transform:scale(1); } 50% { opacity:0.36; transform:scale(1.14); } }
+
+    /* ============================================================ */
+    /*  APP LAYOUT                                                   */
+    /* ============================================================ */
+    .app-layout { display: flex; min-height: 100vh; position: relative; z-index: 1; }
+
+    /* ============================================================ */
+    /*  LEFT SIDEBAR — indeximm.html ile birebir aynı                */
+    /* ============================================================ */
+    .sidebar {
+      position: fixed; top: 0; left: 0; width: var(--sidebar-w); height: 100vh;
+      display: flex; flex-direction: column; padding: 0px 16px 20px; gap: 0;
+      z-index: 100; background: transparent;
+    }
+    .sidebar-logo {
+      font-size: 24px; font-weight: 900; letter-spacing: -0.5px; color: #fff;
+      padding: 0 4px 0; margin-bottom: 12px; display: flex; align-items: flex-end; min-height: 80px;
+    }
+    .sidebar-nav-box {
+      background: var(--glass); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur);
+      border: 1px solid var(--glass-border); box-shadow: var(--glass-shadow); border-radius: 20px;
+      padding: 10px 8px; display: flex; flex-direction: column; gap: 2px; flex: 1; overflow: hidden;
+    }
+    .nav-item {
+      display: flex; align-items: center; gap: 14px; padding: 12px 14px; border-radius: 14px;
+      font-size: 15px; font-weight: 600; color: rgba(255,255,255,0.70); text-decoration: none;
+      cursor: pointer; transition: background 0.2s, color 0.2s; user-select: none;
+    }
+    .nav-item:hover { background: rgba(255,255,255,0.10); color: #fff; }
+    .nav-item.active {
+      background: rgba(255,255,255,0.16); color: #fff; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.22); box-shadow: inset 0 1px 0 rgba(255,255,255,0.25);
+    }
+    .nav-icon { width: 22px; height: 22px; flex-shrink: 0; opacity: 0.85; }
+    .nav-item.active .nav-icon { opacity: 1; }
+    .sidebar-avatar {
+      margin-top: auto; display: flex; align-items: center; gap: 12px; padding: 12px 10px;
+      border-radius: 14px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.14);
+    }
+    .sidebar-avatar img { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; border: 2px solid rgba(255,255,255,0.3); }
+    .sidebar-avatar-info { flex: 1; min-width: 0; }
+    .sidebar-avatar-name { font-size: 13px; font-weight: 700; }
+    .sidebar-avatar-handle { font-size: 11px; color: var(--text-dim); }
+
+    /* ============================================================ */
+    /*  MAIN CONTENT                                                 */
+    /* ============================================================ */
+    .main-content { margin-left: var(--sidebar-w); flex: 1; min-height: 100vh; }
+    .profile-page { max-width: 1040px; margin: 0 auto; padding: 24px 32px 60px; }
+
+    /* Top-right icon bar — indeximm.html ile aynı bileşen */
+    .top-icon-row { display: flex; justify-content: flex-end; gap: 10px; margin-bottom: 28px; }
+    .top-icon-btn {
+      width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--glass-border);
+      background: var(--glass); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+      display: flex; align-items: center; justify-content: center; cursor: pointer;
+      color: var(--text-dim); position: relative; transition: background 0.2s;
+    }
+    .top-icon-btn:hover { background: rgba(255,255,255,0.22); color: #fff; }
+    .top-icon-btn svg { width: 18px; height: 18px; }
+    .notif-count-badge {
+      position: absolute; top: -5px; right: -5px; min-width: 18px; height: 18px; border-radius: 9px;
+      background: #ef4444; border: 2px solid rgba(0,0,0,0.85); color: #fff; font-size: 9px; font-weight: 800;
+      font-family: 'Outfit', sans-serif; display: flex; align-items: center; justify-content: center;
+      padding: 0 4px; line-height: 1; z-index: 2; pointer-events: none;
+    }
+
+    /* ============================================================ */
+    /*  PROFILE HEADER                                               */
+    /* ============================================================ */
+    .profile-top { display: flex; align-items: flex-start; gap: 40px; margin-bottom: 28px; }
+
+    .profile-avatar-wrap {
+      width: 150px; height: 150px; border-radius: 50%; flex-shrink: 0; cursor: pointer;
+      padding: 4px; background: linear-gradient(135deg, rgba(126,184,255,0.55), rgba(255,255,255,0.15));
+      transition: transform 0.2s ease;
+    }
+    .profile-avatar-wrap:hover { transform: scale(1.03); }
+    .profile-avatar-wrap:active { transform: scale(0.97); }
+    .profile-avatar-img {
+      width: 100%; height: 100%; border-radius: 50%; object-fit: cover;
+      border: 3px solid rgba(0,0,0,0.6); display: block;
+    }
+
+    .profile-info { flex: 1; padding-top: 6px; }
+    .profile-name { font-size: 32px; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 10px; }
+
+    .profile-username-row { display: flex; align-items: center; gap: 10px; margin-bottom: 18px; }
+    .profile-username { font-size: 16px; color: var(--text-dim); font-weight: 500; }
+    .profile-more-btn {
+      background: none; border: none; color: var(--text-dim); font-size: 18px; letter-spacing: 1px;
+      cursor: pointer; padding: 4px 8px; border-radius: 8px; transition: background 0.2s, color 0.2s;
+    }
+    .profile-more-btn:hover { background: rgba(255,255,255,0.10); color: #fff; }
+
+    .profile-stats-row { display: flex; gap: 30px; margin-bottom: 18px; }
+    .profile-stat {
+      background: none; border: none; color: #fff; font-size: 16px; cursor: pointer;
+      font-family: 'Outfit', sans-serif; padding: 2px 0; position: relative;
+    }
+    .profile-stat strong { font-weight: 800; margin-right: 5px; }
+    .profile-stat::after {
+      content: ''; position: absolute; left: 0; bottom: -3px; width: 0; height: 2px;
+      background: var(--accent); transition: width 0.2s ease;
+    }
+    .profile-stat:hover::after { width: 100%; }
+    .profile-stat:hover { color: var(--accent); }
+
+    .profile-bio { font-size: 14px; color: var(--text-dim); line-height: 1.6; max-width: 460px; }
+
+    /* Follow / Message buttons */
+    .profile-actions-row { display: flex; gap: 14px; margin-bottom: 32px; }
+
+    .profile-follow-btn, .profile-message-btn {
+      flex: 1; max-width: 320px; padding: 13px 0; border-radius: 50px; font-family: 'Outfit', sans-serif;
+      font-size: 17px; font-weight: 700; cursor: pointer; border: 1px solid var(--liquid-border);
+      background: var(--liquid-bg); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+      color: #fff; box-shadow: var(--liquid-shadow); transition: background 0.2s, transform 0.12s, opacity 0.2s;
+    }
+    .profile-follow-btn:hover, .profile-message-btn:hover { background: rgba(255,255,255,0.25); }
+    .profile-follow-btn:active, .profile-message-btn:active { transform: scale(0.96); }
+
+    /* Takip edildiğinde buton daha soluk/pasif bir tona döner */
+    .profile-follow-btn.following {
+      background: rgba(255,255,255,0.06);
+      border-color: rgba(255,255,255,0.18);
+      color: rgba(255,255,255,0.55);
+      box-shadow: none;
+    }
+    .profile-follow-btn.following:hover { background: rgba(255,255,255,0.10); }
+
+    @keyframes btnPulse {
+      0%   { transform: scale(1); }
+      40%  { transform: scale(0.93); }
+      100% { transform: scale(1); }
+    }
+    .btn-pulse { animation: btnPulse 0.32s ease; }
+
+    /* ============================================================ */
+    /*  HIGHLIGHTS (öne çıkarılan hikayeler)                         */
+    /* ============================================================ */
+    .highlights-card {
+      background: var(--glass); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur);
+      border: 1px solid var(--glass-border); box-shadow: var(--glass-shadow); border-radius: 20px;
+      padding: 18px 22px; margin-bottom: 26px; overflow-x: auto; scrollbar-width: none;
+    }
+    .highlights-card::-webkit-scrollbar { display: none; }
+    .highlights-row { display: flex; gap: 26px; }
+    .highlight-item {
+      display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer;
+      min-width: 70px; transition: transform 0.15s ease;
+    }
+    .highlight-item:hover { transform: translateY(-2px); }
+    .highlight-ring {
+      width: 70px; height: 70px; border-radius: 50%; padding: 2.5px;
+      background: rgba(255,255,255,0.22); flex-shrink: 0;
+    }
+    .highlight-ring-inner {
+      width: 100%; height: 100%; border-radius: 50%; border: 2.5px solid #000; overflow: hidden; background: #1a1f35;
+    }
+    .highlight-ring-inner img { width: 100%; height: 100%; object-fit: cover; }
+    .highlight-name {
+      font-size: 11.5px; font-weight: 600; color: var(--text-dim); text-align: center;
+      max-width: 76px; line-height: 1.25;
+    }
+
+    /* ============================================================ */
+    /*  CATEGORY TABS (posts / reels / achievements / library)      */
+    /* ============================================================ */
+    .tabs-card {
+      border-top: 1px solid rgba(255,255,255,0.14); position: relative; margin-bottom: 4px;
+    }
+    .tabs-row { display: flex; }
+    .tab-btn {
+      flex: 1; display: flex; align-items: center; justify-content: center; padding: 16px 0;
+      background: none; border: none; color: var(--text-dim); cursor: pointer; transition: color 0.2s;
+    }
+    .tab-btn svg { width: 22px; height: 22px; }
+    .tab-btn:hover { color: #fff; }
+    .tab-btn.active { color: #fff; }
+    .tab-indicator {
+      position: absolute; top: -1px; left: 0; height: 2px; width: 25%; background: #fff;
+      transition: transform 0.28s cubic-bezier(.4,0,.2,1); box-shadow: 0 0 8px rgba(255,255,255,0.6);
+    }
+
+    /* ============================================================ */
+    /*  TAB CONTENT PANELS                                           */
+    /* ============================================================ */
+    .tab-panel { display: none; padding-top: 22px; }
+    .tab-panel.active { display: block; animation: panelFade 0.25s ease; }
+    @keyframes panelFade { from { opacity: 0; transform: translateY(6px);} to { opacity: 1; transform: translateY(0);} }
+
+    /* Posts grid */
+    .posts-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px;
+    }
+    .grid-thumb {
+      aspect-ratio: 1/1; border-radius: 10px; overflow: hidden; cursor: pointer; position: relative;
+      border: 1px solid rgba(255,255,255,0.10);
+    }
+    .grid-thumb img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease; }
+    .grid-thumb:hover img { transform: scale(1.06); }
+
+    /* Reels grid */
+    .reels-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+    .reel-thumb {
+      aspect-ratio: 9/16; border-radius: 10px; overflow: hidden; cursor: pointer; position: relative;
+      border: 1px solid rgba(255,255,255,0.10);
+    }
+    .reel-thumb img { width: 100%; height: 100%; object-fit: cover; }
+    .reel-play-icon {
+      position: absolute; top: 8px; right: 8px; width: 20px; height: 20px; color: #fff;
+      filter: drop-shadow(0 1px 3px rgba(0,0,0,0.6));
+    }
+    .reel-views {
+      position: absolute; bottom: 8px; left: 8px; font-size: 12px; font-weight: 700; color: #fff;
+      display: flex; align-items: center; gap: 4px; filter: drop-shadow(0 1px 3px rgba(0,0,0,0.6));
+    }
+    .reel-views svg { width: 13px; height: 13px; }
+
+    /* Achievements grid */
+    .achv-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+    .achv-card {
+      background: var(--glass); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur);
+      border: 1px solid var(--glass-border); box-shadow: var(--glass-shadow); border-radius: 16px;
+      padding: 18px; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 10px;
+      cursor: pointer; transition: transform 0.15s ease;
+    }
+    .achv-card:hover { transform: translateY(-3px); }
+    .achv-icon-wrap {
+      width: 56px; height: 56px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      background: radial-gradient(circle at 35% 30%, rgba(255,255,255,0.35), rgba(255,255,255,0.06));
+      border: 1px solid rgba(255,255,255,0.25);
+    }
+    .achv-icon-wrap svg { width: 26px; height: 26px; color: #ffd76a; }
+    .achv-icon-wrap.locked svg { color: rgba(255,255,255,0.35); }
+    .achv-card.locked { opacity: 0.5; }
+    .achv-title { font-size: 14px; font-weight: 700; }
+    .achv-desc { font-size: 11.5px; color: var(--text-dim); line-height: 1.4; }
+    .achv-progress {
+      width: 100%; height: 5px; border-radius: 3px; background: rgba(255,255,255,0.12); overflow: hidden; margin-top: 2px;
+    }
+    .achv-progress-fill { height: 100%; background: linear-gradient(90deg, #7eb8ff, #a855f7); border-radius: 3px; }
+
+    /* Library grid */
+    .lib-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+    .lib-card {
+      background: var(--glass); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur);
+      border: 1px solid var(--glass-border); box-shadow: var(--glass-shadow); border-radius: 16px;
+      overflow: hidden; cursor: pointer; transition: transform 0.15s ease;
+    }
+    .lib-card:hover { transform: translateY(-3px); }
+    .lib-cover { width: 100%; aspect-ratio: 3/4; object-fit: cover; display: block; }
+    .lib-info { padding: 10px 12px 12px; }
+    .lib-title { font-size: 13px; font-weight: 700; margin-bottom: 3px; }
+    .lib-meta { font-size: 11px; color: var(--text-dim); display: flex; align-items: center; gap: 5px; }
+    .lib-meta svg { width: 12px; height: 12px; }
+
+    /* ============================================================ */
+    /*  AVATAR POPUP (ortada büyütülmüş profil resmi)                */
+    /* ============================================================ */
+    .avatar-modal-overlay {
+      position: fixed; inset: 0; z-index: 500; display: flex; align-items: center; justify-content: center;
+      background: rgba(0,0,0,0.65); backdrop-filter: blur(18px) saturate(1.4); -webkit-backdrop-filter: blur(18px) saturate(1.4);
+      opacity: 0; pointer-events: none; transition: opacity 0.25s ease;
+    }
+    .avatar-modal-overlay.open { opacity: 1; pointer-events: auto; }
+    .avatar-modal-inner {
+      width: min(420px, 80vw); aspect-ratio: 1/1; border-radius: 50%; padding: 6px;
+      background: linear-gradient(135deg, rgba(126,184,255,0.6), rgba(255,255,255,0.15));
+      box-shadow: 0 20px 70px rgba(0,0,0,0.5); transform: scale(0.8); transition: transform 0.28s cubic-bezier(.34,1.56,.64,1);
+    }
+    .avatar-modal-overlay.open .avatar-modal-inner { transform: scale(1); }
+    .avatar-modal-inner img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 4px solid rgba(0,0,0,0.7); display: block; }
+    .avatar-modal-close {
+      position: absolute; top: 28px; right: 32px; width: 42px; height: 42px; border-radius: 50%;
+      background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.28); color: #fff;
+      display: flex; align-items: center; justify-content: center; cursor: pointer; transition: background 0.2s;
+    }
+    .avatar-modal-close:hover { background: rgba(255,255,255,0.22); }
+    .avatar-modal-close svg { width: 20px; height: 20px; }
+  </style>
+</head>
+<body>
+
+<!-- Animated aura background — indeximm.html ile birebir -->
+<div class="aura-layer">
+  <div class="aura-orb aura-orb-1"></div>
+  <div class="aura-orb aura-orb-2"></div>
+  <div class="aura-orb aura-orb-3"></div>
+</div>
+
+<div class="app-layout">
+
+  <!-- ==================== LEFT SIDEBAR ==================== -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">NIMES</div>
+
+    <div class="sidebar-nav-box">
+      <a class="nav-item active" href="profile.html">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+        Profile
+      </a>
+      <a class="nav-item" href="indeximm.html">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+        Home
+      </a>
+      <a class="nav-item" href="#">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        Search
+      </a>
+      <a class="nav-item" href="#">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+        Reels
+      </a>
+      <a class="nav-item" href="#">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+        Games
+      </a>
+      <a class="nav-item" href="#">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+        Explore
+      </a>
+      <a class="nav-item" href="#">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>
+        Settings
+      </a>
+      <a class="nav-item" href="#">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+        Your Activity
+      </a>
+      <a class="nav-item" href="#">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+        Saved
+      </a>
+      <a class="nav-item" href="#">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3M12 17h.01"/></svg>
+        Support
+      </a>
+
+      <div class="sidebar-avatar">
+        <img src="https://i.pinimg.com/1200x/f3/23/33/f323338233ea1ef3e83ad205919f7a3a.jpg" alt="avatar">
+        <div class="sidebar-avatar-info">
+          <div class="sidebar-avatar-name">moonbreaker</div>
+          <div class="sidebar-avatar-handle">@moonbreaker_07</div>
+        </div>
+      </div>
+    </div><!-- end sidebar-nav-box -->
+  </aside>
+
+  <!-- ==================== MAIN CONTENT ==================== -->
+  <div class="main-content">
+    <div class="profile-page">
+
+      <!-- Top-right icon bar -->
+      <div class="top-icon-row">
+        <button class="top-icon-btn" title="Profil">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+        </button>
+        <button class="top-icon-btn" title="Favoriler">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        </button>
+        <button class="top-icon-btn" title="Bildirimler">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          <span class="notif-count-badge">4</span>
+        </button>
+        <button class="top-icon-btn" title="Mesajlar">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          <span class="notif-count-badge">2</span>
+        </button>
+      </div>
+
+      <!-- ==================== PROFILE HEADER ==================== -->
+      <div class="profile-top">
+        <div class="profile-avatar-wrap" id="avatarOpenBtn">
+          <img id="profileAvatarImg" class="profile-avatar-img"
+               src="https://i.pinimg.com/1200x/f3/23/33/f323338233ea1ef3e83ad205919f7a3a.jpg" alt="Emre Tunçbilek">
+        </div>
+
+        <div class="profile-info">
+          <h1 class="profile-name">Emre Tunçbilek</h1>
+
+          <div class="profile-username-row">
+            <span class="profile-username">emrebronz</span>
+            <button class="profile-more-btn">•••</button>
+          </div>
+
+          <div class="profile-stats-row">
+            <button class="profile-stat"><strong>23</strong>posts</button>
+            <button class="profile-stat"><strong>2.3k</strong>fallowers</button>
+            <button class="profile-stat"><strong>3</strong>fallowing</button>
+          </div>
+
+          <p class="profile-bio">Anybody want to play togetger? just add me if im free we can do!!</p>
+        </div>
+      </div>
+
+      <!-- Follow / Message -->
+      <div class="profile-actions-row">
+        <button class="profile-follow-btn" id="followBtn">Fallow</button>
+        <button class="profile-message-btn" id="messageBtn">Message</button>
+      </div>
+
+      <!-- ==================== HIGHLIGHTS ==================== -->
+      <div class="highlights-card">
+        <div class="highlights-row">
+          <div class="highlight-item">
+            <div class="highlight-ring"><div class="highlight-ring-inner"><img src="https://i.pinimg.com/736x/67/b9/58/67b95875d67570821f5e5a194ab033b2.jpg" alt="Game collection"></div></div>
+            <span class="highlight-name">Game collection</span>
+          </div>
+          <div class="highlight-item">
+            <div class="highlight-ring"><div class="highlight-ring-inner"><img src="https://i.pinimg.com/736x/95/84/95/9584955de5c130fbcce2b57b8a817716.jpg" alt="Set up"></div></div>
+            <span class="highlight-name">Set up</span>
+          </div>
+          <div class="highlight-item">
+            <div class="highlight-ring"><div class="highlight-ring-inner"><img src="https://i.pinimg.com/736x/4e/3c/5a/4e3c5a133d8b2a1176c0df6110f02562.jpg" alt="Current projects"></div></div>
+            <span class="highlight-name">Current projects</span>
+          </div>
+          <div class="highlight-item">
+            <div class="highlight-ring"><div class="highlight-ring-inner"><img src="https://i.pinimg.com/736x/35/5f/a0/355fa00b82d4b0ac718b849a0d9a512f.jpg" alt="Game tests"></div></div>
+            <span class="highlight-name">Game tests</span>
+          </div>
+          <div class="highlight-item">
+            <div class="highlight-ring"><div class="highlight-ring-inner"><img src="https://i.pinimg.com/736x/bc/b3/61/bcb3612bebc2b5dfee3044600ea93700.jpg" alt="Fan arts"></div></div>
+            <span class="highlight-name">Fan arts</span>
+          </div>
+          <div class="highlight-item">
+            <div class="highlight-ring"><div class="highlight-ring-inner"><img src="https://i.pinimg.com/1200x/61/5b/13/615b13791d3c1c8568d36a64195181d4.jpg" alt="Sountracts"></div></div>
+            <span class="highlight-name">Sountracts</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== CATEGORY TABS ==================== -->
+      <div class="tabs-card">
+        <div class="tab-indicator" id="tabIndicator"></div>
+        <div class="tabs-row">
+          <button class="tab-btn active" data-tab="posts" title="Postlar">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+          </button>
+          <button class="tab-btn" data-tab="reels" title="Reels">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8" fill="currentColor" stroke="none"/></svg>
+          </button>
+          <button class="tab-btn" data-tab="achv" title="Başarımlar">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 21h8M12 17v4M7 4h10v4a5 5 0 0 1-10 0V4z"/><path d="M7 5H4a1 1 0 0 0-1 1 5 5 0 0 0 4 4.9M17 5h3a1 1 0 0 1 1 1 5 5 0 0 1-4 4.9"/></svg>
+          </button>
+          <button class="tab-btn" data-tab="lib" title="Kütüphane">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="8" cy="12" r="2"/><path d="M14 10h4M14 14h2"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- ==================== TAB PANELS ==================== -->
+
+      <!-- POSTS -->
+      <div class="tab-panel active" id="panel-posts">
+        <div class="posts-grid">
+          <div class="grid-thumb"><img src="https://i.pinimg.com/736x/35/5f/a0/355fa00b82d4b0ac718b849a0d9a512f.jpg"></div>
+          <div class="grid-thumb"><img src="https://i.pinimg.com/736x/67/b9/58/67b95875d67570821f5e5a194ab033b2.jpg"></div>
+          <div class="grid-thumb"><img src="https://i.pinimg.com/736x/4e/3c/5a/4e3c5a133d8b2a1176c0df6110f02562.jpg"></div>
+          <div class="grid-thumb"><img src="https://i.pinimg.com/736x/95/84/95/9584955de5c130fbcce2b57b8a817716.jpg"></div>
+          <div class="grid-thumb"><img src="https://i.pinimg.com/1200x/7f/b6/77/7fb677760cde1aa8276c59958d316daf.jpg"></div>
+          <div class="grid-thumb"><img src="https://i.pinimg.com/1200x/39/ae/21/39ae2124720685c75da8e99d102e07dc.jpg"></div>
+          <div class="grid-thumb"><img src="https://i.pinimg.com/736x/72/8d/67/728d67196a3113aec1431fbb9ee0f1de.jpg"></div>
+          <div class="grid-thumb"><img src="https://i.pinimg.com/736x/35/5f/a0/355fa00b82d4b0ac718b849a0d9a512f.jpg"></div>
+        </div>
+      </div>
+
+      <!-- REELS -->
+      <div class="tab-panel" id="panel-reels">
+        <div class="reels-grid">
+          <div class="reel-thumb">
+            <img src="https://i.pinimg.com/736x/67/b9/58/67b95875d67570821f5e5a194ab033b2.jpg">
+            <svg class="reel-play-icon" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 3 20 12 6 21 6 3"/></svg>
+            <span class="reel-views"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 5c-7 0-10 7-10 7s3 7 10 7 10-7 10-7-3-7-10-7zm0 11a4 4 0 1 1 0-8 4 4 0 0 1 0 8z"/></svg>12.4k</span>
+          </div>
+          <div class="reel-thumb">
+            <img src="https://i.pinimg.com/736x/95/84/95/9584955de5c130fbcce2b57b8a817716.jpg">
+            <svg class="reel-play-icon" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 3 20 12 6 21 6 3"/></svg>
+            <span class="reel-views"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 5c-7 0-10 7-10 7s3 7 10 7 10-7 10-7-3-7-10-7zm0 11a4 4 0 1 1 0-8 4 4 0 0 1 0 8z"/></svg>8.1k</span>
+          </div>
+          <div class="reel-thumb">
+            <img src="https://i.pinimg.com/736x/4e/3c/5a/4e3c5a133d8b2a1176c0df6110f02562.jpg">
+            <svg class="reel-play-icon" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 3 20 12 6 21 6 3"/></svg>
+            <span class="reel-views"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 5c-7 0-10 7-10 7s3 7 10 7 10-7 10-7-3-7-10-7zm0 11a4 4 0 1 1 0-8 4 4 0 0 1 0 8z"/></svg>21.7k</span>
+          </div>
+          <div class="reel-thumb">
+            <img src="https://i.pinimg.com/1200x/7f/b6/77/7fb677760cde1aa8276c59958d316daf.jpg">
+            <svg class="reel-play-icon" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 3 20 12 6 21 6 3"/></svg>
+            <span class="reel-views"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 5c-7 0-10 7-10 7s3 7 10 7 10-7 10-7-3-7-10-7zm0 11a4 4 0 1 1 0-8 4 4 0 0 1 0 8z"/></svg>5.3k</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ACHIEVEMENTS -->
+      <div class="tab-panel" id="panel-achv">
+        <div class="achv-grid">
+          <div class="achv-card">
+            <div class="achv-icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 21h8M12 17v4M7 4h10v4a5 5 0 0 1-10 0V4z"/><path d="M7 5H4a1 1 0 0 0-1 1 5 5 0 0 0 4 4.9M17 5h3a1 1 0 0 1 1 1 5 5 0 0 1-4 4.9"/></svg></div>
+            <div class="achv-title">İlk Zafer</div>
+            <div class="achv-desc">İlk rekabetçi maçını kazan</div>
+          </div>
+          <div class="achv-card">
+            <div class="achv-icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="6"/><path d="M9 14l-2 8 5-3 5 3-2-8"/></svg></div>
+            <div class="achv-title">100 Saat</div>
+            <div class="achv-desc">Toplam 100 saat oynandı</div>
+          </div>
+          <div class="achv-card">
+            <div class="achv-icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2 3 14h7l-1 8 11-14h-7z"/></svg></div>
+            <div class="achv-title">Hız Ustası</div>
+            <div class="achv-desc">Bir haftayı sıfır kayıpla bitir</div>
+            <div class="achv-progress"><div class="achv-progress-fill" style="width:70%"></div></div>
+          </div>
+          <div class="achv-card locked">
+            <div class="achv-icon-wrap locked"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></div>
+            <div class="achv-title">Efsane</div>
+            <div class="achv-desc">Tüm görevleri tamamla</div>
+          </div>
+          <div class="achv-card locked">
+            <div class="achv-icon-wrap locked"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></div>
+            <div class="achv-title">Ekip Ruhu</div>
+            <div class="achv-desc">50 kişiyle takım kur</div>
+          </div>
+          <div class="achv-card">
+            <div class="achv-icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l2.5 6.5L21 9l-5 4.5L17.5 21 12 17l-5.5 4L8 13.5 3 9l6.5-.5z"/></svg></div>
+            <div class="achv-title">Koleksiyoner</div>
+            <div class="achv-desc">10 oyunu kütüphanene ekle</div>
+            <div class="achv-progress"><div class="achv-progress-fill" style="width:100%"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- LIBRARY -->
+      <div class="tab-panel" id="panel-lib">
+        <div class="lib-grid">
+          <div class="lib-card">
+            <img class="lib-cover" src="https://i.pinimg.com/736x/35/5f/a0/355fa00b82d4b0ac718b849a0d9a512f.jpg">
+            <div class="lib-info">
+              <div class="lib-title">Shadowfall Ops</div>
+              <div class="lib-meta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>142 sa</div>
+            </div>
+          </div>
+          <div class="lib-card">
+            <img class="lib-cover" src="https://i.pinimg.com/736x/67/b9/58/67b95875d67570821f5e5a194ab033b2.jpg">
+            <div class="lib-info">
+              <div class="lib-title">Nightbound Realms</div>
+              <div class="lib-meta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>76 sa</div>
+            </div>
+          </div>
+          <div class="lib-card">
+            <img class="lib-cover" src="https://i.pinimg.com/1200x/7f/b6/77/7fb677760cde1aa8276c59958d316daf.jpg">
+            <div class="lib-info">
+              <div class="lib-title">Rustline Drift</div>
+              <div class="lib-meta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>39 sa</div>
+            </div>
+          </div>
+          <div class="lib-card">
+            <img class="lib-cover" src="https://i.pinimg.com/1200x/39/ae/21/39ae2124720685c75da8e99d102e07dc.jpg">
+            <div class="lib-info">
+              <div class="lib-title">Aurora Front</div>
+              <div class="lib-meta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>210 sa</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- end profile-page -->
+  </div><!-- end main-content -->
+</div><!-- end app-layout -->
+
+<!-- ==================== AVATAR POPUP ==================== -->
+<div class="avatar-modal-overlay" id="avatarModalOverlay">
+  <button class="avatar-modal-close" id="avatarModalClose">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+  </button>
+  <div class="avatar-modal-inner">
+    <img id="avatarModalImg" src="" alt="Profil fotoğrafı">
+  </div>
+</div>
+
+<script>
+  /* ============================================================ */
+  /*  AVATAR POPUP                                                 */
+  /* ============================================================ */
+  const avatarOpenBtn   = document.getElementById('avatarOpenBtn');
+  const avatarOverlay   = document.getElementById('avatarModalOverlay');
+  const avatarModalImg  = document.getElementById('avatarModalImg');
+  const avatarModalClose= document.getElementById('avatarModalClose');
+  const profileAvatarImg= document.getElementById('profileAvatarImg');
+
+  avatarOpenBtn.addEventListener('click', () => {
+    avatarModalImg.src = profileAvatarImg.src;
+    avatarOverlay.classList.add('open');
+  });
+  avatarModalClose.addEventListener('click', () => avatarOverlay.classList.remove('open'));
+  avatarOverlay.addEventListener('click', (e) => {
+    if (e.target === avatarOverlay) avatarOverlay.classList.remove('open');
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') avatarOverlay.classList.remove('open');
+  });
+
+  /* ============================================================ */
+  /*  FOLLOW BUTTON                                                */
+  /* ============================================================ */
+  const followBtn = document.getElementById('followBtn');
+  followBtn.addEventListener('click', () => {
+    followBtn.classList.add('btn-pulse');
+    followBtn.addEventListener('animationend', () => followBtn.classList.remove('btn-pulse'), { once: true });
+
+    const isFollowing = followBtn.classList.toggle('following');
+    followBtn.textContent = isFollowing ? 'Fallowing' : 'Fallow';
+  });
+
+  /* ============================================================ */
+  /*  MESSAGE BUTTON — sadece tıklama animasyonu, işlevsiz         */
+  /* ============================================================ */
+  const messageBtn = document.getElementById('messageBtn');
+  messageBtn.addEventListener('click', () => {
+    messageBtn.classList.add('btn-pulse');
+    messageBtn.addEventListener('animationend', () => messageBtn.classList.remove('btn-pulse'), { once: true });
+  });
+
+  /* ============================================================ */
+  /*  CATEGORY TABS                                                */
+  /* ============================================================ */
+  const tabBtns   = document.querySelectorAll('.tab-btn');
+  const tabPanels = document.querySelectorAll('.tab-panel');
+  const tabIndicator = document.getElementById('tabIndicator');
+
+  function moveIndicator(btn) {
+    tabIndicator.style.transform = `translateX(${btn.offsetLeft}px)`;
+    tabIndicator.style.width = btn.offsetWidth + 'px';
+  }
+
+  tabBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      tabBtns.forEach(b => b.classList.remove('active'));
+      tabPanels.forEach(p => p.classList.remove('active'));
+
+      btn.classList.add('active');
+      document.getElementById('panel-' + btn.dataset.tab).classList.add('active');
+      moveIndicator(btn);
+    });
+  });
+
+  // İlk konumlandırma (yazı tipi yüklendikten sonra da tekrar hizala)
+  window.addEventListener('load', () => moveIndicator(document.querySelector('.tab-btn.active')));
+  window.addEventListener('resize', () => moveIndicator(document.querySelector('.tab-btn.active')));
+</script>
+</body>
+</html>
