@@ -198,6 +198,247 @@
     .sidebar-avatar-handle { font-size: 11px; color: var(--text-dim); }
 
     /* ============================================================ */
+    /*  SEARCH PANEL — Instagram-style liquid glass slide-over       */
+    /* ============================================================ */
+    .search-scrim {
+      position: fixed;
+      inset: 0;
+      z-index: 150;
+      background: transparent;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+    .search-scrim.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .search-panel {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 400px;
+      max-width: 88vw;
+      height: 100vh;
+      z-index: 160;
+      background: rgba(14,14,22,0.62);
+      backdrop-filter: blur(32px) saturate(1.7);
+      -webkit-backdrop-filter: blur(32px) saturate(1.7);
+      border-right: 1px solid var(--glass-border);
+      box-shadow: 12px 0 50px rgba(0,0,0,0.40), inset -1px 0 0 rgba(255,255,255,0.10);
+      transform: translateX(-100%);
+      transition: transform 0.4s cubic-bezier(.22,1,.36,1);
+      display: flex;
+      flex-direction: column;
+      padding: 30px 22px 18px;
+    }
+    .search-panel.open {
+      transform: translateX(0);
+    }
+
+    .search-panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+      flex-shrink: 0;
+    }
+    .search-panel-title {
+      font-size: 26px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+    }
+    .search-panel-close {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.14);
+      cursor: pointer;
+      transition: background 0.2s, transform 0.15s;
+      color: #fff;
+    }
+    .search-panel-close:hover { background: rgba(255,255,255,0.18); transform: scale(1.05); }
+    .search-panel-close svg { width: 16px; height: 16px; }
+
+    .search-input-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+      background: var(--liquid-bg);
+      border: 1px solid var(--liquid-border);
+      box-shadow: var(--liquid-shadow);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-radius: 14px;
+      padding: 0 14px;
+      margin-bottom: 22px;
+      height: 46px;
+      flex-shrink: 0;
+    }
+    .search-input-wrap svg.search-icon { width: 18px; height: 18px; opacity: 0.6; flex-shrink: 0; color: #fff; }
+    .search-panel-input {
+      flex: 1;
+      background: none;
+      border: none;
+      outline: none;
+      color: #fff;
+      font-family: 'Outfit', sans-serif;
+      font-size: 15px;
+      font-weight: 500;
+      padding: 0 10px;
+    }
+    .search-panel-input::placeholder { color: rgba(255,255,255,0.45); }
+    .search-input-clear {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.25);
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      flex-shrink: 0;
+      display: none;
+      color: #fff;
+    }
+    .search-input-clear.show { display: flex; }
+    .search-input-clear svg { width: 11px; height: 11px; }
+
+    .search-panel-subheader {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      padding: 0 4px;
+      flex-shrink: 0;
+    }
+    .search-panel-subheader .label { font-size: 16px; font-weight: 700; }
+    .search-panel-clear-all {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--accent);
+      cursor: pointer;
+      background: none;
+      border: none;
+      font-family: 'Outfit', sans-serif;
+    }
+    .search-panel-clear-all:hover { text-decoration: underline; }
+
+    .search-panel-list {
+      flex: 1;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      margin: 0 -10px;
+      padding: 0 10px;
+    }
+    .search-panel-list::-webkit-scrollbar { width: 6px; }
+    .search-panel-list::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 10px; }
+
+    .search-result-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 8px 6px;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .search-result-item:hover { background: rgba(255,255,255,0.08); }
+    .search-result-item.hidden { display: none; }
+
+    .search-result-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      object-fit: cover;
+      flex-shrink: 0;
+      border: 1px solid rgba(255,255,255,0.15);
+    }
+    .search-result-avatar-fallback {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255,255,255,0.10);
+      border: 1px solid rgba(255,255,255,0.15);
+    }
+    .search-result-avatar-fallback svg { width: 20px; height: 20px; opacity: 0.65; color: #fff; }
+
+    .search-result-avatar-game {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      object-fit: cover;
+      flex-shrink: 0;
+      border: 1px solid rgba(255,255,255,0.15);
+    }
+
+    .search-result-info { flex: 1; min-width: 0; }
+    .search-result-name {
+      font-size: 14px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      color: #fff;
+    }
+    .search-result-name svg.verified-badge { width: 14px; height: 14px; flex-shrink: 0; }
+    .search-result-sub {
+      font-size: 12.5px;
+      color: var(--text-dim);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .search-result-tag {
+      font-size: 10.5px;
+      font-weight: 700;
+      letter-spacing: 0.4px;
+      text-transform: uppercase;
+      color: var(--accent);
+      background: rgba(126,184,255,0.15);
+      border: 1px solid rgba(126,184,255,0.30);
+      padding: 2px 7px;
+      border-radius: 6px;
+      flex-shrink: 0;
+    }
+
+    .search-result-remove {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: none;
+      border: none;
+      cursor: pointer;
+      opacity: 0.6;
+      color: #fff;
+    }
+    .search-result-remove:hover { opacity: 1; background: rgba(255,255,255,0.1); }
+    .search-result-remove svg { width: 14px; height: 14px; }
+
+    .search-panel-empty {
+      text-align: center;
+      color: var(--text-dim);
+      font-size: 14px;
+      padding: 40px 10px;
+      display: none;
+    }
+    .search-panel-empty.show { display: block; }
+
+    /* ============================================================ */
     /*  MAIN CONTENT AREA                                            */
     /* ============================================================ */
     .main-content {
@@ -1997,7 +2238,7 @@
       <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <path d="M5 4v16"/> <path d="M10 4v16"/> <path d="M15 8v12"/><path d="M20 6v14"/></svg>
       Library
     </a>
-      <a class="nav-item" href="#">
+      <a class="nav-item" href="#" id="navSearchBtn">
       <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
     Search
     </a>
@@ -2038,6 +2279,162 @@
       </div>
     </div>
     </div><!-- end sidebar-nav-box -->
+  </aside>
+
+  <!-- ==================== SEARCH PANEL (Instagram-style) ==================== -->
+  <div class="search-scrim" id="searchScrim"></div>
+  <aside class="search-panel" id="searchPanel">
+    <div class="search-panel-header">
+      <div class="search-panel-title">Search</div>
+      <button class="search-panel-close" id="searchPanelClose" aria-label="Kapat">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+      </button>
+    </div>
+
+    <div class="search-input-wrap">
+      <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input type="text" class="search-panel-input" id="searchPanelInput" placeholder="Ara" autocomplete="off">
+      <div class="search-input-clear" id="searchInputClear">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+      </div>
+    </div>
+
+    <div class="search-panel-subheader">
+      <span class="label" id="searchSubheaderLabel">Son Aramalar</span>
+      <button class="search-panel-clear-all" id="searchClearAll">Tümünü temizle</button>
+    </div>
+
+    <div class="search-panel-list" id="searchResultsList">
+
+      <!-- Person -->
+      <div class="search-result-item" data-name="kanyes" data-sub="KANYES">
+        <img class="search-result-avatar" src="https://i.pinimg.com/1200x/f3/23/33/f323338233ea1ef3e83ad205919f7a3a.jpg" alt="kanyes">
+        <div class="search-result-info">
+          <div class="search-result-name">kanyes
+            <svg class="verified-badge" viewBox="0 0 24 24" fill="#7eb8ff"><path d="M12 2l2.4 1.9 3-.6 1.1 2.9 2.9 1.1-.6 3L22.6 12 20.8 14.7l.6 3-2.9 1.1-1.1 2.9-3-.6L12 22.6l-2.4-1.9-3 .6-1.1-2.9-2.9-1.1.6-3L1.4 12l1.8-2.7-.6-3 2.9-1.1L6.6 2.3l3 .6L12 2z"/><path d="M8.5 12.2l2.2 2.2 4.3-4.8" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+          </div>
+          <div class="search-result-sub">KANYES</div>
+        </div>
+        <button class="search-result-remove" aria-label="Kaldır">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+        </button>
+      </div>
+
+      <!-- Person -->
+      <div class="search-result-item" data-name="sami.balbay" data-sub="Sami Balbay Followed by dogukan.agar">
+        <img class="search-result-avatar" src="https://i.pinimg.com/736x/bc/b3/61/bcb3612bebc2b5dfee3044600ea93700.jpg" alt="sami.balbay">
+        <div class="search-result-info">
+          <div class="search-result-name">sami.balbay</div>
+          <div class="search-result-sub">Sami Balbay • Followed by dogukan.agar + 4</div>
+        </div>
+        <button class="search-result-remove" aria-label="Kaldır">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+        </button>
+      </div>
+
+      <!-- Person -->
+      <div class="search-result-item" data-name="yarenguler52" data-sub="Yaren">
+        <img class="search-result-avatar" src="https://i.pinimg.com/736x/f7/d8/f2/f7d8f2df2827bd6f8e0e95b12434ceab.jpg" alt="yarenguler52">
+        <div class="search-result-info">
+          <div class="search-result-name">yarenguler52</div>
+          <div class="search-result-sub">Yaren</div>
+        </div>
+        <button class="search-result-remove" aria-label="Kaldır">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+        </button>
+      </div>
+
+      <!-- Person -->
+      <div class="search-result-item" data-name="yarenguler" data-sub="Yaren Keleşoğlu">
+        <img class="search-result-avatar" src="https://i.pinimg.com/736x/98/df/69/98df6949fce8c87f15b03b306fc89fb0.jpg" alt="yarenguler">
+        <div class="search-result-info">
+          <div class="search-result-name">yarenguler</div>
+          <div class="search-result-sub">Yaren Keleşoğlu</div>
+        </div>
+        <button class="search-result-remove" aria-label="Kaldır">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+        </button>
+      </div>
+
+      <!-- Plain text search history -->
+      <div class="search-result-item" data-name="yarenguler" data-sub="">
+        <div class="search-result-avatar-fallback">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        </div>
+        <div class="search-result-info">
+          <div class="search-result-name">yarenguler</div>
+        </div>
+        <button class="search-result-remove" aria-label="Kaldır">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+        </button>
+      </div>
+
+      <!-- Person -->
+      <div class="search-result-item" data-name="yarenguler" data-sub="Yaren Güler">
+        <img class="search-result-avatar" src="https://i.pinimg.com/736x/75/06/71/750671109df71ce4eec2705e6dca540d.jpg" alt="yarengulerr">
+        <div class="search-result-info">
+          <div class="search-result-name">yarenguler</div>
+          <div class="search-result-sub">Yaren Güler</div>
+        </div>
+        <button class="search-result-remove" aria-label="Kaldır">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+        </button>
+      </div>
+
+      <!-- Game -->
+      <div class="search-result-item" data-name="cyberpunk 2077" data-sub="Oyun RPG">
+        <img class="search-result-avatar-game" src="https://i.pinimg.com/736x/4e/3c/5a/4e3c5a133d8b2a1176c0df6110f02562.jpg" alt="Cyberpunk 2077">
+        <div class="search-result-info">
+          <div class="search-result-name">Cyberpunk 2077</div>
+          <div class="search-result-sub">Oyun • RPG</div>
+        </div>
+        <span class="search-result-tag">Oyun</span>
+        <button class="search-result-remove" aria-label="Kaldır">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+        </button>
+      </div>
+
+      <!-- Game -->
+      <div class="search-result-item" data-name="valorant" data-sub="Oyun FPS">
+        <img class="search-result-avatar-game" src="https://i.pinimg.com/736x/72/8d/67/728d67196a3113aec1431fbb9ee0f1de.jpg" alt="Valorant">
+        <div class="search-result-info">
+          <div class="search-result-name">Valorant</div>
+          <div class="search-result-sub">Oyun • FPS</div>
+        </div>
+        <span class="search-result-tag">Oyun</span>
+        <button class="search-result-remove" aria-label="Kaldır">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+        </button>
+      </div>
+
+      <!-- Person -->
+      <div class="search-result-item" data-name="ilaydaltintasoglu" data-sub="İlayda Altıntaşoğlu">
+        <img class="search-result-avatar" src="https://i.pinimg.com/736x/35/5f/a0/355fa00b82d4b0ac718b849a0d9a512f.jpg" alt="ilaydaltintasoglu">
+        <div class="search-result-info">
+          <div class="search-result-name">ilaydaltintasoglu</div>
+          <div class="search-result-sub">İlayda Altıntaşoğlu</div>
+        </div>
+        <button class="search-result-remove" aria-label="Kaldır">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+        </button>
+      </div>
+
+      <!-- Plain text search history (no avatar) -->
+      <div class="search-result-item" data-name="asas" data-sub="">
+        <div class="search-result-avatar-fallback">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+        </div>
+        <div class="search-result-info">
+          <div class="search-result-name">asas</div>
+        </div>
+        <button class="search-result-remove" aria-label="Kaldır">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+        </button>
+      </div>
+
+    </div>
+
+    <div class="search-panel-empty" id="searchPanelEmpty">Son arama yok</div>
   </aside>
 
   <!-- ==================== MAIN CONTENT ==================== -->
@@ -3669,6 +4066,106 @@
       }
     });
   });
+
+  /* ============================================================ */
+  /*  SEARCH PANEL — open/close, filter, remove, clear-all         */
+  /* ============================================================ */
+  (function () {
+    const navSearchBtn   = document.getElementById('navSearchBtn');
+    const panel          = document.getElementById('searchPanel');
+    const scrim          = document.getElementById('searchScrim');
+    const closeBtn       = document.getElementById('searchPanelClose');
+    const input          = document.getElementById('searchPanelInput');
+    const inputClear     = document.getElementById('searchInputClear');
+    const clearAllBtn    = document.getElementById('searchClearAll');
+    const subheaderLabel = document.getElementById('searchSubheaderLabel');
+    const listEl         = document.getElementById('searchResultsList');
+    const emptyEl        = document.getElementById('searchPanelEmpty');
+
+    if (!panel) return;
+
+    function openPanel(e) {
+      if (e) e.preventDefault();
+      panel.classList.add('open');
+      scrim.classList.add('open');
+      navSearchBtn.classList.add('active');
+      document.body.style.overflow = 'hidden';
+      setTimeout(() => input.focus(), 320);
+    }
+
+    function closePanel() {
+      panel.classList.remove('open');
+      scrim.classList.remove('open');
+      navSearchBtn.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    navSearchBtn.addEventListener('click', openPanel);
+    closeBtn.addEventListener('click', closePanel);
+    scrim.addEventListener('click', closePanel);
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && panel.classList.contains('open')) closePanel();
+    });
+
+    function refreshView() {
+      const q = input.value.trim().toLowerCase();
+      inputClear.classList.toggle('show', q.length > 0);
+      subheaderLabel.textContent = q ? 'Sonuçlar' : 'Son Aramalar';
+      clearAllBtn.style.display = q ? 'none' : '';
+
+      const items = listEl.querySelectorAll('.search-result-item');
+      let anyVisible = false;
+
+      items.forEach((item) => {
+        if (item.classList.contains('removed')) {
+          item.classList.add('hidden');
+          return;
+        }
+        const name = (item.dataset.name || '').toLowerCase();
+        const sub  = (item.dataset.sub  || '').toLowerCase();
+        const match = !q || name.includes(q) || sub.includes(q);
+        item.classList.toggle('hidden', !match);
+        if (match) anyVisible = true;
+      });
+
+      emptyEl.textContent = q ? 'Sonuç bulunamadı' : 'Son arama yok';
+      emptyEl.classList.toggle('show', !anyVisible);
+    }
+
+    input.addEventListener('input', refreshView);
+
+    inputClear.addEventListener('click', () => {
+      input.value = '';
+      refreshView();
+      input.focus();
+    });
+
+    clearAllBtn.addEventListener('click', () => {
+      listEl.querySelectorAll('.search-result-item').forEach((item) => {
+        item.classList.add('removed');
+      });
+      refreshView();
+    });
+
+    listEl.querySelectorAll('.search-result-remove').forEach((btn) => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const item = btn.closest('.search-result-item');
+        item.classList.add('removed');
+        refreshView();
+      });
+    });
+
+    listEl.querySelectorAll('.search-result-item').forEach((item) => {
+      item.addEventListener('click', () => {
+        const name = item.dataset.name || '';
+        input.value = name;
+        refreshView();
+      });
+    });
+
+    refreshView();
+  })();
 
 </script>
 </body>
