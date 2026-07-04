@@ -109,16 +109,19 @@
     }
 
     .sidebar-logo {
-      font-size: 24px;
-      font-weight: 900;
-      letter-spacing: -0.5px;
-      color: #fff;
-      padding: 0 4px 0;
-      margin-bottom: 12px;
-      display: flex;
-      align-items: flex-end;
-      min-height: 80px;
-    }
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 50px;
+  min-height: 0;
+  margin-bottom: 4;
+}
+.sidebar-logo-mark {
+  width: 26px;
+  height: 26px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
 
     /* Nav items wrapped in a glass rounded-rect box */
     .sidebar-nav-box {
@@ -2223,7 +2226,10 @@
 
   <!-- ==================== LEFT SIDEBAR ==================== -->
   <aside class="sidebar">
-    <div class="sidebar-logo">NIMES</div>
+    <div class="sidebar-logo">
+  <img src="nimes.png" alt="Nimes logo" class="sidebar-logo-mark">
+  NIMES
+</div>
     
     <div class="sidebar-nav-box">
       <a class="nav-item active" href="#">
