@@ -2273,6 +2273,17 @@
       flex-shrink: 0;
     }
 
+    /* Reel card should not use the liquid-glass post-card look */
+    .reel-card.post-card {
+      background: transparent;
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+      border: none;
+      box-shadow: none;
+      border-radius: 0;
+      overflow: visible;
+    }
+
     /* Reel içerik satırı: video + sağ action bar yan yana */
     .reel-inner-row {
       display: flex;
@@ -2282,11 +2293,10 @@
 
     .reel-media-wrap {
       position: relative;
-      /* 9:16 aspect ratio */
-      width: calc(88vh * 9 / 16);
-      max-width: 380px;
-      height: 88vh;
-      border-radius: 22px;
+      /* 9:16 aspect ratio, fullscreen */
+      width: calc(100vh * 9 / 16);
+      height: 100vh;
+      border-radius: 0;
       overflow: hidden;
       background: #05050a;
       flex-shrink: 0;
@@ -2768,11 +2778,6 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
         <span class="notif-count-badge" id="msgUnreadBadge">2</span>
       </button>
-    </div>
-
-    <div class="reels-scroll-hint">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>
-      Kaydırarak gez
     </div>
 
     <!-- Nav scroll buttons (sağ taraf oklar) -->
