@@ -2273,16 +2273,23 @@
       flex-shrink: 0;
     }
 
+    /* Reel içerik satırı: video + sağ action bar yan yana */
+    .reel-inner-row {
+      display: flex;
+      align-items: flex-end;
+      gap: 14px;
+    }
+
     .reel-media-wrap {
       position: relative;
-      width: 420px;
-      max-width: 92%;
+      /* 9:16 aspect ratio */
+      width: calc(88vh * 9 / 16);
+      max-width: 380px;
       height: 88vh;
       border-radius: 22px;
       overflow: hidden;
       background: #05050a;
-      border: 1px solid var(--glass-border);
-      box-shadow: var(--glass-shadow);
+      flex-shrink: 0;
     }
 
     .reel-video,
@@ -2292,6 +2299,85 @@
       object-fit: cover;
       display: block;
       background: #000;
+    }
+
+    /* Mute butonu videonun SAĞ ÜST dışına (reel-inner-row içinde konumlandırılacak) */
+    .reel-mute-btn-outer {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      z-index: 5;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: rgba(0,0,0,0.45);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.28);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .reel-mute-btn-outer:hover { background: rgba(0,0,0,0.65); }
+    .reel-mute-btn-outer svg { width: 17px; height: 17px; }
+
+    /* Sağ action panel — liquid glass */
+    .reel-side-actions {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      padding: 14px 10px;
+      background: rgba(255,255,255,0.14);
+      backdrop-filter: blur(24px) saturate(1.7);
+      -webkit-backdrop-filter: blur(24px) saturate(1.7);
+      border: 1px solid rgba(255,255,255,0.32);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.22), inset 0 2px 8px rgba(255,255,255,0.55), inset 0 -2px 4px rgba(0,0,0,0.10);
+      border-radius: 28px;
+      flex-shrink: 0;
+    }
+
+    .reel-side-btn {
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.12);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,0.20);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.15s;
+      padding: 0;
+      flex-shrink: 0;
+    }
+    .reel-side-btn:hover { background: rgba(255,255,255,0.25); transform: scale(1.06); }
+    .reel-side-btn svg { width: 22px; height: 22px; }
+    .reel-side-btn.liked { color: #ef4444; }
+    .reel-side-btn.liked svg { fill: #ef4444; stroke: none; }
+
+    /* Liked heart — filled */
+    .reel-side-btn.liked .heart-icon { fill: #ef4444; stroke: none; }
+
+    .reel-side-count {
+      font-size: 11px;
+      font-weight: 700;
+      color: #fff;
+      text-align: center;
+      text-shadow: 0 1px 4px rgba(0,0,0,0.6);
+      margin-top: -4px;
+      margin-bottom: 6px;
+    }
+
+    .reel-side-group {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
     }
 
     .reel-gradient-top {
@@ -2377,26 +2463,31 @@
       cursor: pointer;
     }
 
-    /* Right action bar */
-    .reel-actions {
-      position: absolute;
-      right: 12px;
-      bottom: 24px;
-      z-index: 2;
+    /* Old reel-actions — now handled by reel-side-actions outside video */
+    .reel-actions { display: none !important; }
+    .reel-mute-btn { display: none !important; }
+
+    /* Nav scroll arrows — sağda iki balon */
+    .reels-nav-btns {
+      position: fixed;
+      right: 32px;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 200;
       display: flex;
       flex-direction: column;
-      align-items: center;
-      gap: 18px;
+      gap: 14px;
     }
 
-    .reel-action-btn {
-      width: 42px;
-      height: 42px;
+    .reels-nav-btn {
+      width: 52px;
+      height: 52px;
       border-radius: 50%;
-      background: rgba(255,255,255,0.10);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      border: none;
+      background: rgba(255,255,255,0.14);
+      backdrop-filter: blur(18px) saturate(1.6);
+      -webkit-backdrop-filter: blur(18px) saturate(1.6);
+      border: 1.5px solid rgba(255,255,255,0.38);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.25), inset 0 2px 6px rgba(255,255,255,0.45), inset 0 -2px 4px rgba(0,0,0,0.10);
       color: #fff;
       display: flex;
       align-items: center;
@@ -2404,44 +2495,10 @@
       cursor: pointer;
       transition: background 0.2s, transform 0.15s;
       padding: 0;
+      border: none;
     }
-    .reel-action-btn:hover { background: rgba(255,255,255,0.20); transform: scale(1.06); }
-    .reel-action-btn svg { width: 25px; height: 25px; }
-    .reel-action-btn.liked { color: #ef4444; }
-
-    .reel-action-count {
-      font-size: 12px;
-      font-weight: 700;
-      color: #fff;
-      margin-top: -12px;
-      text-shadow: 0 1px 4px rgba(0,0,0,0.6);
-    }
-
-    .reel-action-group {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .reel-mute-btn {
-      position: absolute;
-      top: 16px;
-      right: 16px;
-      z-index: 3;
-      width: 34px;
-      height: 34px;
-      border-radius: 50%;
-      background: rgba(0,0,0,0.35);
-      backdrop-filter: blur(8px);
-      border: 1px solid rgba(255,255,255,0.25);
-      color: #fff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-    }
-    .reel-mute-btn svg { width: 16px; height: 16px; }
+    .reels-nav-btn:hover { background: rgba(255,255,255,0.26); transform: scale(1.07); }
+    .reels-nav-btn svg { width: 22px; height: 22px; }
 
     .reels-scroll-hint {
       position: fixed;
@@ -2718,60 +2775,61 @@
       Kaydırarak gez
     </div>
 
+    <!-- Nav scroll buttons (sağ taraf oklar) -->
+    <div class="reels-nav-btns" id="reelsNavBtns">
+      <button class="reels-nav-btn" id="reelNavUp" title="Önceki">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="18 15 12 9 6 15"/></svg>
+      </button>
+      <button class="reels-nav-btn" id="reelNavDown" title="Sonraki">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+    </div>
+
     <!-- REELS FEED -->
     <div class="reels-main">
       <div class="reels-feed" id="reelsFeed">
 
         <!-- Reel 1 -->
         <section class="reel-card post-card">
-          <div class="heart-burst">
-            <svg viewBox="0 0 24 24" fill="#ef4444" width="90" height="90"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-          </div>
-          <div class="reel-media-wrap">
-            <video class="reel-video" src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.webm" loop muted playsinline></video>
-            <div class="reel-gradient-top"></div>
-            <div class="reel-gradient-bottom"></div>
-            <button class="reel-mute-btn">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5 6 9H2v6h4l5 4V5z"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
-            </button>
-
-            <div class="reel-overlay-bottom">
-              <div class="reel-user">
-                <img class="reel-avatar" src="https://i.pinimg.com/1200x/f3/23/33/f323338233ea1ef3e83ad205919f7a3a.jpg" alt="moonbreaker">
-                <span class="reel-username">moonbreaker</span>
-                <button class="reel-follow-btn">Follow</button>
+          <div class="heart-burst"><svg viewBox="0 0 24 24" fill="#ef4444" width="90" height="90"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div>
+          <div class="reel-inner-row">
+            <div class="reel-media-wrap">
+              <video class="reel-video" src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.webm" loop muted playsinline></video>
+              <div class="reel-gradient-top"></div>
+              <div class="reel-gradient-bottom"></div>
+              <button class="reel-mute-btn-outer global-mute-btn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5 6 9H2v6h4l5 4V5z"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
+              </button>
+              <div class="reel-overlay-bottom">
+                <div class="reel-user">
+                  <img class="reel-avatar" src="https://i.pinimg.com/1200x/f3/23/33/f323338233ea1ef3e83ad205919f7a3a.jpg" alt="moonbreaker">
+                  <span class="reel-username">moonbreaker</span>
+                  <button class="reel-follow-btn">Follow</button>
+                </div>
+                <div class="reel-caption">Yeni build hazır, akşam denemeye geliyorum 🎮 <span class="more-link">... more</span></div>
               </div>
-              <div class="reel-caption">Yeni build hazır, akşam denemeye geliyorum 🎮 <span class="more-link">... more</span></div>
             </div>
-
-            <div class="reel-actions">
-              <div class="reel-action-group">
-                <button class="reel-action-btn post-action-btn like-btn">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-                </button>
-                <span class="reel-action-count">33.5K</span>
+            <div class="reel-side-actions">
+              <div class="reel-side-group">
+                <button class="reel-side-btn post-action-btn like-btn"><svg class="heart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+                <span class="reel-side-count">24.2K</span>
               </div>
-              <div class="reel-action-group">
-                <button class="reel-action-btn">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-                </button>
-                <span class="reel-action-count">118</span>
+              <div class="reel-side-group">
+                <button class="reel-side-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></button>
+                <span class="reel-side-count">786</span>
               </div>
-              <div class="reel-action-group">
-                <button class="reel-action-btn">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-                </button>
-                <span class="reel-action-count">908</span>
+              <div class="reel-side-group">
+                <button class="reel-side-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg></button>
+                <span class="reel-side-count">416</span>
               </div>
-              <div class="reel-action-group">
-                <button class="reel-action-btn post-save-btn">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
-                </button>
+              <div class="reel-side-group">
+                <button class="reel-side-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button>
               </div>
-              <div class="reel-action-group">
-                <button class="reel-action-btn">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
-                </button>
+              <div class="reel-side-group">
+                <button class="reel-side-btn post-save-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></button>
+              </div>
+              <div class="reel-side-group">
+                <button class="reel-side-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg></button>
               </div>
             </div>
           </div>
@@ -2779,54 +2837,45 @@
 
         <!-- Reel 2 -->
         <section class="reel-card post-card">
-          <div class="heart-burst">
-            <svg viewBox="0 0 24 24" fill="#ef4444" width="90" height="90"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-          </div>
-          <div class="reel-media-wrap">
-            <video class="reel-video" src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/friday.mp4" loop muted playsinline></video>
-            <div class="reel-gradient-top"></div>
-            <div class="reel-gradient-bottom"></div>
-            <button class="reel-mute-btn">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5 6 9H2v6h4l5 4V5z"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
-            </button>
-
-            <div class="reel-overlay-bottom">
-              <div class="reel-user">
-                <img class="reel-avatar" src="https://i.pinimg.com/736x/bc/b3/61/bcb3612bebc2b5dfee3044600ea93700.jpg" alt="Mino">
-                <span class="reel-username">mino_plays</span>
-                <button class="reel-follow-btn">Follow</button>
+          <div class="heart-burst"><svg viewBox="0 0 24 24" fill="#ef4444" width="90" height="90"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div>
+          <div class="reel-inner-row">
+            <div class="reel-media-wrap">
+              <video class="reel-video" src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/friday.mp4" loop muted playsinline></video>
+              <div class="reel-gradient-top"></div>
+              <div class="reel-gradient-bottom"></div>
+              <button class="reel-mute-btn-outer global-mute-btn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5 6 9H2v6h4l5 4V5z"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
+              </button>
+              <div class="reel-overlay-bottom">
+                <div class="reel-user">
+                  <img class="reel-avatar" src="https://i.pinimg.com/736x/bc/b3/61/bcb3612bebc2b5dfee3044600ea93700.jpg" alt="Mino">
+                  <span class="reel-username">mino_plays</span>
+                  <button class="reel-follow-btn">Follow</button>
+                </div>
+                <div class="reel-caption">Fortnite chapter 5 highlights, son klip efsane 🔥 <span class="more-link">... more</span></div>
               </div>
-              <div class="reel-caption">Fortnite chapter 5 highlights, son klip efsane 🔥 <span class="more-link">... more</span></div>
             </div>
-
-            <div class="reel-actions">
-              <div class="reel-action-group">
-                <button class="reel-action-btn post-action-btn like-btn">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-                </button>
-                <span class="reel-action-count">12.1K</span>
+            <div class="reel-side-actions">
+              <div class="reel-side-group">
+                <button class="reel-side-btn post-action-btn like-btn"><svg class="heart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+                <span class="reel-side-count">12.1K</span>
               </div>
-              <div class="reel-action-group">
-                <button class="reel-action-btn">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-                </button>
-                <span class="reel-action-count">64</span>
+              <div class="reel-side-group">
+                <button class="reel-side-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></button>
+                <span class="reel-side-count">64</span>
               </div>
-              <div class="reel-action-group">
-                <button class="reel-action-btn">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-                </button>
-                <span class="reel-action-count">301</span>
+              <div class="reel-side-group">
+                <button class="reel-side-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg></button>
+                <span class="reel-side-count">301</span>
               </div>
-              <div class="reel-action-group">
-                <button class="reel-action-btn post-save-btn">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
-                </button>
+              <div class="reel-side-group">
+                <button class="reel-side-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button>
               </div>
-              <div class="reel-action-group">
-                <button class="reel-action-btn">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
-                </button>
+              <div class="reel-side-group">
+                <button class="reel-side-btn post-save-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></button>
+              </div>
+              <div class="reel-side-group">
+                <button class="reel-side-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg></button>
               </div>
             </div>
           </div>
@@ -2834,54 +2883,275 @@
 
         <!-- Reel 3 -->
         <section class="reel-card post-card">
-          <div class="heart-burst">
-            <svg viewBox="0 0 24 24" fill="#ef4444" width="90" height="90"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-          </div>
-          <div class="reel-media-wrap">
-            <video class="reel-video" src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/coffee.mp4" loop muted playsinline></video>
-            <div class="reel-gradient-top"></div>
-            <div class="reel-gradient-bottom"></div>
-            <button class="reel-mute-btn">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5 6 9H2v6h4l5 4V5z"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
-            </button>
-
-            <div class="reel-overlay-bottom">
-              <div class="reel-user">
-                <img class="reel-avatar" src="https://i.pinimg.com/736x/fc/56/8e/fc568e1fc2445b8af18cc4e050ca13cf.jpg" alt="Mochi">
-                <span class="reel-username">mochi_valo</span>
-                <button class="reel-follow-btn">Follow</button>
+          <div class="heart-burst"><svg viewBox="0 0 24 24" fill="#ef4444" width="90" height="90"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div>
+          <div class="reel-inner-row">
+            <div class="reel-media-wrap">
+              <video class="reel-video" src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/coffee.mp4" loop muted playsinline></video>
+              <div class="reel-gradient-top"></div>
+              <div class="reel-gradient-bottom"></div>
+              <button class="reel-mute-btn-outer global-mute-btn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5 6 9H2v6h4l5 4V5z"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
+              </button>
+              <div class="reel-overlay-bottom">
+                <div class="reel-user">
+                  <img class="reel-avatar" src="https://i.pinimg.com/736x/fc/56/8e/fc568e1fc2445b8af18cc4e050ca13cf.jpg" alt="Mochi">
+                  <span class="reel-username">mochi_valo</span>
+                  <button class="reel-follow-btn">Follow</button>
+                </div>
+                <div class="reel-caption">Valorant ranked ace clip, gördünüz mü? 🎯 <span class="more-link">... more</span></div>
               </div>
-              <div class="reel-caption">Valorant ranked ace clip, gördünüz mü? 🎯 <span class="more-link">... more</span></div>
             </div>
+            <div class="reel-side-actions">
+              <div class="reel-side-group">
+                <button class="reel-side-btn post-action-btn like-btn"><svg class="heart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+                <span class="reel-side-count">8,204</span>
+              </div>
+              <div class="reel-side-group">
+                <button class="reel-side-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></button>
+                <span class="reel-side-count">37</span>
+              </div>
+              <div class="reel-side-group">
+                <button class="reel-side-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg></button>
+                <span class="reel-side-count">150</span>
+              </div>
+              <div class="reel-side-group">
+                <button class="reel-side-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button>
+              </div>
+              <div class="reel-side-group">
+                <button class="reel-side-btn post-save-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></button>
+              </div>
+              <div class="reel-side-group">
+                <button class="reel-side-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg></button>
+              </div>
+            </div>
+          </div>
+        </section>
 
-            <div class="reel-actions">
-              <div class="reel-action-group">
-                <button class="reel-action-btn post-action-btn like-btn">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-                </button>
-                <span class="reel-action-count">8,204</span>
+        <!-- Reel 4 -->
+        <section class="reel-card post-card">
+          <div class="heart-burst"><svg viewBox="0 0 24 24" fill="#ef4444" width="90" height="90"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div>
+          <div class="reel-inner-row">
+            <div class="reel-media-wrap">
+              <video class="reel-video" src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.webm" loop muted playsinline></video>
+              <div class="reel-gradient-top"></div>
+              <div class="reel-gradient-bottom"></div>
+              <button class="reel-mute-btn-outer global-mute-btn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5 6 9H2v6h4l5 4V5z"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
+              </button>
+              <div class="reel-overlay-bottom">
+                <div class="reel-user">
+                  <img class="reel-avatar" src="https://i.pinimg.com/736x/f7/d8/f2/f7d8f2df2827bd6f8e0e95b12434ceab.jpg" alt="Jhon">
+                  <span class="reel-username">jhon_gamer</span>
+                  <button class="reel-follow-btn">Follow</button>
+                </div>
+                <div class="reel-caption">CS2 Premier'de rank atladım sonunda 🏆 <span class="more-link">... more</span></div>
               </div>
-              <div class="reel-action-group">
-                <button class="reel-action-btn">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-                </button>
-                <span class="reel-action-count">37</span>
+            </div>
+            <div class="reel-side-actions">
+              <div class="reel-side-group">
+                <button class="reel-side-btn post-action-btn like-btn"><svg class="heart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+                <span class="reel-side-count">5,830</span>
               </div>
-              <div class="reel-action-group">
-                <button class="reel-action-btn">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-                </button>
-                <span class="reel-action-count">150</span>
+              <div class="reel-side-group">
+                <button class="reel-side-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></button>
+                <span class="reel-side-count">92</span>
               </div>
-              <div class="reel-action-group">
-                <button class="reel-action-btn post-save-btn">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
-                </button>
+              <div class="reel-side-group">
+                <button class="reel-side-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg></button>
+                <span class="reel-side-count">214</span>
               </div>
-              <div class="reel-action-group">
-                <button class="reel-action-btn">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
-                </button>
+              <div class="reel-side-group">
+                <button class="reel-side-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button>
+              </div>
+              <div class="reel-side-group">
+                <button class="reel-side-btn post-save-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></button>
+              </div>
+              <div class="reel-side-group">
+                <button class="reel-side-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg></button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Reel 5 -->
+        <section class="reel-card post-card">
+          <div class="heart-burst"><svg viewBox="0 0 24 24" fill="#ef4444" width="90" height="90"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div>
+          <div class="reel-inner-row">
+            <div class="reel-media-wrap">
+              <video class="reel-video" src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/friday.mp4" loop muted playsinline></video>
+              <div class="reel-gradient-top"></div>
+              <div class="reel-gradient-bottom"></div>
+              <button class="reel-mute-btn-outer global-mute-btn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5 6 9H2v6h4l5 4V5z"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
+              </button>
+              <div class="reel-overlay-bottom">
+                <div class="reel-user">
+                  <img class="reel-avatar" src="https://i.pinimg.com/736x/98/df/69/98df6949fce8c87f15b03b306fc89fb0.jpg" alt="Moony">
+                  <span class="reel-username">moony.gg</span>
+                  <button class="reel-follow-btn">Follow</button>
+                </div>
+                <div class="reel-caption">Elden Ring boss fight, ilk seferinde geçtim inanamıyorum ⚔️ <span class="more-link">... more</span></div>
+              </div>
+            </div>
+            <div class="reel-side-actions">
+              <div class="reel-side-group">
+                <button class="reel-side-btn post-action-btn like-btn"><svg class="heart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+                <span class="reel-side-count">18.7K</span>
+              </div>
+              <div class="reel-side-group">
+                <button class="reel-side-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></button>
+                <span class="reel-side-count">430</span>
+              </div>
+              <div class="reel-side-group">
+                <button class="reel-side-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg></button>
+                <span class="reel-side-count">1.2K</span>
+              </div>
+              <div class="reel-side-group">
+                <button class="reel-side-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button>
+              </div>
+              <div class="reel-side-group">
+                <button class="reel-side-btn post-save-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></button>
+              </div>
+              <div class="reel-side-group">
+                <button class="reel-side-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg></button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Reel 6 -->
+        <section class="reel-card post-card">
+          <div class="heart-burst"><svg viewBox="0 0 24 24" fill="#ef4444" width="90" height="90"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div>
+          <div class="reel-inner-row">
+            <div class="reel-media-wrap">
+              <video class="reel-video" src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/coffee.mp4" loop muted playsinline></video>
+              <div class="reel-gradient-top"></div>
+              <div class="reel-gradient-bottom"></div>
+              <button class="reel-mute-btn-outer global-mute-btn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5 6 9H2v6h4l5 4V5z"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
+              </button>
+              <div class="reel-overlay-bottom">
+                <div class="reel-user">
+                  <img class="reel-avatar" src="https://i.pinimg.com/736x/35/5f/a0/355fa00b82d4b0ac718b849a0d9a512f.jpg" alt="kanyes">
+                  <span class="reel-username">kanyes</span>
+                  <button class="reel-follow-btn">Follow</button>
+                </div>
+                <div class="reel-caption">GTA 6 gameplay sızdı, kimse görmeden önce izle! 👀 <span class="more-link">... more</span></div>
+              </div>
+            </div>
+            <div class="reel-side-actions">
+              <div class="reel-side-group">
+                <button class="reel-side-btn post-action-btn like-btn"><svg class="heart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+                <span class="reel-side-count">41.9K</span>
+              </div>
+              <div class="reel-side-group">
+                <button class="reel-side-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></button>
+                <span class="reel-side-count">1.1K</span>
+              </div>
+              <div class="reel-side-group">
+                <button class="reel-side-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg></button>
+                <span class="reel-side-count">3.4K</span>
+              </div>
+              <div class="reel-side-group">
+                <button class="reel-side-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button>
+              </div>
+              <div class="reel-side-group">
+                <button class="reel-side-btn post-save-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></button>
+              </div>
+              <div class="reel-side-group">
+                <button class="reel-side-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg></button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Reel 7 -->
+        <section class="reel-card post-card">
+          <div class="heart-burst"><svg viewBox="0 0 24 24" fill="#ef4444" width="90" height="90"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div>
+          <div class="reel-inner-row">
+            <div class="reel-media-wrap">
+              <video class="reel-video" src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.webm" loop muted playsinline></video>
+              <div class="reel-gradient-top"></div>
+              <div class="reel-gradient-bottom"></div>
+              <button class="reel-mute-btn-outer global-mute-btn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5 6 9H2v6h4l5 4V5z"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
+              </button>
+              <div class="reel-overlay-bottom">
+                <div class="reel-user">
+                  <img class="reel-avatar" src="https://i.pinimg.com/1200x/61/5b/13/615b13791d3c1c8568d36a64195181d4.jpg" alt="Yeerzy">
+                  <span class="reel-username">yeerzy</span>
+                  <button class="reel-follow-btn">Follow</button>
+                </div>
+                <div class="reel-caption">Minecraft hardcore dünya 500 gün, bitirdim 💪 <span class="more-link">... more</span></div>
+              </div>
+            </div>
+            <div class="reel-side-actions">
+              <div class="reel-side-group">
+                <button class="reel-side-btn post-action-btn like-btn"><svg class="heart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+                <span class="reel-side-count">9,552</span>
+              </div>
+              <div class="reel-side-group">
+                <button class="reel-side-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></button>
+                <span class="reel-side-count">183</span>
+              </div>
+              <div class="reel-side-group">
+                <button class="reel-side-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg></button>
+                <span class="reel-side-count">678</span>
+              </div>
+              <div class="reel-side-group">
+                <button class="reel-side-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button>
+              </div>
+              <div class="reel-side-group">
+                <button class="reel-side-btn post-save-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></button>
+              </div>
+              <div class="reel-side-group">
+                <button class="reel-side-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg></button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Reel 8 -->
+        <section class="reel-card post-card">
+          <div class="heart-burst"><svg viewBox="0 0 24 24" fill="#ef4444" width="90" height="90"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div>
+          <div class="reel-inner-row">
+            <div class="reel-media-wrap">
+              <video class="reel-video" src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/friday.mp4" loop muted playsinline></video>
+              <div class="reel-gradient-top"></div>
+              <div class="reel-gradient-bottom"></div>
+              <button class="reel-mute-btn-outer global-mute-btn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5 6 9H2v6h4l5 4V5z"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
+              </button>
+              <div class="reel-overlay-bottom">
+                <div class="reel-user">
+                  <img class="reel-avatar" src="https://i.pinimg.com/1200x/db/fe/75/dbfe75990174020a7ebf8799999212d8.jpg" alt="Apple">
+                  <span class="reel-username">apple_fps</span>
+                  <button class="reel-follow-btn">Follow</button>
+                </div>
+                <div class="reel-caption">League of Legends pentakill klibi, 5 yılda bir olan şey 🎮✨ <span class="more-link">... more</span></div>
+              </div>
+            </div>
+            <div class="reel-side-actions">
+              <div class="reel-side-group">
+                <button class="reel-side-btn post-action-btn like-btn"><svg class="heart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+                <span class="reel-side-count">31.0K</span>
+              </div>
+              <div class="reel-side-group">
+                <button class="reel-side-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></button>
+                <span class="reel-side-count">762</span>
+              </div>
+              <div class="reel-side-group">
+                <button class="reel-side-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg></button>
+                <span class="reel-side-count">2.1K</span>
+              </div>
+              <div class="reel-side-group">
+                <button class="reel-side-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button>
+              </div>
+              <div class="reel-side-group">
+                <button class="reel-side-btn post-save-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></button>
+              </div>
+              <div class="reel-side-group">
+                <button class="reel-side-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg></button>
               </div>
             </div>
           </div>
@@ -3288,7 +3558,7 @@
   })();
 
   /* ============================================================ */
-  /*  REELS — autoplay active video, pause others, mute toggle     */
+  /*  REELS — autoplay, global mute, nav buttons                  */
   /* ============================================================ */
   (function() {
     const feed = document.getElementById('reelsFeed');
@@ -3297,12 +3567,39 @@
     const cards = Array.from(feed.querySelectorAll('.reel-card'));
     const videos = cards.map(c => c.querySelector('.reel-video')).filter(Boolean);
 
+    // Global mute state — tüm videolar aynı anda muted/unmuted
+    let globalMuted = true;
+
+    const MUTE_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5 6 9H2v6h4l5 4V5z"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>';
+    const UNMUTE_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>';
+
+    function applyGlobalMute() {
+      videos.forEach(v => { v.muted = globalMuted; });
+      document.querySelectorAll('.global-mute-btn').forEach(btn => {
+        btn.innerHTML = globalMuted ? MUTE_SVG : UNMUTE_SVG;
+      });
+    }
+
+    // Init: all muted
+    applyGlobalMute();
+
+    // Each mute button toggles global state
+    document.querySelectorAll('.global-mute-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        globalMuted = !globalMuted;
+        applyGlobalMute();
+      });
+    });
+
+    // IntersectionObserver: autoplay aktif video
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         const video = entry.target.querySelector('.reel-video');
         if (!video) return;
         if (entry.isIntersecting && entry.intersectionRatio > 0.6) {
-          videos.forEach(v => { if (v !== video) { v.pause(); } });
+          videos.forEach(v => { if (v !== video) v.pause(); });
+          video.muted = globalMuted;
           video.play().catch(() => {});
         } else {
           video.pause();
@@ -3312,8 +3609,8 @@
 
     cards.forEach(card => observer.observe(card));
 
-    // Start first video muted+playing
-    if (videos[0]) { videos[0].muted = true; videos[0].play().catch(() => {}); }
+    // Start first video
+    if (videos[0]) { videos[0].muted = globalMuted; videos[0].play().catch(() => {}); }
 
     // Tap video to play/pause
     cards.forEach(card => {
@@ -3321,24 +3618,34 @@
       const mediaWrap = card.querySelector('.reel-media-wrap');
       if (!video || !mediaWrap) return;
       mediaWrap.addEventListener('click', (e) => {
-        if (e.target.closest('button') || e.target.closest('.reel-actions')) return;
+        if (e.target.closest('button')) return;
         if (video.paused) video.play().catch(() => {}); else video.pause();
       });
     });
 
-    // Mute/unmute buttons
-    document.querySelectorAll('.reel-mute-btn').forEach(btn => {
-      const video = btn.closest('.reel-media-wrap').querySelector('.reel-video');
-      if (!video) return;
-      video.muted = true;
-      btn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        video.muted = !video.muted;
-        btn.innerHTML = video.muted
-          ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5 6 9H2v6h4l5 4V5z"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>'
-          : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>';
+    // Nav buttons — yukarı/aşağı ok
+    const navUp   = document.getElementById('reelNavUp');
+    const navDown = document.getElementById('reelNavDown');
+
+    function scrollToCard(idx) {
+      if (idx < 0 || idx >= cards.length) return;
+      cards[idx].scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function getCurrentCardIndex() {
+      const feedRect = feed.getBoundingClientRect();
+      let best = 0, bestRatio = -1;
+      cards.forEach((card, i) => {
+        const r = card.getBoundingClientRect();
+        const visible = Math.min(r.bottom, feedRect.bottom) - Math.max(r.top, feedRect.top);
+        const ratio = visible / card.offsetHeight;
+        if (ratio > bestRatio) { bestRatio = ratio; best = i; }
       });
-    });
+      return best;
+    }
+
+    if (navUp) navUp.addEventListener('click', () => scrollToCard(getCurrentCardIndex() - 1));
+    if (navDown) navDown.addEventListener('click', () => scrollToCard(getCurrentCardIndex() + 1));
   })();
 
   /* ============================================================ */
