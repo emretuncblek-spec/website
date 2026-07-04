@@ -113,8 +113,8 @@
   align-items: center;
   gap: 8px;
   margin-top: 50px;
-  min-height: 0;
-  margin-bottom: 4;
+  min-height: 0;       /* 80px'lik zorunlu yüksekliği kaldırır */
+  margin-bottom: 4;    /* nav-box'a olan boşluğu sıfırlar, istediğin kadar artır */
 }
 .sidebar-logo-mark {
   width: 26px;
@@ -2227,9 +2227,9 @@
   <!-- ==================== LEFT SIDEBAR ==================== -->
   <aside class="sidebar">
     <div class="sidebar-logo">
-  <img src="nimes.png" alt="Nimes logo" class="sidebar-logo-mark">
-  NIMES
-</div>
+      <img src="nimes.png" alt="Nimes logo" class="sidebar-logo-mark">
+      NIMES
+    </div>
     
     <div class="sidebar-nav-box">
       <a class="nav-item active" href="#">
