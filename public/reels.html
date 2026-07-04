@@ -1,1 +1,4326 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <link rel="icon" type="image/png" href="/nimes.png">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nimes - Reels</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    /* ============================================================ */
+    /*  CSS VARIABLES & RESET                                        */
+    /* ============================================================ */ 
+    :root {
+      --glass:         rgba(255,255,255,0.13);
+      --glass-border:  rgba(255,255,255,0.28);
+      --glass-blur:    blur(22px) saturate(1.6);
+      --glass-shadow:  0 8px 40px rgba(0,0,0,0.22), inset 0 1px 0 rgba(255,255,255,0.35), inset 0 0 0 1px rgba(255,255,255,0.12);
+      --liquid-bg:     rgba(255,255,255,0.16);
+      --liquid-border: rgba(255,255,255,0.50);
+      --liquid-shadow: 0 6px 20px rgba(100,160,255,0.18), inset 0 2px 8px rgba(255,255,255,0.70), inset 0 -2px 4px rgba(0,0,0,0.10);
+      --accent:        #7eb8ff;
+      --text:          #ffffff;
+      --text-dim:      rgba(255,255,255,0.65);
+      --sidebar-w:     240px;
+    }
 
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Outfit', sans-serif;
+      min-height: 100vh;
+      background: #000000;
+      color: var(--text);
+      overflow-x: hidden;
+    }
+
+    /* Animated aura layer */
+    .aura-layer {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    .aura-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(100px);
+    }
+    .aura-orb-1 {
+      width: 600px; height: 600px;
+      top: -150px; left: 5%;
+      background: radial-gradient(circle, rgba(30,60,200,0.50) 0%, transparent 70%);
+      animation: aura1 9s ease-in-out infinite;
+    }
+    .aura-orb-2 {
+      width: 450px; height: 450px;
+      bottom: 0; right: 5%;
+      background: radial-gradient(circle, rgba(50,20,170,0.40) 0%, transparent 70%);
+      animation: aura2 12s ease-in-out infinite 3s;
+    }
+    .aura-orb-3 {
+      width: 350px; height: 350px;
+      top: 40%; left: 38%;
+      background: radial-gradient(circle, rgba(20,50,180,0.28) 0%, transparent 70%);
+      animation: aura3 15s ease-in-out infinite 6s;
+    }
+    @keyframes aura1 {
+      0%,100% { opacity:0.45; transform:scale(1) translate(0,0); }
+      50%      { opacity:0.65; transform:scale(1.12) translate(18px,28px); }
+    }
+    @keyframes aura2 {
+      0%,100% { opacity:0.35; transform:scale(1) translate(0,0); }
+      50%      { opacity:0.52; transform:scale(1.10) translate(-22px,-18px); }
+    }
+    @keyframes aura3 {
+      0%,100% { opacity:0.20; transform:scale(1); }
+      50%      { opacity:0.36; transform:scale(1.14); }
+    }
+
+    /* ============================================================ */
+    /*  APP LAYOUT                                                   */
+    /* ============================================================ */
+    .app-layout {
+      display: flex;
+      min-height: 100vh;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ============================================================ */
+    /*  LEFT SIDEBAR — Fixed always                                  */
+    /* ============================================================ */
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: var(--sidebar-w);
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      padding: 0px 16px 20px;
+      gap: 0;
+      z-index: 100;
+      background: transparent;
+    }
+
+    .sidebar-logo {
+      font-size: 24px;
+      font-weight: 900;
+      letter-spacing: -0.5px;
+      color: #fff;
+      padding: 0 4px 0;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: flex-end;
+      min-height: 80px;
+    }
+
+    /* Nav items wrapped in a glass rounded-rect box */
+    .sidebar-nav-box {
+      background: var(--glass);
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+      border: 1px solid var(--glass-border);
+      box-shadow: var(--glass-shadow);
+      border-radius: 20px;
+      padding: 10px 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      font-size: 15px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.70);
+      text-decoration: none;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+      user-select: none;
+    }
+
+    .nav-item:hover {
+      background: rgba(255,255,255,0.10);
+      color: #fff;
+    }
+
+    .nav-item.active {
+      background: rgba(255,255,255,0.16);
+      color: #fff;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.22);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.25);
+    }
+
+    .nav-icon {
+      width: 22px;
+      height: 22px;
+      flex-shrink: 0;
+      opacity: 0.85;
+    }
+
+    .nav-item.active .nav-icon { opacity: 1; }
+
+    .sidebar-avatar {
+      margin-top: auto;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 10px;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.14);
+    }
+
+    .sidebar-avatar img {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid rgba(255,255,255,0.3);
+    }
+
+    .sidebar-avatar-info { flex: 1; min-width: 0; }
+    .sidebar-avatar-name { font-size: 13px; font-weight: 700; }
+    .sidebar-avatar-handle { font-size: 11px; color: var(--text-dim); }
+
+    /* ============================================================ */
+    /*  SEARCH PANEL — Instagram-style liquid glass slide-over       */
+    /* ============================================================ */
+    .search-scrim {
+      position: fixed;
+      inset: 0;
+      z-index: 150;
+      background: transparent;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+    .search-scrim.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .search-panel {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 400px;
+      max-width: 88vw;
+      height: 100vh;
+      z-index: 160;
+      background: rgba(14,14,22,0.62);
+      backdrop-filter: blur(32px) saturate(1.7);
+      -webkit-backdrop-filter: blur(32px) saturate(1.7);
+      border-right: 1px solid var(--glass-border);
+      box-shadow: 12px 0 50px rgba(0,0,0,0.40), inset -1px 0 0 rgba(255,255,255,0.10);
+      transform: translateX(-100%);
+      transition: transform 0.4s cubic-bezier(.22,1,.36,1);
+      display: flex;
+      flex-direction: column;
+      padding: 30px 22px 18px;
+    }
+    .search-panel.open {
+      transform: translateX(0);
+    }
+
+    .search-panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+      flex-shrink: 0;
+    }
+    .search-panel-title {
+      font-size: 26px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+    }
+    .search-panel-close {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.14);
+      cursor: pointer;
+      transition: background 0.2s, transform 0.15s;
+      color: #fff;
+    }
+    .search-panel-close:hover { background: rgba(255,255,255,0.18); transform: scale(1.05); }
+    .search-panel-close svg { width: 16px; height: 16px; }
+
+    .search-input-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+      background: var(--liquid-bg);
+      border: 1px solid var(--liquid-border);
+      box-shadow: var(--liquid-shadow);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-radius: 14px;
+      padding: 0 14px;
+      margin-bottom: 22px;
+      height: 46px;
+      flex-shrink: 0;
+    }
+    .search-input-wrap svg.search-icon { width: 18px; height: 18px; opacity: 0.6; flex-shrink: 0; color: #fff; }
+    .search-panel-input {
+      flex: 1;
+      background: none;
+      border: none;
+      outline: none;
+      color: #fff;
+      font-family: 'Outfit', sans-serif;
+      font-size: 15px;
+      font-weight: 500;
+      padding: 0 10px;
+    }
+    .search-panel-input::placeholder { color: rgba(255,255,255,0.45); }
+    .search-input-clear {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.25);
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      flex-shrink: 0;
+      display: none;
+      color: #fff;
+    }
+    .search-input-clear.show { display: flex; }
+    .search-input-clear svg { width: 11px; height: 11px; }
+
+    .search-panel-subheader {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      padding: 0 4px;
+      flex-shrink: 0;
+    }
+    .search-panel-subheader .label { font-size: 16px; font-weight: 700; }
+    .search-panel-clear-all {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--accent);
+      cursor: pointer;
+      background: none;
+      border: none;
+      font-family: 'Outfit', sans-serif;
+    }
+    .search-panel-clear-all:hover { text-decoration: underline; }
+
+    .search-panel-list {
+      flex: 1;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      margin: 0 -10px;
+      padding: 0 10px;
+    }
+    .search-panel-list::-webkit-scrollbar { width: 6px; }
+    .search-panel-list::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 10px; }
+
+    .search-result-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 8px 6px;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .search-result-item:hover { background: rgba(255,255,255,0.08); }
+    .search-result-item.hidden { display: none; }
+
+    .search-result-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      object-fit: cover;
+      flex-shrink: 0;
+      border: 1px solid rgba(255,255,255,0.15);
+    }
+    .search-result-avatar-fallback {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255,255,255,0.10);
+      border: 1px solid rgba(255,255,255,0.15);
+    }
+    .search-result-avatar-fallback svg { width: 20px; height: 20px; opacity: 0.65; color: #fff; }
+
+    .search-result-avatar-game {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      object-fit: cover;
+      flex-shrink: 0;
+      border: 1px solid rgba(255,255,255,0.15);
+    }
+
+    .search-result-info { flex: 1; min-width: 0; }
+    .search-result-name {
+      font-size: 14px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      color: #fff;
+    }
+    .search-result-name svg.verified-badge { width: 14px; height: 14px; flex-shrink: 0; }
+    .search-result-sub {
+      font-size: 12.5px;
+      color: var(--text-dim);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .search-result-tag {
+      font-size: 10.5px;
+      font-weight: 700;
+      letter-spacing: 0.4px;
+      text-transform: uppercase;
+      color: var(--accent);
+      background: rgba(126,184,255,0.15);
+      border: 1px solid rgba(126,184,255,0.30);
+      padding: 2px 7px;
+      border-radius: 6px;
+      flex-shrink: 0;
+    }
+
+    .search-result-remove {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: none;
+      border: none;
+      cursor: pointer;
+      opacity: 0.6;
+      color: #fff;
+    }
+    .search-result-remove:hover { opacity: 1; background: rgba(255,255,255,0.1); }
+    .search-result-remove svg { width: 14px; height: 14px; }
+
+    .search-panel-empty {
+      text-align: center;
+      color: var(--text-dim);
+      font-size: 14px;
+      padding: 40px 10px;
+      display: none;
+    }
+    .search-panel-empty.show { display: block; }
+
+    /* ============================================================ */
+    /*  MAIN CONTENT AREA                                            */
+    /* ============================================================ */
+    .main-content {
+      margin-left: var(--sidebar-w);
+      flex: 1;
+      display: flex;
+      gap: 0;
+      min-height: 100vh;
+    }
+
+    /* ============================================================ */
+    /*  CENTER FEED                                                  */
+    /* ============================================================ */
+    .feed-area {
+      flex: 1;
+      max-width: 620px;
+      margin: 0 auto;
+      padding: 24px 20px 60px;
+    }
+
+    /* Top bar: New Post button */
+    .feed-topbar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .new-post-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      border-radius: 50px;
+      border: 1px solid var(--liquid-border);
+      background: var(--liquid-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      color: #fff;
+      font-family: 'Outfit', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: var(--liquid-shadow);
+      transition: background 0.2s, transform 0.15s;
+    }
+
+    .new-post-btn:hover { background: rgba(255,255,255,0.25); transform: translateY(-1px); }
+    .new-post-btn svg { width:16px; height:16px; }
+
+    /* ============================================================ */
+    /*  STORIES ROW — sticky scroll behavior                        */
+    /* ============================================================ */
+    .stories-wrapper {
+      /* This is the sentinel zone that tracks scroll */
+      position: relative;
+    }
+
+    .stories-card {
+      background: var(--glass);
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+      border: 1px solid var(--glass-border);
+      box-shadow: var(--glass-shadow);
+      border-radius: 20px;
+      padding: 16px 18px;
+      margin-bottom: 16px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    .stories-card::-webkit-scrollbar { display: none; }
+
+    .stories-row {
+      display: flex;
+      gap: 20px;
+      align-items: flex-start;
+    }
+
+    .story-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      min-width: 68px;
+    }
+
+    .story-ring {
+      width: 68px;
+      height: 68px;
+      border-radius: 50%;
+      padding: 3px;
+      background: linear-gradient(135deg, #a855f7, #6366f1, #3b82f6);
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .story-ring.no-ring {
+      background: rgba(255,255,255,0.15);
+    }
+
+    .story-ring-inner {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      border: 2.5px solid #000000;
+      overflow: hidden;
+      background: #1a1f35;
+    }
+
+    .story-ring-inner img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .story-add-btn {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: #3b82f6;
+      border: 2px solid #000000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 14px;
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    .story-name {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-dim);
+      text-align: center;
+      max-width: 68px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    /* ============================================================ */
+    /*  POSTS FEED                                                   */
+    /* ============================================================ */
+    .post-card {
+      background: var(--glass);
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+      border: 1px solid var(--glass-border);
+      box-shadow: var(--glass-shadow);
+      border-radius: 20px;
+      margin-bottom: 16px;
+      overflow: hidden;
+    }
+
+    .post-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 16px;
+    }
+
+    .post-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid rgba(255,255,255,0.25);
+    }
+
+    .post-user-info { flex: 1; }
+    .post-username { font-size: 14px; font-weight: 700; }
+    .post-time { font-size: 12px; color: var(--text-dim); }
+
+    .post-follow-btn {
+      color: var(--accent);
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      background: none;
+      border: none;
+      font-family: 'Outfit', sans-serif;
+    }
+
+    .post-menu {
+      color: var(--text-dim);
+      font-size: 18px;
+      cursor: pointer;
+      margin-left: 4px;
+    }
+
+    .post-image {
+      width: 100%;
+      aspect-ratio: 16/9;
+      object-fit: cover;
+      display: block;
+    }
+
+    .post-image.tall { aspect-ratio: 4/3; }
+
+    .post-actions {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 12px 16px 8px;
+    }
+
+    .post-action-btn {
+      background: none;
+      border: none;
+      color: var(--text-dim);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-family: 'Outfit', sans-serif;
+      font-size: 14px;
+      transition: color 0.2s;
+    }
+
+    .post-action-btn:hover { color: #fff; }
+    .post-action-btn.liked { color: #ef4444; }
+    .post-action-btn svg { width:20px; height:20px; }
+
+    .post-save-btn {
+      margin-left: auto;
+      background: none;
+      border: none;
+      color: var(--text-dim);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+    }
+
+    .post-save-btn svg { width:20px; height:20px; }
+    .post-save-btn:hover { color: #fff; }
+
+    .post-likes {
+      padding: 0 16px 4px;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .post-caption {
+      padding: 0 16px 14px;
+      font-size: 13px;
+      color: var(--text-dim);
+      line-height: 1.5;
+    }
+
+    /* ============================================================ */
+    /*  RIGHT SIDEBAR — Weather + Date                               */
+    /* ============================================================ */
+    .right-panel {
+      width: 300px;
+      flex-shrink: 0;
+      padding: 24px 20px 24px 0;
+      position: relative;
+    }
+
+    /* The sticky container — starts at top of right panel,
+       stays fixed after a threshold, releases at top */
+    .right-sticky {
+      position: sticky;
+      top: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .widget-card {
+      background: var(--glass);
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+      border: 1px solid var(--glass-border);
+      box-shadow: var(--glass-shadow);
+      border-radius: 20px;
+      padding: 22px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .widget-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 15%; right: 15%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.45), transparent);
+    }
+
+    /* (date/weather widgets removed) */
+
+    /* Right panel top icons */
+    .right-topbar {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-bottom: 4px;
+    }
+
+    .top-icon-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 1px solid var(--glass-border);
+      background: var(--glass);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--text-dim);
+      position: relative;
+      transition: background 0.2s;
+    }
+
+    .top-icon-btn:hover { background: rgba(255,255,255,0.22); color: #fff; }
+    .top-icon-btn svg { width: 18px; height: 18px; }
+
+    .badge-dot { display: none; } /* replaced by notif-count-badge */
+
+    /* ============================================================ */
+    /*  SCROLL ANIMATIONS                                            */
+    /* ============================================================ */
+    /* Stories shrink as user scrolls down */
+    .stories-card {
+      transition: transform 0.3s ease, opacity 0.3s ease, max-height 0.4s ease;
+      transform-origin: top center;
+    }
+
+    .stories-card.hidden-up {
+      opacity: 0;
+      transform: translateY(-20px) scaleY(0.85);
+      max-height: 0;
+      padding: 0;
+      margin: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    /* ============================================================ */
+    /*  LIQUID GLASS HELPER                                          */
+    /* ============================================================ */
+    .liquid-glass {
+      background: var(--glass);
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+      border: 1px solid var(--glass-border);
+      box-shadow: var(--glass-shadow);
+    }
+
+    /* ============================================================ */
+    /*  SCROLLBAR                                                    */
+    /* ============================================================ */
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.18); border-radius: 10px; }
+
+    /* ============================================================ */
+    /*  BANNER SLIDER WIDGET                                         */
+    /* ============================================================ */
+    .banner-widget {
+      padding: 0;
+      overflow: hidden;
+      min-height: 170px;
+    }
+
+    .banner-slider {
+      position: relative;
+      width: 100%;
+      height: 170px;
+    }
+
+    .banner-slide {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      opacity: 0;
+      transition: opacity 0.6s ease;
+      pointer-events: none;
+    }
+
+    .banner-slide.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .banner-img-wrap {
+      position: absolute;
+      inset: 0;
+      border-radius: 20px;
+      overflow: hidden;
+    }
+
+    .banner-glow {
+      position: absolute;
+      inset: 0;
+    }
+
+    .banner-icon-decor {
+      position: absolute;
+      right: 14px;
+      top: 14px;
+      font-size: 48px;
+      filter: drop-shadow(0 0 20px rgba(200,160,255,0.7));
+      animation: floatIcon 3s ease-in-out infinite;
+    }
+
+    @keyframes floatIcon {
+      0%,100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
+    }
+
+    .banner-content {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 14px 16px;
+      background: linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 100%);
+      border-radius: 0 0 20px 20px;
+    }
+
+    .banner-new-tag {
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      color: #ff6b6b;
+      text-transform: uppercase;
+      margin-bottom: 2px;
+    }
+
+    .banner-title {
+      font-size: 16px;
+      font-weight: 800;
+      color: #fff;
+      line-height: 1.2;
+    }
+
+    .banner-desc {
+      font-size: 11px;
+      color: rgba(255,255,255,0.75);
+      margin: 2px 0 8px;
+    }
+
+    .banner-read-more {
+      background: rgba(255,255,255,0.18);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.35);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+      font-family: 'Outfit', sans-serif;
+      padding: 4px 12px;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .banner-read-more:hover { background: rgba(255,255,255,0.28); }
+
+    .banner-dots {
+      position: absolute;
+      bottom: 10px;
+      right: 14px;
+      display: flex;
+      gap: 5px;
+      z-index: 10;
+    }
+
+    .banner-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.35);
+      cursor: pointer;
+      transition: background 0.3s, width 0.3s;
+    }
+
+    .banner-dot.active {
+      background: #fff;
+      width: 16px;
+      border-radius: 4px;
+    }
+
+    /* ============================================================ */
+    /*  FRIENDS WIDGET                                               */
+    /* ============================================================ */
+    .friends-widget {
+      padding: 0;
+      max-height: 260px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .friends-header-sticky {
+      padding: 16px 18px 10px;
+      background: var(--glass);
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+      border-radius: 20px 20px 0 0;
+      position: relative;
+      z-index: 2;
+      flex-shrink: 0;
+    }
+
+    .friends-header-sticky::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 12px; right: 12px;
+      height: 1px;
+      background: rgba(255,255,255,0.12);
+    }
+
+    .friends-title {
+      font-size: 16px;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .friends-scroll-area {
+      overflow-y: auto;
+      flex: 1;
+      padding: 6px 10px 10px;
+      scrollbar-width: none;
+    }
+
+    .friends-scroll-area::-webkit-scrollbar { display: none; }
+
+    .friend-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 7px 8px;
+      border-radius: 12px;
+      transition: background 0.18s;
+      cursor: pointer;
+    }
+
+    .friend-item:hover { background: rgba(255,255,255,0.08); }
+
+    .friend-avatar-wrap {
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .friend-avatar-wrap img {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid rgba(255,255,255,0.2);
+    }
+
+    .friend-status {
+      position: absolute;
+      bottom: 1px; right: 1px;
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      border: 2px solid #000;
+    }
+
+    .friend-status.online { background: #22c55e; }
+    .friend-status.away   { background: #eab308; }
+    .friend-status.offline{ background: rgba(255,255,255,0.3); }
+
+    .friend-info { flex: 1; min-width: 0; }
+    .friend-name { font-size: 13px; font-weight: 700; color: #fff; }
+    .friend-activity { font-size: 11px; color: var(--text-dim); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+    /* ============================================================ */
+    /*  AI FLOATING BUTTON & CHAT                                    */
+    /* ============================================================ */
+    .ai-fab-wrap {
+      position: fixed;
+      bottom: 28px;
+      right: 28px;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 10px;
+    }
+
+    .ai-welcome-bubble {
+      background: var(--liquid-bg);
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+      border: 1px solid var(--liquid-border);
+      box-shadow: var(--liquid-shadow);
+      border-radius: 18px 18px 4px 18px;
+      padding: 10px 16px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #fff;
+      max-width: 200px;
+      opacity: 0;
+      transform: translateY(8px) scale(0.95);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+      pointer-events: none;
+    }
+
+    .ai-welcome-bubble.show {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    /* AI Chat Panel */
+    .ai-chat-panel {
+      background: rgba(15,15,25,0.85);
+      backdrop-filter: blur(30px) saturate(1.8);
+      -webkit-backdrop-filter: blur(30px) saturate(1.8);
+      border: 1px solid rgba(255,255,255,0.22);
+      box-shadow: 0 12px 50px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.18);
+      border-radius: 22px;
+      width: 300px;
+      display: none;
+      flex-direction: column;
+      overflow: hidden;
+      transform-origin: bottom right;
+      animation: panelIn 0.3s cubic-bezier(0.17,0.89,0.32,1.28) forwards;
+    }
+
+    .ai-chat-panel.open {
+      display: flex;
+    }
+
+    @keyframes panelIn {
+      from { opacity:0; transform: scale(0.85); }
+      to   { opacity:1; transform: scale(1); }
+    }
+
+    .ai-chat-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 16px 12px;
+      border-bottom: 1px solid rgba(255,255,255,0.10);
+    }
+
+    .ai-chat-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .ai-avatar-small {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #7c3aed, #3b82f6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+    }
+
+    .ai-close-btn {
+      background: none;
+      border: none;
+      color: var(--text-dim);
+      cursor: pointer;
+      font-size: 14px;
+      line-height: 1;
+      padding: 4px;
+      border-radius: 6px;
+      transition: background 0.2s;
+    }
+
+    .ai-close-btn:hover { background: rgba(255,255,255,0.1); color: #fff; }
+
+    .ai-chat-messages {
+      padding: 12px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-height: 240px;
+      overflow-y: auto;
+      scrollbar-width: none;
+    }
+
+    .ai-chat-messages::-webkit-scrollbar { display: none; }
+
+    .ai-msg {
+      max-width: 88%;
+      padding: 8px 12px;
+      border-radius: 14px;
+      font-size: 13px;
+      line-height: 1.45;
+      word-break: break-word;
+    }
+
+    .ai-msg-bot {
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.14);
+      align-self: flex-start;
+      border-radius: 4px 14px 14px 14px;
+      color: #fff;
+    }
+
+    .ai-msg-user {
+      background: linear-gradient(135deg, #7c3aed, #3b82f6);
+      align-self: flex-end;
+      border-radius: 14px 14px 4px 14px;
+      color: #fff;
+    }
+
+    .ai-typing {
+      display: flex;
+      gap: 4px;
+      align-items: center;
+      padding: 10px 14px;
+    }
+
+    .ai-typing span {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.5);
+      animation: typingDot 1.2s infinite;
+    }
+
+    .ai-typing span:nth-child(2) { animation-delay: 0.2s; }
+    .ai-typing span:nth-child(3) { animation-delay: 0.4s; }
+
+    @keyframes typingDot {
+      0%,60%,100% { transform: translateY(0); opacity: 0.4; }
+      30% { transform: translateY(-5px); opacity: 1; }
+    }
+
+    .ai-chat-input-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 12px;
+      border-top: 1px solid rgba(255,255,255,0.10);
+    }
+
+    .ai-chat-input {
+      flex: 1;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 20px;
+      padding: 8px 14px;
+      color: #fff;
+      font-size: 13px;
+      font-family: 'Outfit', sans-serif;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .ai-chat-input::placeholder { color: rgba(255,255,255,0.4); }
+    .ai-chat-input:focus { border-color: rgba(255,255,255,0.35); }
+
+    .ai-send-btn {
+      width: 34px; height: 34px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #7c3aed, #3b82f6);
+      border: none;
+      color: #fff;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: opacity 0.2s, transform 0.15s;
+    }
+
+    .ai-send-btn:hover { opacity: 0.85; transform: scale(1.05); }
+    .ai-send-btn svg { width: 15px; height: 15px; }
+
+    /* FAB button */
+    .ai-fab {
+      width: 54px; height: 54px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.14);
+      backdrop-filter: blur(16px) saturate(1.6);
+      -webkit-backdrop-filter: blur(16px) saturate(1.6);
+      border: 1.5px solid rgba(255,255,255,0.42);
+      box-shadow: 0 6px 24px rgba(100,60,255,0.30), inset 0 2px 6px rgba(255,255,255,0.50), inset 0 -2px 4px rgba(0,0,0,0.12);
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      padding: 0;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .ai-fab:hover { transform: scale(1.07); box-shadow: 0 8px 32px rgba(100,60,255,0.45), inset 0 2px 6px rgba(255,255,255,0.55); }
+
+    .ai-fab-avatar {
+      width: 100%; height: 100%;
+      border-radius: 50%;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .ai-fab-avatar img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+    }
+
+    .ai-fab-glow {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      background: linear-gradient(135deg, rgba(150,100,255,0.35) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    /* ============================================================ */
+    /*  DOUBLE-TAP HEART ANIMATION (Instagram style)                 */
+    /* ============================================================ */
+    .post-card {
+      position: relative;
+    }
+
+    .heart-burst {
+      position: absolute;
+      left: 50%;
+      top: 45%;
+      transform: translate(-50%, -50%) scale(0);
+      pointer-events: none;
+      z-index: 20;
+      color: #fff;
+      filter: drop-shadow(0 0 12px rgba(255,255,255,0.6));
+    }
+
+    .heart-burst svg {
+      width: 110px;
+      height: 110px;
+    }
+
+    .heart-burst.animate {
+      animation: heartPop 0.75s cubic-bezier(0.17, 0.89, 0.32, 1.28) forwards;
+    }
+
+    @keyframes heartPop {
+      0%   { transform: translate(-50%, -50%) scale(0); opacity: 1; }
+      30%  { transform: translate(-50%, -50%) scale(1.25); opacity: 1; }
+      55%  { transform: translate(-50%, -50%) scale(1.0);  opacity: 1; }
+      80%  { transform: translate(-50%, -50%) scale(1.1);  opacity: 0.9; }
+      100% { transform: translate(-50%, -50%) scale(1.2);  opacity: 0; }
+    }
+
+
+    /* ============================================================ */
+    /*  MESSAGES POPUP SYSTEM                                        */
+    /* ============================================================ */
+
+    /* Shared popup base */
+    .msg-inbox-popup,
+    .msg-chat-popup {
+      position: fixed;
+      top: 70px;
+      right: 28px;
+      width: 340px;
+      border-radius: 22px;
+      background: rgba(12,14,28,0.82);
+      backdrop-filter: blur(32px) saturate(1.8);
+      -webkit-backdrop-filter: blur(32px) saturate(1.8);
+      border: 1px solid rgba(255,255,255,0.18);
+      box-shadow: 0 16px 60px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.16), inset 0 0 0 1px rgba(255,255,255,0.06);
+      z-index: 3000;
+      display: none;
+      flex-direction: column;
+      overflow: hidden;
+      animation: msgPopupIn 0.28s cubic-bezier(0.17,0.89,0.32,1.28) forwards;
+    }
+
+    .msg-inbox-popup.open,
+    .msg-chat-popup.open { display: flex; }
+
+    @keyframes msgPopupIn {
+      from { opacity:0; transform: scale(0.88) translateY(-10px); }
+      to   { opacity:1; transform: scale(1) translateY(0); }
+    }
+
+    /* Inbox header */
+    .msg-inbox-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 16px 16px 12px;
+      border-bottom: 1px solid rgba(255,255,255,0.09);
+      flex-shrink: 0;
+    }
+
+    .msg-inbox-title {
+      font-size: 16px;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .msg-inbox-badge {
+      background: #ef4444;
+      color: #fff;
+      font-size: 10px;
+      font-weight: 800;
+      border-radius: 20px;
+      padding: 1px 6px;
+      min-width: 18px;
+      text-align: center;
+    }
+
+    .msg-inbox-expand,
+    .msg-inbox-close {
+      background: none;
+      border: none;
+      color: rgba(255,255,255,0.5);
+      cursor: pointer;
+      padding: 4px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.15s, color 0.15s;
+    }
+
+    .msg-inbox-expand:hover,
+    .msg-inbox-close:hover { background: rgba(255,255,255,0.10); color: #fff; }
+
+    /* Inbox list */
+    .msg-inbox-list {
+      overflow-y: auto;
+      max-height: 420px;
+      padding: 6px 0 8px;
+      scrollbar-width: none;
+    }
+
+    .msg-inbox-list::-webkit-scrollbar { display: none; }
+
+    .msg-conv-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 16px;
+      cursor: pointer;
+      transition: background 0.15s;
+      position: relative;
+    }
+
+    .msg-conv-item:hover { background: rgba(255,255,255,0.07); }
+
+    .msg-conv-avatar-wrap {
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .msg-conv-avatar {
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid rgba(255,255,255,0.15);
+    }
+
+    .msg-conv-online-dot {
+      position: absolute;
+      bottom: 2px; right: 2px;
+      width: 11px; height: 11px;
+      border-radius: 50%;
+      background: #22c55e;
+      border: 2px solid #0c0e1c;
+    }
+
+    .msg-conv-info { flex: 1; min-width: 0; }
+    .msg-conv-name { font-size: 14px; font-weight: 700; color: #fff; }
+    .msg-conv-preview {
+      font-size: 12px;
+      color: rgba(255,255,255,0.5);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 170px;
+    }
+
+    .msg-conv-meta {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 4px;
+      flex-shrink: 0;
+    }
+
+    .msg-conv-time { font-size: 11px; color: rgba(255,255,255,0.4); }
+
+    .msg-conv-unread-dot {
+      width: 9px; height: 9px;
+      border-radius: 50%;
+      background: #3b82f6;
+    }
+
+    /* ---- CHAT POPUP ---- */
+    .msg-chat-popup {
+      height: 520px;
+      top: 70px;
+    }
+
+    .msg-chat-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 14px;
+      border-bottom: 1px solid rgba(255,255,255,0.09);
+      flex-shrink: 0;
+    }
+
+    .msg-chat-back {
+      background: none;
+      border: none;
+      color: rgba(255,255,255,0.6);
+      cursor: pointer;
+      padding: 4px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      transition: background 0.15s, color 0.15s;
+    }
+
+    .msg-chat-back:hover { background: rgba(255,255,255,0.10); color: #fff; }
+
+    .msg-chat-user-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .msg-chat-avatar {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid rgba(255,255,255,0.2);
+    }
+
+    .msg-chat-name { font-size: 14px; font-weight: 700; color: #fff; }
+    .msg-chat-status { font-size: 11px; color: #22c55e; }
+
+    /* Chat messages scrollable area */
+    .msg-chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 14px 12px 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(255,255,255,0.12) transparent;
+    }
+
+    .msg-chat-messages::-webkit-scrollbar { width: 3px; }
+    .msg-chat-messages::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius: 10px; }
+
+    /* Individual message bubble */
+    .msg-bubble-wrap {
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    .msg-bubble-wrap.mine { align-items: flex-end; }
+    .msg-bubble-wrap.theirs { align-items: flex-start; }
+
+    .msg-bubble {
+      max-width: 75%;
+      padding: 9px 13px;
+      border-radius: 18px;
+      font-size: 13px;
+      line-height: 1.45;
+      position: relative;
+      word-break: break-word;
+      cursor: pointer;
+    }
+
+    .msg-bubble-wrap.mine .msg-bubble {
+      background: linear-gradient(135deg, #3b5bdb, #2563eb);
+      color: #fff;
+      border-bottom-right-radius: 5px;
+    }
+
+    .msg-bubble-wrap.theirs .msg-bubble {
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.10);
+      color: #fff;
+      border-bottom-left-radius: 5px;
+    }
+
+    /* Voice message bubble */
+    .msg-voice-bubble {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      min-width: 160px;
+    }
+
+    .msg-voice-play-btn {
+      width: 30px; height: 30px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.2);
+      border: none;
+      color: #fff;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: background 0.15s;
+    }
+
+    .msg-voice-play-btn:hover { background: rgba(255,255,255,0.32); }
+
+    .msg-voice-waveform {
+      flex: 1;
+      height: 26px;
+      display: flex;
+      align-items: center;
+      gap: 2px;
+    }
+
+    .msg-voice-bar {
+      width: 3px;
+      border-radius: 2px;
+      background: rgba(255,255,255,0.6);
+      flex-shrink: 0;
+    }
+
+    .msg-voice-dur {
+      font-size: 11px;
+      color: rgba(255,255,255,0.65);
+      flex-shrink: 0;
+    }
+
+    /* Image message */
+    .msg-image-msg {
+      max-width: 200px;
+      border-radius: 14px;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .msg-image-msg img {
+      width: 100%;
+      display: block;
+      border-radius: 14px;
+    }
+
+    /* Sticker message */
+    .msg-sticker-msg {
+      font-size: 42px;
+      padding: 4px 8px;
+      background: none !important;
+      border: none !important;
+      box-shadow: none !important;
+    }
+
+    /* Reaction on message */
+    .msg-reaction-wrap {
+      display: flex;
+      margin-top: 2px;
+    }
+
+    .msg-bubble-wrap.mine .msg-reaction-wrap { justify-content: flex-end; }
+
+    .msg-reaction-badge {
+      background: rgba(255,255,255,0.14);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 20px;
+      padding: 2px 7px;
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    /* Reply reference inside bubble */
+    .msg-reply-ref {
+      background: rgba(255,255,255,0.12);
+      border-left: 2px solid rgba(255,255,255,0.5);
+      border-radius: 8px 8px 0 0;
+      padding: 5px 9px;
+      font-size: 11px;
+      color: rgba(255,255,255,0.65);
+      margin-bottom: 4px;
+      max-width: 75%;
+    }
+
+    .msg-bubble-wrap.mine .msg-reply-ref {
+      align-self: flex-end;
+      border-left-color: rgba(255,255,255,0.7);
+    }
+
+    /* Hover action icons (react + reply) */
+    .msg-bubble-actions {
+      display: none;
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      gap: 4px;
+      align-items: center;
+    }
+
+    .msg-bubble-wrap.theirs .msg-bubble-actions { right: -64px; }
+    .msg-bubble-wrap.mine .msg-bubble-actions { left: -64px; }
+
+    .msg-bubble-wrap:hover .msg-bubble-actions { display: flex; }
+
+    .msg-action-icon {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.12);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,0.16);
+      color: rgba(255,255,255,0.8);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.15s;
+    }
+
+    .msg-action-icon:hover { background: rgba(255,255,255,0.22); color: #fff; }
+
+    /* Reply bar */
+    .msg-reply-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 14px;
+      background: rgba(255,255,255,0.06);
+      border-top: 1px solid rgba(255,255,255,0.08);
+      flex-shrink: 0;
+    }
+
+    .msg-reply-bar-inner { flex: 1; min-width: 0; }
+    .msg-reply-label { font-size: 10px; color: rgba(255,255,255,0.5); display: block; }
+    .msg-reply-preview { font-size: 12px; color: rgba(255,255,255,0.8); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; max-width: 230px; }
+
+    .msg-reply-cancel-btn {
+      background: none;
+      border: none;
+      color: rgba(255,255,255,0.5);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      padding: 3px;
+      border-radius: 6px;
+    }
+
+    .msg-reply-cancel-btn:hover { background: rgba(255,255,255,0.1); color: #fff; }
+
+    /* Image preview bar */
+    .msg-image-preview-bar {
+      display: flex;
+      gap: 6px;
+      padding: 8px 14px;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      overflow-x: auto;
+      scrollbar-width: none;
+      flex-shrink: 0;
+    }
+
+    .msg-image-preview-bar::-webkit-scrollbar { display: none; }
+
+    .msg-preview-thumb {
+      width: 52px; height: 52px;
+      border-radius: 10px;
+      object-fit: cover;
+      flex-shrink: 0;
+      border: 1.5px solid rgba(255,255,255,0.2);
+    }
+
+    /* Input area */
+    .msg-chat-input-area {
+      padding: 8px 10px 10px;
+      border-top: 1px solid rgba(255,255,255,0.09);
+      flex-shrink: 0;
+    }
+
+    .msg-normal-input {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.14);
+      border-radius: 26px;
+      padding: 6px 10px;
+    }
+
+    .msg-chat-text-input {
+      flex: 1;
+      background: none;
+      border: none;
+      outline: none;
+      color: #fff;
+      font-size: 13px;
+      font-family: 'Outfit', sans-serif;
+      min-width: 0;
+    }
+
+    .msg-chat-text-input::placeholder { color: rgba(255,255,255,0.38); }
+
+    .msg-input-action-btn {
+      background: none;
+      border: none;
+      color: rgba(255,255,255,0.55);
+      cursor: pointer;
+      padding: 3px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      flex-shrink: 0;
+      transition: color 0.15s, background 0.15s;
+    }
+
+    .msg-input-action-btn:hover { color: #fff; background: rgba(255,255,255,0.1); }
+    .msg-send-active { color: #3b82f6 !important; }
+
+    /* Voice record state */
+    .msg-voice-rec-state {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 10px;
+      background: rgba(239,68,68,0.12);
+      border: 1px solid rgba(239,68,68,0.3);
+      border-radius: 26px;
+    }
+
+    .msg-voice-pulse {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: #ef4444;
+      flex-shrink: 0;
+      animation: voicePulse 1.2s ease-in-out infinite;
+    }
+
+    @keyframes voicePulse {
+      0%,100% { opacity:1; transform: scale(1); }
+      50% { opacity:0.4; transform: scale(0.7); }
+    }
+
+    .msg-rec-timer {
+      font-size: 13px;
+      font-weight: 700;
+      color: #ef4444;
+      min-width: 36px;
+    }
+
+    .msg-voice-ctrl-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      padding: 5px;
+      transition: background 0.15s;
+    }
+
+    .msg-voice-ctrl-btn { color: rgba(255,255,255,0.7); }
+    .msg-voice-ctrl-btn:hover { background: rgba(255,255,255,0.1); color: #fff; }
+    .msg-voice-stop { color: #3b82f6 !important; }
+    .msg-voice-cancel { color: rgba(255,255,255,0.5) !important; }
+    .msg-voice-cancel:hover { color: #ef4444 !important; }
+
+    /* Cancel img btn */
+    .msg-cancel-img-btn { color: rgba(255,255,255,0.5) !important; }
+    .msg-cancel-img-btn:hover { color: #ef4444 !important; }
+
+    /* Emoji picker */
+    .msg-emoji-picker {
+      position: fixed;
+      background: rgba(18,20,36,0.90);
+      backdrop-filter: blur(24px);
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 40px;
+      padding: 8px 12px;
+      display: flex;
+      gap: 6px;
+      z-index: 4000;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+      animation: msgPopupIn 0.2s ease forwards;
+    }
+
+    .msg-emoji-picker span {
+      font-size: 20px;
+      cursor: pointer;
+      border-radius: 50%;
+      padding: 4px;
+      transition: transform 0.15s, background 0.15s;
+    }
+
+    .msg-emoji-picker span:hover { transform: scale(1.3); background: rgba(255,255,255,0.1); }
+
+    /* Sticker picker */
+    .msg-sticker-picker {
+      position: fixed;
+      background: rgba(18,20,36,0.90);
+      backdrop-filter: blur(24px);
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 20px;
+      padding: 12px;
+      z-index: 4000;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+      animation: msgPopupIn 0.2s ease forwards;
+      width: 200px;
+    }
+
+    .msg-sticker-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 4px;
+    }
+
+    .msg-sticker-item {
+      font-size: 26px;
+      text-align: center;
+      cursor: pointer;
+      padding: 6px;
+      border-radius: 10px;
+      transition: background 0.15s, transform 0.15s;
+    }
+
+    .msg-sticker-item:hover { background: rgba(255,255,255,0.12); transform: scale(1.15); }
+
+  
+    .post-action-btn.like-btn.liked {
+      color: #ef4444;
+      animation: none;
+    }
+
+    .post-action-btn.like-btn.like-pop {
+      animation: likePop 0.35s cubic-bezier(0.17, 0.89, 0.32, 1.28);
+    }
+
+    @keyframes likePop {
+      0%   { transform: scale(1); }
+      50%  { transform: scale(1.5); }
+      100% { transform: scale(1); }
+    }
+
+    /* ============================================================ */
+    /*  NOTIFICATION COUNT BADGE                                     */
+    /* ============================================================ */
+    .notif-count-badge {
+      position: absolute;
+      top: -5px; right: -5px;
+      min-width: 18px; height: 18px;
+      border-radius: 9px;
+      background: #ef4444;
+      border: 2px solid rgba(0,0,0,0.85);
+      color: #fff;
+      font-size: 9px;
+      font-weight: 800;
+      font-family: 'Outfit', sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 4px;
+      line-height: 1;
+      z-index: 2;
+      pointer-events: none;
+    }
+    .notif-count-badge.hidden { display: none; }
+
+    /* ============================================================ */
+    /*  LIKE NOTIFICATIONS POPUP                                     */
+    /* ============================================================ */
+    .like-notif-popup {
+      position: fixed;
+      top: 70px;
+      right: 28px;
+      width: 340px;
+      border-radius: 22px;
+      background: rgba(12,14,28,0.82);
+      backdrop-filter: blur(32px) saturate(1.8);
+      -webkit-backdrop-filter: blur(32px) saturate(1.8);
+      border: 1px solid rgba(255,255,255,0.18);
+      box-shadow: 0 16px 60px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.16), inset 0 0 0 1px rgba(255,255,255,0.06);
+      z-index: 3000;
+      display: none;
+      flex-direction: column;
+      overflow: hidden;
+      max-height: 520px;
+      animation: msgPopupIn 0.28s cubic-bezier(0.17,0.89,0.32,1.28) forwards;
+    }
+
+    .like-notif-popup.open { display: flex; }
+
+    .like-notif-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 15px 16px 12px;
+      border-bottom: 1px solid rgba(255,255,255,0.09);
+      flex-shrink: 0;
+    }
+
+    .like-notif-title {
+      font-size: 15px;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .like-notif-close {
+      background: none;
+      border: none;
+      color: rgba(255,255,255,0.5);
+      cursor: pointer;
+      padding: 4px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      transition: background 0.15s;
+    }
+    .like-notif-close:hover { background: rgba(255,255,255,0.1); color: #fff; }
+
+    .like-notif-scroll {
+      overflow-y: auto;
+      flex: 1;
+      padding: 4px 0 8px;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(255,255,255,0.15) transparent;
+    }
+
+    .like-notif-scroll::-webkit-scrollbar { width: 4px; }
+    .like-notif-scroll::-webkit-scrollbar-track { background: transparent; }
+    .like-notif-scroll::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 4px; }
+
+    .like-notif-section-label {
+      font-size: 11px;
+      font-weight: 800;
+      color: rgba(255,255,255,0.45);
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      padding: 10px 16px 4px;
+    }
+
+    .like-notif-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 14px;
+      cursor: pointer;
+      transition: background 0.15s;
+      position: relative;
+    }
+
+    .like-notif-item:hover { background: rgba(255,255,255,0.05); }
+
+    .like-notif-item.unread {
+      background: rgba(126,184,255,0.06);
+    }
+    .like-notif-item.unread:hover { background: rgba(126,184,255,0.1); }
+
+    /* Avatar area */
+    .like-notif-avatars {
+      flex-shrink: 0;
+      position: relative;
+      width: 44px;
+      height: 36px;
+    }
+
+    .lna-img {
+      width: 34px; height: 34px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid rgba(0,0,0,0.8);
+      position: absolute;
+    }
+
+    .like-notif-avatars.stacked .lna-back { left: 0; top: 0; width: 28px; height: 28px; opacity: 0.8; }
+    .like-notif-avatars.stacked .lna-front { right: 0; bottom: 0; width: 28px; height: 28px; }
+    .like-notif-avatars .lna-single { left: 0; top: 1px; }
+
+    /* Text */
+    .like-notif-text {
+      flex: 1;
+      min-width: 0;
+      font-size: 12.5px;
+      color: rgba(255,255,255,0.75);
+      line-height: 1.4;
+    }
+
+    .lnt-bold { font-weight: 700; color: #fff; }
+
+    .lnt-time {
+      font-size: 10.5px;
+      color: rgba(255,255,255,0.38);
+      margin-top: 2px;
+    }
+
+    .lnt-comment-preview {
+      font-size: 11px;
+      color: rgba(255,255,255,0.45);
+      margin-top: 2px;
+      font-style: italic;
+    }
+
+    .lnt-actions {
+      display: flex;
+      gap: 6px;
+      margin-top: 5px;
+    }
+
+    .lnt-act-btn {
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 12px;
+      color: rgba(255,255,255,0.75);
+      font-size: 11px;
+      font-weight: 600;
+      font-family: 'Outfit', sans-serif;
+      padding: 3px 10px;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+    }
+
+    .lnt-act-btn:hover { background: rgba(255,255,255,0.18); color: #fff; }
+
+    .lnt-act-reply {
+      background: rgba(126,184,255,0.15);
+      border-color: rgba(126,184,255,0.3);
+      color: var(--accent);
+    }
+
+    .lnt-act-reply:hover { background: rgba(126,184,255,0.25); }
+
+    /* Follow back button */
+    .lnt-follow-back-btn {
+      flex-shrink: 0;
+      background: rgba(255,255,255,0.15);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.28);
+      border-radius: 14px;
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+      font-family: 'Outfit', sans-serif;
+      padding: 5px 12px;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+      white-space: nowrap;
+    }
+
+    .lnt-follow-back-btn:hover { background: rgba(255,255,255,0.25); }
+
+    .lnt-follow-back-btn.lnt-followed {
+      background: rgba(255,255,255,0.07);
+      border-color: rgba(255,255,255,0.14);
+      color: rgba(255,255,255,0.45);
+      cursor: default;
+    }
+
+    /* Post thumbnail on right */
+    .like-notif-post-thumb {
+      flex-shrink: 0;
+      width: 42px;
+      height: 42px;
+      border-radius: 8px;
+      overflow: hidden;
+      position: relative;
+      border: 1px solid rgba(255,255,255,0.12);
+      cursor: pointer;
+    }
+
+    .like-notif-post-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .lnpt-icon {
+      position: absolute;
+      bottom: 3px; right: 3px;
+      width: 16px; height: 16px;
+      border-radius: 50%;
+      background: rgba(0,0,0,0.65);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #ef4444;
+    }
+
+    /* ============================================================ */
+    /*  LIQUID GLASS HINT BUBBLE                                     */
+    /* ============================================================ */
+    .like-hint-bubble {
+      position: fixed;
+      top: 74px;
+      right: 120px;
+      background: rgba(10,12,30,0.72);
+      backdrop-filter: blur(28px) saturate(1.8);
+      -webkit-backdrop-filter: blur(28px) saturate(1.8);
+      border: 1px solid rgba(255,255,255,0.22);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.18);
+      border-radius: 20px;
+      padding: 10px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      z-index: 2990;
+      pointer-events: none;
+      opacity: 0;
+      transform: translateY(-6px) scale(0.94);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+
+    .like-hint-bubble.show {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    .like-hint-bubble.hide {
+      opacity: 0;
+      transform: translateY(-6px) scale(0.94);
+    }
+
+    .lhb-row {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .lhb-icon {
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .lhb-heart {
+      background: rgba(239,68,68,0.22);
+      color: #ef4444;
+      border: 1px solid rgba(239,68,68,0.35);
+    }
+
+    .lhb-follow {
+      background: rgba(126,184,255,0.18);
+      color: #7eb8ff;
+      border: 1px solid rgba(126,184,255,0.3);
+    }
+
+    .lhb-comment {
+      background: rgba(255,255,255,0.12);
+      color: rgba(255,255,255,0.8);
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+
+    .lhb-text {
+      font-size: 12px;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: 0.3px;
+    }
+
+    /* ============================================================ */
+    /*  SIDEBAR LOGO MARK (Removal logo)                             */
+    /* ============================================================ */
+    .sidebar-logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .sidebar-logo-mark {
+      width: 26px;
+      height: 26px;
+      object-fit: contain;
+      flex-shrink: 0;
+    }
+
+    /* ============================================================ */
+    /*  REELS — fixed top-right icon bar (same 4 buttons as home)    */
+    /* ============================================================ */
+    .reels-topbar {
+      position: fixed;
+      top: 24px;
+      right: 24px;
+      z-index: 120;
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin: 0;
+    }
+
+    /* ============================================================ */
+    /*  REELS FEED                                                   */
+    /* ============================================================ */
+    .reels-main {
+      margin-left: var(--sidebar-w);
+      flex: 1;
+      min-height: 100vh;
+    }
+
+    .reels-feed {
+      height: 100vh;
+      overflow-y: scroll;
+      scroll-snap-type: y mandatory;
+      scrollbar-width: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .reels-feed::-webkit-scrollbar { display: none; }
+
+    .reel-card {
+      position: relative;
+      scroll-snap-align: start;
+      scroll-snap-stop: always;
+      height: 100vh;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .reel-media-wrap {
+      position: relative;
+      width: 420px;
+      max-width: 92%;
+      height: 88vh;
+      border-radius: 22px;
+      overflow: hidden;
+      background: #05050a;
+      border: 1px solid var(--glass-border);
+      box-shadow: var(--glass-shadow);
+    }
+
+    .reel-video,
+    .reel-media-wrap img.reel-poster {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      background: #000;
+    }
+
+    .reel-gradient-top {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 90px;
+      background: linear-gradient(180deg, rgba(0,0,0,0.55), transparent);
+      pointer-events: none;
+    }
+
+    .reel-gradient-bottom {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 45%;
+      background: linear-gradient(0deg, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.35) 55%, transparent 100%);
+      pointer-events: none;
+    }
+
+    .reel-overlay-bottom {
+      position: absolute;
+      left: 18px;
+      right: 76px;
+      bottom: 20px;
+      z-index: 2;
+      color: #fff;
+    }
+
+    .reel-user {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .reel-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid rgba(255,255,255,0.5);
+      flex-shrink: 0;
+    }
+
+    .reel-username {
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .reel-location {
+      font-size: 11px;
+      color: rgba(255,255,255,0.75);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .reel-follow-btn {
+      margin-left: 6px;
+      padding: 5px 14px;
+      border-radius: 50px;
+      border: 1px solid rgba(255,255,255,0.6);
+      background: rgba(255,255,255,0.10);
+      backdrop-filter: blur(8px);
+      color: #fff;
+      font-family: 'Outfit', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+    .reel-follow-btn:hover { background: rgba(255,255,255,0.22); }
+
+    .reel-caption {
+      font-size: 13px;
+      line-height: 1.45;
+      color: rgba(255,255,255,0.92);
+      max-width: 100%;
+    }
+
+    .reel-caption .more-link {
+      color: rgba(255,255,255,0.6);
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    /* Right action bar */
+    .reel-actions {
+      position: absolute;
+      right: 12px;
+      bottom: 24px;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .reel-action-btn {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.10);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: none;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.15s;
+      padding: 0;
+    }
+    .reel-action-btn:hover { background: rgba(255,255,255,0.20); transform: scale(1.06); }
+    .reel-action-btn svg { width: 25px; height: 25px; }
+    .reel-action-btn.liked { color: #ef4444; }
+
+    .reel-action-count {
+      font-size: 12px;
+      font-weight: 700;
+      color: #fff;
+      margin-top: -12px;
+      text-shadow: 0 1px 4px rgba(0,0,0,0.6);
+    }
+
+    .reel-action-group {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .reel-mute-btn {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      z-index: 3;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: rgba(0,0,0,0.35);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,0.25);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+    .reel-mute-btn svg { width: 16px; height: 16px; }
+
+    .reels-scroll-hint {
+      position: fixed;
+      bottom: 24px;
+      left: calc(var(--sidebar-w) + 24px);
+      z-index: 50;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-dim);
+      font-size: 12px;
+      font-weight: 600;
+      opacity: 0.7;
+    }
+
+    @media (max-width: 900px) {
+      .reels-scroll-hint { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Animated aura background -->
+<div class="aura-layer">
+  <div class="aura-orb aura-orb-1"></div>
+  <div class="aura-orb aura-orb-2"></div>
+  <div class="aura-orb aura-orb-3"></div>
+</div>
+
+<div class="app-layout">
+
+  <!-- ==================== LEFT SIDEBAR ==================== -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <img src="Removal-304.png" alt="Nimes logo" class="sidebar-logo-mark">
+      NIMES
+    </div>
+
+    <div class="sidebar-nav-box">
+      <a class="nav-item" href="indexvl.html">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+      Home
+    </a>
+      <a class="nav-item" href="#">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+      Games
+    </a>
+          <a class="nav-item" href="#">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <path d="M5 4v16"/> <path d="M10 4v16"/> <path d="M15 8v12"/><path d="M20 6v14"/></svg>
+      Library
+    </a>
+      <a class="nav-item" href="#" id="navSearchBtn">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    Search
+    </a>
+      <a class="nav-item active" href="reels.html">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+      Reels
+    </a>
+    <a class="nav-item" href="#">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+      Explore
+    </a>
+    <a class="nav-item" href="#">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"> <path d="M12 5v14"/> <path d="M5 12h14"/> </svg>
+      Newpost
+      </a>
+      <a class="nav-item" href="profile.html">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+      Profile
+      </a>
+       <a class="nav-item" href="#">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+      Saved
+    </a>
+    <a class="nav-item" href="#">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>
+      Settings
+    </a>
+    <a class="nav-item" href="#">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3M12 17h.01"/></svg>
+      Support
+    </a>
+
+    <div class="sidebar-avatar">
+      <img src="https://i.pinimg.com/1200x/f3/23/33/f323338233ea1ef3e83ad205919f7a3a.jpg" alt="avatar">
+      <div class="sidebar-avatar-info">
+        <div class="sidebar-avatar-name">moonbreaker</div>
+        <div class="sidebar-avatar-handle">@moonbreaker_07</div>
+      </div>
+    </div>
+    </div><!-- end sidebar-nav-box -->
+  </aside>
+
+  <!-- ==================== SEARCH PANEL (Instagram-style) ==================== -->
+  <div class="search-scrim" id="searchScrim"></div>
+  <aside class="search-panel" id="searchPanel">
+    <div class="search-panel-header">
+      <div class="search-panel-title">Search</div>
+      <button class="search-panel-close" id="searchPanelClose" aria-label="Kapat">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+      </button>
+    </div>
+
+    <div class="search-input-wrap">
+      <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input type="text" class="search-panel-input" id="searchPanelInput" placeholder="Ara" autocomplete="off">
+      <div class="search-input-clear" id="searchInputClear">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+      </div>
+    </div>
+
+    <div class="search-panel-subheader">
+      <span class="label" id="searchSubheaderLabel">Son Aramalar</span>
+      <button class="search-panel-clear-all" id="searchClearAll">Tümünü temizle</button>
+    </div>
+
+    <div class="search-panel-list" id="searchResultsList">
+
+      <!-- Person -->
+      <div class="search-result-item" data-name="kanyes" data-sub="KANYES">
+        <img class="search-result-avatar" src="https://i.pinimg.com/1200x/f3/23/33/f323338233ea1ef3e83ad205919f7a3a.jpg" alt="kanyes">
+        <div class="search-result-info">
+          <div class="search-result-name">kanyes
+            <svg class="verified-badge" viewBox="0 0 24 24" fill="#7eb8ff"><path d="M12 2l2.4 1.9 3-.6 1.1 2.9 2.9 1.1-.6 3L22.6 12 20.8 14.7l.6 3-2.9 1.1-1.1 2.9-3-.6L12 22.6l-2.4-1.9-3 .6-1.1-2.9-2.9-1.1.6-3L1.4 12l1.8-2.7-.6-3 2.9-1.1L6.6 2.3l3 .6L12 2z"/><path d="M8.5 12.2l2.2 2.2 4.3-4.8" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+          </div>
+          <div class="search-result-sub">KANYES</div>
+        </div>
+        <button class="search-result-remove" aria-label="Kaldır">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+        </button>
+      </div>
+
+      <!-- Person -->
+      <div class="search-result-item" data-name="sami.balbay" data-sub="Sami Balbay Followed by dogukan.agar">
+        <img class="search-result-avatar" src="https://i.pinimg.com/736x/bc/b3/61/bcb3612bebc2b5dfee3044600ea93700.jpg" alt="sami.balbay">
+        <div class="search-result-info">
+          <div class="search-result-name">sami.balbay</div>
+          <div class="search-result-sub">Sami Balbay • Followed by dogukan.agar + 4</div>
+        </div>
+        <button class="search-result-remove" aria-label="Kaldır">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+        </button>
+      </div>
+
+      <!-- Person -->
+      <div class="search-result-item" data-name="yarenguler52" data-sub="Yaren">
+        <img class="search-result-avatar" src="https://i.pinimg.com/736x/f7/d8/f2/f7d8f2df2827bd6f8e0e95b12434ceab.jpg" alt="yarenguler52">
+        <div class="search-result-info">
+          <div class="search-result-name">yarenguler52</div>
+          <div class="search-result-sub">Yaren</div>
+        </div>
+        <button class="search-result-remove" aria-label="Kaldır">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+        </button>
+      </div>
+
+      <!-- Person -->
+      <div class="search-result-item" data-name="yarenguler" data-sub="Yaren Keleşoğlu">
+        <img class="search-result-avatar" src="https://i.pinimg.com/736x/98/df/69/98df6949fce8c87f15b03b306fc89fb0.jpg" alt="yarenguler">
+        <div class="search-result-info">
+          <div class="search-result-name">yarenguler</div>
+          <div class="search-result-sub">Yaren Keleşoğlu</div>
+        </div>
+        <button class="search-result-remove" aria-label="Kaldır">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+        </button>
+      </div>
+
+      <!-- Plain text search history -->
+      <div class="search-result-item" data-name="yarenguler" data-sub="">
+        <div class="search-result-avatar-fallback">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        </div>
+        <div class="search-result-info">
+          <div class="search-result-name">yarenguler</div>
+        </div>
+        <button class="search-result-remove" aria-label="Kaldır">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+        </button>
+      </div>
+
+      <!-- Person -->
+      <div class="search-result-item" data-name="yarenguler" data-sub="Yaren Güler">
+        <img class="search-result-avatar" src="https://i.pinimg.com/736x/75/06/71/750671109df71ce4eec2705e6dca540d.jpg" alt="yarengulerr">
+        <div class="search-result-info">
+          <div class="search-result-name">yarenguler</div>
+          <div class="search-result-sub">Yaren Güler</div>
+        </div>
+        <button class="search-result-remove" aria-label="Kaldır">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+        </button>
+      </div>
+
+      <!-- Game -->
+      <div class="search-result-item" data-name="cyberpunk 2077" data-sub="Oyun RPG">
+        <img class="search-result-avatar-game" src="https://i.pinimg.com/736x/4e/3c/5a/4e3c5a133d8b2a1176c0df6110f02562.jpg" alt="Cyberpunk 2077">
+        <div class="search-result-info">
+          <div class="search-result-name">Cyberpunk 2077</div>
+          <div class="search-result-sub">Oyun • RPG</div>
+        </div>
+        <span class="search-result-tag">Oyun</span>
+        <button class="search-result-remove" aria-label="Kaldır">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+        </button>
+      </div>
+
+      <!-- Game -->
+      <div class="search-result-item" data-name="valorant" data-sub="Oyun FPS">
+        <img class="search-result-avatar-game" src="https://i.pinimg.com/736x/72/8d/67/728d67196a3113aec1431fbb9ee0f1de.jpg" alt="Valorant">
+        <div class="search-result-info">
+          <div class="search-result-name">Valorant</div>
+          <div class="search-result-sub">Oyun • FPS</div>
+        </div>
+        <span class="search-result-tag">Oyun</span>
+        <button class="search-result-remove" aria-label="Kaldır">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+        </button>
+      </div>
+
+      <!-- Person -->
+      <div class="search-result-item" data-name="ilaydaltintasoglu" data-sub="İlayda Altıntaşoğlu">
+        <img class="search-result-avatar" src="https://i.pinimg.com/736x/35/5f/a0/355fa00b82d4b0ac718b849a0d9a512f.jpg" alt="ilaydaltintasoglu">
+        <div class="search-result-info">
+          <div class="search-result-name">ilaydaltintasoglu</div>
+          <div class="search-result-sub">İlayda Altıntaşoğlu</div>
+        </div>
+        <button class="search-result-remove" aria-label="Kaldır">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+        </button>
+      </div>
+
+      <!-- Plain text search history (no avatar) -->
+      <div class="search-result-item" data-name="asas" data-sub="">
+        <div class="search-result-avatar-fallback">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+        </div>
+        <div class="search-result-info">
+          <div class="search-result-name">asas</div>
+        </div>
+        <button class="search-result-remove" aria-label="Kaldır">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+        </button>
+      </div>
+
+    </div>
+
+    <div class="search-panel-empty" id="searchPanelEmpty">Son arama yok</div>
+  </aside>
+
+  <!-- ==================== MAIN CONTENT (REELS) ==================== -->
+  <div class="main-content">
+
+    <!-- Fixed top-right 4 icon buttons (same as Home page, same position) -->
+    <div class="reels-topbar">
+      <button class="top-icon-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+      </button>
+      <a href="gamepass.html" class="top-icon-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+      </a>
+      <button class="top-icon-btn" id="likeNotifBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        <span class="notif-count-badge" id="likeNotifBadge">5</span>
+      </button>
+      <button class="top-icon-btn" id="msgInboxBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        <span class="notif-count-badge" id="msgUnreadBadge">2</span>
+      </button>
+    </div>
+
+    <div class="reels-scroll-hint">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>
+      Kaydırarak gez
+    </div>
+
+    <!-- REELS FEED -->
+    <div class="reels-main">
+      <div class="reels-feed" id="reelsFeed">
+
+        <!-- Reel 1 -->
+        <section class="reel-card post-card">
+          <div class="heart-burst">
+            <svg viewBox="0 0 24 24" fill="#ef4444" width="90" height="90"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          </div>
+          <div class="reel-media-wrap">
+            <video class="reel-video" src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.webm" loop muted playsinline></video>
+            <div class="reel-gradient-top"></div>
+            <div class="reel-gradient-bottom"></div>
+            <button class="reel-mute-btn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5 6 9H2v6h4l5 4V5z"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
+            </button>
+
+            <div class="reel-overlay-bottom">
+              <div class="reel-user">
+                <img class="reel-avatar" src="https://i.pinimg.com/1200x/f3/23/33/f323338233ea1ef3e83ad205919f7a3a.jpg" alt="moonbreaker">
+                <span class="reel-username">moonbreaker</span>
+                <button class="reel-follow-btn">Follow</button>
+              </div>
+              <div class="reel-caption">Yeni build hazır, akşam denemeye geliyorum 🎮 <span class="more-link">... more</span></div>
+            </div>
+
+            <div class="reel-actions">
+              <div class="reel-action-group">
+                <button class="reel-action-btn post-action-btn like-btn">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                </button>
+                <span class="reel-action-count">33.5K</span>
+              </div>
+              <div class="reel-action-group">
+                <button class="reel-action-btn">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                </button>
+                <span class="reel-action-count">118</span>
+              </div>
+              <div class="reel-action-group">
+                <button class="reel-action-btn">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                </button>
+                <span class="reel-action-count">908</span>
+              </div>
+              <div class="reel-action-group">
+                <button class="reel-action-btn post-save-btn">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+                </button>
+              </div>
+              <div class="reel-action-group">
+                <button class="reel-action-btn">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Reel 2 -->
+        <section class="reel-card post-card">
+          <div class="heart-burst">
+            <svg viewBox="0 0 24 24" fill="#ef4444" width="90" height="90"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          </div>
+          <div class="reel-media-wrap">
+            <video class="reel-video" src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/friday.mp4" loop muted playsinline></video>
+            <div class="reel-gradient-top"></div>
+            <div class="reel-gradient-bottom"></div>
+            <button class="reel-mute-btn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5 6 9H2v6h4l5 4V5z"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
+            </button>
+
+            <div class="reel-overlay-bottom">
+              <div class="reel-user">
+                <img class="reel-avatar" src="https://i.pinimg.com/736x/bc/b3/61/bcb3612bebc2b5dfee3044600ea93700.jpg" alt="Mino">
+                <span class="reel-username">mino_plays</span>
+                <button class="reel-follow-btn">Follow</button>
+              </div>
+              <div class="reel-caption">Fortnite chapter 5 highlights, son klip efsane 🔥 <span class="more-link">... more</span></div>
+            </div>
+
+            <div class="reel-actions">
+              <div class="reel-action-group">
+                <button class="reel-action-btn post-action-btn like-btn">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                </button>
+                <span class="reel-action-count">12.1K</span>
+              </div>
+              <div class="reel-action-group">
+                <button class="reel-action-btn">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                </button>
+                <span class="reel-action-count">64</span>
+              </div>
+              <div class="reel-action-group">
+                <button class="reel-action-btn">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                </button>
+                <span class="reel-action-count">301</span>
+              </div>
+              <div class="reel-action-group">
+                <button class="reel-action-btn post-save-btn">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+                </button>
+              </div>
+              <div class="reel-action-group">
+                <button class="reel-action-btn">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Reel 3 -->
+        <section class="reel-card post-card">
+          <div class="heart-burst">
+            <svg viewBox="0 0 24 24" fill="#ef4444" width="90" height="90"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          </div>
+          <div class="reel-media-wrap">
+            <video class="reel-video" src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/coffee.mp4" loop muted playsinline></video>
+            <div class="reel-gradient-top"></div>
+            <div class="reel-gradient-bottom"></div>
+            <button class="reel-mute-btn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5 6 9H2v6h4l5 4V5z"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
+            </button>
+
+            <div class="reel-overlay-bottom">
+              <div class="reel-user">
+                <img class="reel-avatar" src="https://i.pinimg.com/736x/fc/56/8e/fc568e1fc2445b8af18cc4e050ca13cf.jpg" alt="Mochi">
+                <span class="reel-username">mochi_valo</span>
+                <button class="reel-follow-btn">Follow</button>
+              </div>
+              <div class="reel-caption">Valorant ranked ace clip, gördünüz mü? 🎯 <span class="more-link">... more</span></div>
+            </div>
+
+            <div class="reel-actions">
+              <div class="reel-action-group">
+                <button class="reel-action-btn post-action-btn like-btn">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                </button>
+                <span class="reel-action-count">8,204</span>
+              </div>
+              <div class="reel-action-group">
+                <button class="reel-action-btn">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                </button>
+                <span class="reel-action-count">37</span>
+              </div>
+              <div class="reel-action-group">
+                <button class="reel-action-btn">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                </button>
+                <span class="reel-action-count">150</span>
+              </div>
+              <div class="reel-action-group">
+                <button class="reel-action-btn post-save-btn">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+                </button>
+              </div>
+              <div class="reel-action-group">
+                <button class="reel-action-btn">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </div><!-- end reels-feed -->
+    </div><!-- end reels-main -->
+
+  </div><!-- end main-content -->
+</div><!-- end app-layout -->
+
+<!-- ==================== LIKE NOTIFICATIONS POPUP ==================== -->
+<div id="likeNotifPopup" class="like-notif-popup">
+  <div class="like-notif-header">
+    <span class="like-notif-title">Notifications</span>
+    <div style="flex:1"></div>
+    <button class="like-notif-close" id="likeNotifClose">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="like-notif-scroll" id="likeNotifScroll">
+
+    <!-- NEW section -->
+    <div class="like-notif-section-label">New</div>
+
+    <!-- Post like - multiple people -->
+    <div class="like-notif-item unread" data-post-img="https://i.pinimg.com/736x/35/5f/a0/355fa00b82d4b0ac718b849a0d9a512f.jpg">
+      <div class="like-notif-avatars stacked">
+        <img src="https://i.pinimg.com/736x/bc/b3/61/bcb3612bebc2b5dfee3044600ea93700.jpg" class="lna-img lna-back">
+        <img src="https://i.pinimg.com/736x/fc/56/8e/fc568e1fc2445b8af18cc4e050ca13cf.jpg" class="lna-img lna-front">
+      </div>
+      <div class="like-notif-text">
+        <span class="lnt-bold">Minocials</span> and <span class="lnt-bold">Mochi</span> liked your post
+        <div class="lnt-time">8m ago</div>
+      </div>
+      <div class="like-notif-post-thumb" data-href="#">
+        <img src="https://i.pinimg.com/736x/35/5f/a0/355fa00b82d4b0ac718b849a0d9a512f.jpg" alt="">
+        <div class="lnpt-icon">
+          <svg viewBox="0 0 24 24" fill="currentColor" width="10" height="10"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- Comment like - multiple -->
+    <div class="like-notif-item unread" data-post-img="https://i.pinimg.com/736x/35/5f/a0/355fa00b82d4b0ac718b849a0d9a512f.jpg">
+      <div class="like-notif-avatars stacked">
+        <img src="https://i.pinimg.com/736x/f7/d8/f2/f7d8f2df2827bd6f8e0e95b12434ceab.jpg" class="lna-img lna-back">
+        <img src="https://i.pinimg.com/736x/bc/b3/61/bcb3612bebc2b5dfee3044600ea93700.jpg" class="lna-img lna-front">
+      </div>
+      <div class="like-notif-text">
+        <span class="lnt-bold">Minocials</span> and <span class="lnt-bold">Eckk</span> liked your comment
+        <div class="lnt-time">5m ago</div>
+      </div>
+      <div class="like-notif-post-thumb" data-href="#">
+        <img src="https://i.pinimg.com/736x/35/5f/a0/355fa00b82d4b0ac718b849a0d9a512f.jpg" alt="">
+        <div class="lnpt-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="10" height="10"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- Follow - single person -->
+    <div class="like-notif-item unread" data-new-hidden="true" style="display:none">
+      <div class="like-notif-avatars">
+        <img src="https://i.pinimg.com/736x/fc/56/8e/fc568e1fc2445b8af18cc4e050ca13cf.jpg" class="lna-img lna-single">
+      </div>
+      <div class="like-notif-text">
+        <span class="lnt-bold">Mochi</span> started following you
+        <div class="lnt-time">23 June</div>
+      </div>
+      <button class="lnt-follow-back-btn" id="followBackMochi">Follow back</button>
+    </div>
+
+    <!-- Comment reply - single person -->
+    <div class="like-notif-item unread" data-new-hidden="true" style="display:none" data-post-img="https://i.pinimg.com/736x/67/b9/58/67b95875d67570821f5e5a194ab033b2.jpg">
+      <div class="like-notif-avatars">
+        <img src="https://i.pinimg.com/736x/f7/d8/f2/f7d8f2df2827bd6f8e0e95b12434ceab.jpg" class="lna-img lna-single">
+      </div>
+      <div class="like-notif-text">
+        <span class="lnt-bold">Jhon</span> replied to your comment
+        <div class="lnt-comment-preview">@moon do u p ...</div>
+        <div class="lnt-actions">
+          <button class="lnt-act-btn">Like</button>
+          <button class="lnt-act-btn lnt-act-reply" onclick="">Reply</button>
+        </div>
+        <div class="lnt-time">15m ago</div>
+      </div>
+      <div class="like-notif-post-thumb" data-href="#">
+        <img src="https://i.pinimg.com/736x/67/b9/58/67b95875d67570821f5e5a194ab033b2.jpg" alt="">
+        <div class="lnpt-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="10" height="10"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- TODAY section -->
+    <div class="like-notif-section-label">Today</div>
+
+    <!-- Comment like - many people -->
+    <div class="like-notif-item" data-post-img="https://i.pinimg.com/736x/4e/3c/5a/4e3c5a133d8b2a1176c0df6110f02562.jpg">
+      <div class="like-notif-avatars stacked">
+        <img src="https://i.pinimg.com/736x/98/df/69/98df6949fce8c87f15b03b306fc89fb0.jpg" class="lna-img lna-back">
+        <img src="https://i.pinimg.com/1200x/61/5b/13/615b13791d3c1c8568d36a64195181d4.jpg" class="lna-img lna-front">
+      </div>
+      <div class="like-notif-text">
+        <span class="lnt-bold">Jabez, Moony</span> and 58 others liked your comment
+        <div class="lnt-time">2h ago</div>
+      </div>
+      <div class="like-notif-post-thumb" data-href="#">
+        <img src="https://i.pinimg.com/736x/4e/3c/5a/4e3c5a133d8b2a1176c0df6110f02562.jpg" alt="">
+        <div class="lnpt-icon">
+          <svg viewBox="0 0 24 24" fill="currentColor" width="10" height="10"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- Post comment -->
+    <div class="like-notif-item" data-post-img="https://i.pinimg.com/736x/95/84/95/9584955de5c130fbcce2b57b8a817716.jpg">
+      <div class="like-notif-avatars">
+        <img src="https://i.pinimg.com/1200x/db/fe/75/dbfe75990174020a7ebf8799999212d8.jpg" class="lna-img lna-single">
+      </div>
+      <div class="like-notif-text">
+        <span class="lnt-bold">Apple</span> commented on your post
+        <div class="lnt-comment-preview">Nice shot! 🔥</div>
+        <div class="lnt-actions">
+          <button class="lnt-act-btn">Like</button>
+          <button class="lnt-act-btn lnt-act-reply">Reply</button>
+        </div>
+        <div class="lnt-time">4h ago</div>
+      </div>
+      <div class="like-notif-post-thumb" data-href="#">
+        <img src="https://i.pinimg.com/736x/95/84/95/9584955de5c130fbcce2b57b8a817716.jpg" alt="">
+        <div class="lnpt-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="10" height="10"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- YESTERDAY section -->
+    <div class="like-notif-section-label">Yesterday</div>
+
+    <!-- Follow - single -->
+    <div class="like-notif-item">
+      <div class="like-notif-avatars">
+        <img src="https://i.pinimg.com/1200x/db/fe/75/dbfe75990174020a7ebf8799999212d8.jpg" class="lna-img lna-single">
+      </div>
+      <div class="like-notif-text">
+        <span class="lnt-bold">Emre</span> and <span class="lnt-bold">Film</span> liked your comment
+        <div class="lnt-time">5m ago</div>
+      </div>
+      <div class="like-notif-post-thumb" data-href="#">
+        <img src="https://i.pinimg.com/736x/4e/3c/5a/4e3c5a133d8b2a1176c0df6110f02562.jpg" alt="">
+        <div class="lnpt-icon">
+          <svg viewBox="0 0 24 24" fill="currentColor" width="10" height="10"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- THIS WEEK section -->
+    <div class="like-notif-section-label">This Week</div>
+
+    <div class="like-notif-item" data-post-img="https://i.pinimg.com/736x/35/5f/a0/355fa00b82d4b0ac718b849a0d9a512f.jpg">
+      <div class="like-notif-avatars">
+        <img src="https://i.pinimg.com/736x/98/df/69/98df6949fce8c87f15b03b306fc89fb0.jpg" class="lna-img lna-single">
+      </div>
+      <div class="like-notif-text">
+        <span class="lnt-bold">Moony</span> liked your post
+        <div class="lnt-time">3 days ago</div>
+      </div>
+      <div class="like-notif-post-thumb" data-href="#">
+        <img src="https://i.pinimg.com/736x/35/5f/a0/355fa00b82d4b0ac718b849a0d9a512f.jpg" alt="">
+        <div class="lnpt-icon">
+          <svg viewBox="0 0 24 24" fill="currentColor" width="10" height="10"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        </div>
+      </div>
+    </div>
+
+    <div class="like-notif-item">
+      <div class="like-notif-avatars">
+        <img src="https://i.pinimg.com/1200x/61/5b/13/615b13791d3c1c8568d36a64195181d4.jpg" class="lna-img lna-single">
+      </div>
+      <div class="like-notif-text">
+        <span class="lnt-bold">Yeerzy</span> started following you
+        <div class="lnt-time">4 days ago</div>
+      </div>
+      <button class="lnt-follow-back-btn lnt-followed" id="followBackYeerzy">Following</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- Liquid Glass Hint Bubble for Like Notifications -->
+<div class="like-hint-bubble" id="likeHintBubble">
+  <div class="lhb-row">
+    <div class="lhb-icon lhb-heart">
+      <svg viewBox="0 0 24 24" fill="currentColor" width="13" height="13"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+    </div>
+    <span class="lhb-text">+12</span>
+  </div>
+  <div class="lhb-row">
+    <div class="lhb-icon lhb-follow">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="13" height="13"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+    </div>
+    <span class="lhb-text">+3</span>
+  </div>
+  <div class="lhb-row">
+    <div class="lhb-icon lhb-comment">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="13" height="13"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+    </div>
+    <span class="lhb-text">+8</span>
+  </div>
+</div>
+
+<!-- ==================== MESSAGES POPUP SYSTEM ==================== -->
+
+<!-- Messages Inbox Popup -->
+<div id="msgInboxPopup" class="msg-inbox-popup">
+  <div class="msg-inbox-header">
+    <span class="msg-inbox-title">Messages</span>
+    <span class="msg-inbox-badge">2</span>
+    <div style="flex:1"></div>
+    <button class="msg-inbox-expand" title="Expand">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+    </button>
+    <button class="msg-inbox-close" id="msgInboxClose">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="msg-inbox-list" id="msgInboxList">
+    <!-- Conversations list injected by JS -->
+  </div>
+</div>
+
+<!-- Chat Conversation Popup -->
+<div id="msgChatPopup" class="msg-chat-popup">
+  <div class="msg-chat-header">
+    <button class="msg-chat-back" id="msgChatBack">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><polyline points="15 18 9 12 15 6"/></svg>
+    </button>
+    <div class="msg-chat-user-info">
+      <img id="msgChatAvatar" src="" alt="" class="msg-chat-avatar">
+      <div>
+        <div id="msgChatName" class="msg-chat-name"></div>
+        <div id="msgChatStatus" class="msg-chat-status">Online</div>
+      </div>
+    </div>
+    <div style="flex:1"></div>
+    <button class="msg-inbox-close" id="msgChatClose">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="msg-chat-messages" id="msgChatMessages"></div>
+  <!-- Reply bar -->
+  <div id="msgReplyBar" class="msg-reply-bar" style="display:none">
+    <div class="msg-reply-bar-inner">
+      <span class="msg-reply-label">Yanıtlıyorsun:</span>
+      <span id="msgReplyText" class="msg-reply-preview"></span>
+    </div>
+    <button id="msgReplyCancel" class="msg-reply-cancel-btn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <!-- Image preview strip -->
+  <div id="msgImagePreviewBar" class="msg-image-preview-bar" style="display:none"></div>
+  <!-- Input area -->
+  <div class="msg-chat-input-area" id="msgChatInputArea">
+    <!-- Voice recording state -->
+    <div id="msgVoiceRecState" class="msg-voice-rec-state" style="display:none">
+      <div class="msg-voice-pulse"></div>
+      <span id="msgRecTimer" class="msg-rec-timer">0:00</span>
+      <button id="msgVoicePauseBtn" class="msg-voice-ctrl-btn" title="Pause/Resume">
+        <svg id="msgVoicePauseIcon" viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+      </button>
+      <button id="msgVoiceStopBtn" class="msg-voice-ctrl-btn msg-voice-stop" title="Send">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+      </button>
+      <button id="msgVoiceCancelBtn" class="msg-voice-ctrl-btn msg-voice-cancel" title="Cancel">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <!-- Normal input state -->
+    <div id="msgNormalInput" class="msg-normal-input">
+      <button id="msgCancelImgBtn" class="msg-input-action-btn msg-cancel-img-btn" style="display:none" title="Cancel image">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+      <input type="text" id="msgChatInput" class="msg-chat-text-input" placeholder="Message...">
+      <!-- Right side controls — shown based on state -->
+      <button id="msgMicBtn" class="msg-input-action-btn" title="Voice message">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 10a7 7 0 0 0 14 0"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+      </button>
+      <button id="msgImageBtn" class="msg-input-action-btn" title="Send image">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+      </button>
+      <button id="msgStickerBtn" class="msg-input-action-btn" title="Sticker">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+      </button>
+      <button id="msgSendBtn" class="msg-input-action-btn msg-send-active" style="display:none" title="Send">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="18" height="18"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+      </button>
+    </div>
+    <input type="file" id="msgFileInput" accept="image/*" multiple style="display:none">
+  </div>
+</div>
+
+<!-- Emoji Reaction Picker (floating) -->
+<div id="msgEmojiPicker" class="msg-emoji-picker" style="display:none">
+  <span data-emoji="❤️">❤️</span>
+  <span data-emoji="😂">😂</span>
+  <span data-emoji="😮">😮</span>
+  <span data-emoji="😢">😢</span>
+  <span data-emoji="😡">😡</span>
+  <span data-emoji="👍">👍</span>
+</div>
+
+<!-- Sticker Picker -->
+<div id="msgStickerPicker" class="msg-sticker-picker" style="display:none">
+  <div class="msg-sticker-grid">
+    <span class="msg-sticker-item" data-sticker="🎮">🎮</span>
+    <span class="msg-sticker-item" data-sticker="🔥">🔥</span>
+    <span class="msg-sticker-item" data-sticker="💎">💎</span>
+    <span class="msg-sticker-item" data-sticker="🏆">🏆</span>
+    <span class="msg-sticker-item" data-sticker="⚔️">⚔️</span>
+    <span class="msg-sticker-item" data-sticker="🛡️">🛡️</span>
+    <span class="msg-sticker-item" data-sticker="👾">👾</span>
+    <span class="msg-sticker-item" data-sticker="🚀">🚀</span>
+    <span class="msg-sticker-item" data-sticker="💀">💀</span>
+    <span class="msg-sticker-item" data-sticker="⭐">⭐</span>
+    <span class="msg-sticker-item" data-sticker="🎯">🎯</span>
+    <span class="msg-sticker-item" data-sticker="💥">💥</span>
+  </div>
+</div>
+
+<!-- AI Floating Button -->
+<div class="ai-fab-wrap">
+  <!-- Welcome bubble -->
+  <div class="ai-welcome-bubble" id="aiBubble">
+    <span>Hi, how can I help you today?</span>
+  </div>
+  <!-- Chat panel -->
+  <div class="ai-chat-panel" id="aiChatPanel">
+    <div class="ai-chat-header">
+      <div class="ai-chat-title">
+        <div class="ai-avatar-small">✦</div>
+        <span>Aurelia AI</span>
+      </div>
+      <button class="ai-close-btn" id="aiCloseBtn">✕</button>
+    </div>
+    <div class="ai-chat-messages" id="aiMessages">
+      <div class="ai-msg ai-msg-bot">
+        <span>Hey! How can I help you today? 🎮</span>
+      </div>
+    </div>
+    <div class="ai-chat-input-wrap">
+      <input class="ai-chat-input" id="aiInput" type="text" placeholder="Ask me anything..." maxlength="300">
+      <button class="ai-send-btn" id="aiSendBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+      </button>
+    </div>
+  </div>
+  <!-- FAB button -->
+  <button class="ai-fab" id="aiFab">
+    <div class="ai-fab-avatar">
+      <img src="https://i.pinimg.com/736x/75/06/71/750671109df71ce4eec2705e6dca540d.jpg" alt="AI">
+      <div class="ai-fab-glow"></div>
+    </div>
+  </button>
+</div>
+
+  </div><!-- end main-content -->
+</div><!-- end app-layout -->
+
+<script>
+  /* ============================================================ */
+  /*  BANNER SLIDER — 12s auto loop                                */
+  /* ============================================================ */
+  (function() {
+    const slides = document.querySelectorAll('.banner-slide');
+    const dots = document.querySelectorAll('.banner-dot');
+    if (!slides.length || !dots.length) return;
+    let current = 0;
+    let timer;
+
+    function goTo(idx) {
+      slides[current].classList.remove('active');
+      dots[current].classList.remove('active');
+      current = (idx + slides.length) % slides.length;
+      slides[current].classList.add('active');
+      dots[current].classList.add('active');
+    }
+
+    function startLoop() {
+      timer = setInterval(() => goTo(current + 1), 12000);
+    }
+
+    dots.forEach(dot => {
+      dot.addEventListener('click', () => {
+        clearInterval(timer);
+        goTo(parseInt(dot.dataset.idx));
+        startLoop();
+      });
+    });
+
+    startLoop();
+  })();
+
+  /* ============================================================ */
+  /*  REELS — autoplay active video, pause others, mute toggle     */
+  /* ============================================================ */
+  (function() {
+    const feed = document.getElementById('reelsFeed');
+    if (!feed) return;
+
+    const cards = Array.from(feed.querySelectorAll('.reel-card'));
+    const videos = cards.map(c => c.querySelector('.reel-video')).filter(Boolean);
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        const video = entry.target.querySelector('.reel-video');
+        if (!video) return;
+        if (entry.isIntersecting && entry.intersectionRatio > 0.6) {
+          videos.forEach(v => { if (v !== video) { v.pause(); } });
+          video.play().catch(() => {});
+        } else {
+          video.pause();
+        }
+      });
+    }, { root: feed, threshold: [0, 0.6, 1] });
+
+    cards.forEach(card => observer.observe(card));
+
+    // Start first video muted+playing
+    if (videos[0]) { videos[0].muted = true; videos[0].play().catch(() => {}); }
+
+    // Tap video to play/pause
+    cards.forEach(card => {
+      const video = card.querySelector('.reel-video');
+      const mediaWrap = card.querySelector('.reel-media-wrap');
+      if (!video || !mediaWrap) return;
+      mediaWrap.addEventListener('click', (e) => {
+        if (e.target.closest('button') || e.target.closest('.reel-actions')) return;
+        if (video.paused) video.play().catch(() => {}); else video.pause();
+      });
+    });
+
+    // Mute/unmute buttons
+    document.querySelectorAll('.reel-mute-btn').forEach(btn => {
+      const video = btn.closest('.reel-media-wrap').querySelector('.reel-video');
+      if (!video) return;
+      video.muted = true;
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        video.muted = !video.muted;
+        btn.innerHTML = video.muted
+          ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5 6 9H2v6h4l5 4V5z"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>'
+          : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>';
+      });
+    });
+  })();
+
+  /* ============================================================ */
+  /*  AI CHAT — Proxy üzerinden Groq                              */
+  /* ============================================================ */
+  (function() {
+    // Railway'deki proxy URL'ini buraya yaz
+    // Örnek: 'https://groq-proxy-production.up.railway.app'
+    const PROXY_URL = '';
+
+    const fab = document.getElementById('aiFab');
+    const panel = document.getElementById('aiChatPanel');
+    const closeBtn = document.getElementById('aiCloseBtn');
+    const sendBtn = document.getElementById('aiSendBtn');
+    const input = document.getElementById('aiInput');
+    const messages = document.getElementById('aiMessages');
+    const bubble = document.getElementById('aiBubble');
+
+    let chatHistory = [
+      { role: 'system', content: 'You are Aurelia AI, a friendly gaming assistant for the AureliaGames platform. Keep responses short, helpful and gaming-focused. Use emojis occasionally.' }
+    ];
+
+    // Show welcome bubble on load
+    setTimeout(() => {
+      bubble.classList.add('show');
+      setTimeout(() => {
+        bubble.classList.remove('show');
+      }, 5000);
+    }, 800);
+
+    fab.addEventListener('click', () => {
+      bubble.classList.remove('show');
+      if (panel.classList.contains('open')) {
+        panel.classList.remove('open');
+      } else {
+        panel.classList.add('open');
+        input.focus();
+      }
+    });
+
+    closeBtn.addEventListener('click', () => {
+      panel.classList.remove('open');
+    });
+
+    function appendMsg(role, text) {
+      const div = document.createElement('div');
+      div.className = 'ai-msg ' + (role === 'user' ? 'ai-msg-user' : 'ai-msg-bot');
+      div.textContent = text;
+      messages.appendChild(div);
+      messages.scrollTop = messages.scrollHeight;
+      return div;
+    }
+
+    function showTyping() {
+      const div = document.createElement('div');
+      div.className = 'ai-msg ai-msg-bot ai-typing';
+      div.innerHTML = '<span></span><span></span><span></span>';
+      messages.appendChild(div);
+      messages.scrollTop = messages.scrollHeight;
+      return div;
+    }
+
+    async function sendMessage() {
+      const text = input.value.trim();
+      if (!text) return;
+      input.value = '';
+
+      appendMsg('user', text);
+      chatHistory.push({ role: 'user', content: text });
+
+      const typing = showTyping();
+      sendBtn.disabled = true;
+
+      try {
+        const res = await fetch(PROXY_URL + '/api/chat', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ messages: chatHistory })
+        });
+
+        const data = await res.json();
+        console.log(JSON.stringify(data));
+        typing.remove();
+
+        if (data.choices && data.choices[0]) {
+          const reply = data.choices[0].message.content;
+          chatHistory.push({ role: 'assistant', content: reply });
+          appendMsg('assistant', reply);
+        } else {
+          appendMsg('assistant', 'Sorry, I had a connection issue. Try again! 🎮');
+        }
+      } catch (err) {
+        typing.remove();
+        appendMsg('assistant', 'Oops, something went wrong. Check your API key! 🔑');
+      }
+
+      sendBtn.disabled = false;
+      input.focus();
+    }
+
+    sendBtn.addEventListener('click', sendMessage);
+    input.addEventListener('keydown', e => { if (e.key === 'Enter') sendMessage(); });
+  })();
+
+  /* ============================================================ */
+  /*  MESSAGES SYSTEM                                              */
+  /* ============================================================ */
+  (function() {
+    const conversations = [
+      {
+        id: 'yeerzy', name: 'Yeerzy',
+        avatar: 'https://i.pinimg.com/1200x/61/5b/13/615b13791d3c1c8568d36a64195181d4.jpg',
+        online: true, unread: true, preview: 'Liked your message', time: '8m',
+        messages: [
+          { id:1, mine:false, type:'text', text:'yo moon!!', time:'10:20' },
+          { id:2, mine:true,  type:'text', text:'hey yeerzy wsp', time:'10:21' },
+          { id:3, mine:false, type:'text', text:'you coming to the tournament friday?', time:'10:22' },
+          { id:4, mine:true,  type:'text', text:'yea probably, gotta check my schedule', time:'10:22', reaction:'👍' },
+        ]
+      },
+      {
+        id: 'mino', name: 'Mino',
+        avatar: 'https://i.pinimg.com/736x/bc/b3/61/bcb3612bebc2b5dfee3044600ea93700.jpg',
+        online: true, unread: true, preview: 'Do u building somet..', time: '2h',
+        messages: [
+          { id:1, mine:false, type:'text', text:'Do u building something cool rn?', time:'08:10' },
+          { id:2, mine:true,  type:'text', text:'yeah working on a new map actually', time:'08:12' },
+          { id:3, mine:false, type:'text', text:'send pics when done!!', time:'08:12' },
+        ]
+      },
+      {
+        id: 'eckk', name: 'Eckk',
+        avatar: 'https://i.pinimg.com/736x/fc/56/8e/fc568e1fc2445b8af18cc4e050ca13cf.jpg',
+        online: true, unread: false, preview: 'Yooo hi moon!!', time: '10s',
+        messages: [
+          { id:1, mine:false, type:'text', text:'Yoo will u join today?', time:'11:00' },
+          { id:2, mine:true,  type:'text', text:'Nope i should visit my parrents for special day', time:'11:01' },
+          { id:3, mine:true,  type:'text', text:'Tommorow maybe?', time:'11:01' },
+          { id:4, mine:false, type:'text', text:'Ohh okey okey npp enjoy with ur day see u soon :))', time:'11:02' },
+          { id:5, mine:false, type:'text', text:'When u be free?', time:'11:03' },
+          { id:6, mine:false, type:'text', text:'We need to refill chests', time:'11:03' },
+          { id:7, mine:true,  type:'text', text:'Tuesday maybe idkk', time:'11:04' },
+          { id:8, mine:true,  type:'text', text:'We will see loll', time:'11:05' },
+          { id:9, mine:false, type:'text', text:'Yooo hi moon!!', time:'11:06', reaction:'❤️' },
+        ]
+      },
+      {
+        id: 'mochi', name: 'Mochi',
+        avatar: 'https://i.pinimg.com/736x/fc/56/8e/fc568e1fc2445b8af18cc4e050ca13cf.jpg',
+        online: false, unread: false, preview: 'Do u have any vault..', time: '5m',
+        messages: [
+          { id:1, mine:false, type:'text', text:'Do u have any vault keys left?', time:'10:55' },
+          { id:2, mine:true,  type:'text', text:'yeah i got 3, need one?', time:'10:56' },
+        ]
+      },
+      {
+        id: 'jhon', name: 'Jhon',
+        avatar: 'https://i.pinimg.com/736x/f7/d8/f2/f7d8f2df2827bd6f8e0e95b12434ceab.jpg',
+        online: true, unread: false, preview: 'me: Join my game b..', time: '8m',
+        messages: [
+          { id:1, mine:true,  type:'text', text:'Join my game bro', time:'10:45' },
+          { id:2, mine:false, type:'text', text:'in a sec let me finish this match', time:'10:46' },
+        ]
+      },
+      {
+        id: 'apple', name: 'Apple',
+        avatar: 'https://i.pinimg.com/1200x/db/fe/75/dbfe75990174020a7ebf8799999212d8.jpg',
+        online: false, unread: false, preview: 'Send ipad to me bro', time: '2h',
+        messages: [
+          { id:1, mine:false, type:'text', text:'Send ipad to me bro', time:'09:00' },
+          { id:2, mine:true,  type:'text', text:'lmaooo no 😂', time:'09:01' },
+        ]
+      },
+      {
+        id: 'sharp', name: 'Sharp',
+        avatar: 'https://api.dicebear.com/7.x/adventurer/svg?seed=sharp99',
+        online: false, unread: false, preview: 'Liked your Story', time: '8s',
+        messages: [
+          { id:1, mine:false, type:'text', text:'Liked your Story 🌟', time:'11:08' },
+        ]
+      },
+    ];
+
+    let currentConvId = null;
+    let replyingTo = null;
+    let pendingImages = [];
+    let mediaRecorder = null;
+    let audioChunks = [];
+    let recInterval = null;
+    let recSeconds = 0;
+    let recPaused = false;
+    let nextMsgId = 1000;
+
+    const inboxPopup    = document.getElementById('msgInboxPopup');
+    const chatPopup     = document.getElementById('msgChatPopup');
+    const inboxBtn      = document.getElementById('msgInboxBtn');
+    const inboxClose    = document.getElementById('msgInboxClose');
+    const chatClose     = document.getElementById('msgChatClose');
+    const chatBack      = document.getElementById('msgChatBack');
+    const inboxList     = document.getElementById('msgInboxList');
+    const chatMessages  = document.getElementById('msgChatMessages');
+    const chatInput     = document.getElementById('msgChatInput');
+    const micBtn        = document.getElementById('msgMicBtn');
+    const imageBtn      = document.getElementById('msgImageBtn');
+    const stickerBtn    = document.getElementById('msgStickerBtn');
+    const msgSendBtn    = document.getElementById('msgSendBtn');
+    const fileInput     = document.getElementById('msgFileInput');
+    const replyBar      = document.getElementById('msgReplyBar');
+    const replyText     = document.getElementById('msgReplyText');
+    const replyCancel   = document.getElementById('msgReplyCancel');
+    const imagePreviewBar = document.getElementById('msgImagePreviewBar');
+    const cancelImgBtn  = document.getElementById('msgCancelImgBtn');
+    const voiceRecState = document.getElementById('msgVoiceRecState');
+    const normalInput   = document.getElementById('msgNormalInput');
+    const recTimer      = document.getElementById('msgRecTimer');
+    const voicePauseBtn = document.getElementById('msgVoicePauseBtn');
+    const voicePauseIcon= document.getElementById('msgVoicePauseIcon');
+    const voiceStopBtn  = document.getElementById('msgVoiceStopBtn');
+    const voiceCancelBtn= document.getElementById('msgVoiceCancelBtn');
+    const emojiPicker   = document.getElementById('msgEmojiPicker');
+    const stickerPicker = document.getElementById('msgStickerPicker');
+
+    // Inbox toggle
+    inboxBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      // Close like notifications popup if open
+      const likePopup = document.getElementById('likeNotifPopup');
+      if (likePopup) likePopup.classList.remove('open');
+      const isOpen = inboxPopup.classList.contains('open');
+      closeAll();
+      if (!isOpen) {
+        renderInbox();
+        inboxPopup.classList.add('open');
+        // Mark all conversations as read and hide badge
+        conversations.forEach(c => c.unread = false);
+        updateMsgBadge();
+      }
+    });
+
+    function updateMsgBadge() {
+      const badge = document.getElementById('msgUnreadBadge');
+      if (!badge) return;
+      const n = conversations.filter(c => c.unread).length;
+      if (n > 0) {
+        badge.textContent = n > 9 ? '9+' : n;
+        badge.classList.remove('hidden');
+      } else {
+        badge.classList.add('hidden');
+      }
+    }
+    updateMsgBadge();
+
+    inboxClose.addEventListener('click', () => inboxPopup.classList.remove('open'));
+    chatClose.addEventListener('click',  () => chatPopup.classList.remove('open'));
+    chatBack.addEventListener('click', () => {
+      chatPopup.classList.remove('open');
+      renderInbox();
+      inboxPopup.classList.add('open');
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!inboxPopup.contains(e.target) && !chatPopup.contains(e.target) &&
+          !inboxBtn.contains(e.target) && !emojiPicker.contains(e.target) && !stickerPicker.contains(e.target)) {
+        closeAll();
+      }
+      if (!emojiPicker.contains(e.target)) emojiPicker.style.display = 'none';
+      if (!stickerPicker.contains(e.target) && e.target !== stickerBtn && !stickerBtn.contains(e.target)) stickerPicker.style.display = 'none';
+    });
+
+    function closeAll() {
+      inboxPopup.classList.remove('open');
+      chatPopup.classList.remove('open');
+      emojiPicker.style.display = 'none';
+      stickerPicker.style.display = 'none';
+    }
+
+    function renderInbox() {
+      inboxList.innerHTML = '';
+      conversations.forEach(conv => {
+        const item = document.createElement('div');
+        item.className = 'msg-conv-item';
+        item.innerHTML = `
+          <div class="msg-conv-avatar-wrap">
+            <img class="msg-conv-avatar" src="${conv.avatar}" alt="${conv.name}">
+            ${conv.online ? '<span class="msg-conv-online-dot"></span>' : ''}
+          </div>
+          <div class="msg-conv-info">
+            <div class="msg-conv-name">${conv.name}</div>
+            <div class="msg-conv-preview">${conv.preview} • ${conv.time}</div>
+          </div>
+          <div class="msg-conv-meta">
+            ${conv.unread ? '<span class="msg-conv-unread-dot"></span>' : ''}
+          </div>
+        `;
+        item.addEventListener('click', () => openChat(conv.id));
+        inboxList.appendChild(item);
+      });
+    }
+
+    function openChat(convId) {
+      currentConvId = convId;
+      const conv = conversations.find(c => c.id === convId);
+      conv.unread = false;
+      document.getElementById('msgChatAvatar').src = conv.avatar;
+      document.getElementById('msgChatName').textContent = conv.name;
+      const statusEl = document.getElementById('msgChatStatus');
+      statusEl.textContent = conv.online ? 'Online' : 'Last seen recently';
+      statusEl.style.color = conv.online ? '#22c55e' : 'rgba(255,255,255,0.45)';
+      renderMessages(conv);
+      inboxPopup.classList.remove('open');
+      chatPopup.classList.add('open');
+      replyingTo = null; pendingImages = [];
+      replyBar.style.display = 'none';
+      imagePreviewBar.style.display = 'none';
+      cancelImgBtn.style.display = 'none';
+      chatInput.value = '';
+      updateInputControls();
+    }
+
+    function renderMessages(conv) {
+      chatMessages.innerHTML = '';
+      conv.messages.forEach(msg => renderOneBubble(msg));
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    function renderOneBubble(msg) {
+      const wrap = document.createElement('div');
+      wrap.className = 'msg-bubble-wrap ' + (msg.mine ? 'mine' : 'theirs');
+      wrap.dataset.msgId = msg.id;
+      let html = '';
+
+      if (msg.replyTo) html += `<div class="msg-reply-ref">↩ ${escHtml(msg.replyTo)}</div>`;
+
+      const actionBtns = `<div class="msg-bubble-actions">
+        <button class="msg-action-icon msg-react-btn" title="React"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg></button>
+        <button class="msg-action-icon msg-reply-btn" title="Reply"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><polyline points="9 17 4 12 9 7"/><path d="M20 18v-2a4 4 0 0 0-4-4H4"/></svg></button>
+      </div>`;
+
+      if (msg.type === 'text') {
+        html += `<div class="msg-bubble" style="position:relative;">${escHtml(msg.text)}${actionBtns}</div>`;
+      } else if (msg.type === 'voice') {
+        html += `<div class="msg-bubble msg-voice-bubble" style="position:relative;">
+          <button class="msg-voice-play-btn" data-blob="${msg.blobUrl||''}">
+            <svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          </button>
+          <div class="msg-voice-waveform">${genWave()}</div>
+          <span class="msg-voice-dur">${msg.dur||'0:05'}</span>
+          ${actionBtns}
+        </div>`;
+      } else if (msg.type === 'image') {
+        html += `<div class="msg-image-msg" style="position:relative;"><img src="${msg.url}" alt="photo" loading="lazy">
+          <div class="msg-bubble-actions" style="top:8px;transform:none;">${actionBtns.match(/<button[\s\S]*?<\/button>/g).join('')}</div>
+        </div>`;
+      } else if (msg.type === 'sticker') {
+        html += `<div class="msg-bubble msg-sticker-msg">${msg.sticker}</div>`;
+      }
+
+      wrap.innerHTML = html;
+
+      if (msg.reaction) {
+        const rb = document.createElement('div');
+        rb.className = 'msg-reaction-wrap';
+        rb.innerHTML = `<span class="msg-reaction-badge">${msg.reaction}</span>`;
+        wrap.appendChild(rb);
+      }
+
+      const reactBtn = wrap.querySelector('.msg-react-btn');
+      const repBtn   = wrap.querySelector('.msg-reply-btn');
+      if (reactBtn) reactBtn.addEventListener('click', (e) => { e.stopPropagation(); showEmojiPicker(e, msg.id); });
+      if (repBtn)   repBtn.addEventListener('click', (e) => { e.stopPropagation(); startReply(msg); });
+
+      const playBtn = wrap.querySelector('.msg-voice-play-btn');
+      if (playBtn) playBtn.addEventListener('click', () => { if (playBtn.dataset.blob) { const a = new Audio(playBtn.dataset.blob); a.play().catch(()=>{}); }});
+
+      chatMessages.appendChild(wrap);
+    }
+
+    function genWave() {
+      let s = '';
+      for (let i=0;i<20;i++) { const h=Math.floor(Math.random()*16)+4; s+=`<div class="msg-voice-bar" style="height:${h}px;opacity:${(0.4+Math.random()*0.5).toFixed(2)}"></div>`; }
+      return s;
+    }
+
+    function escHtml(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+    function showEmojiPicker(e, msgId) {
+      const rect = e.currentTarget.getBoundingClientRect();
+      emojiPicker.style.display = 'flex';
+      emojiPicker.style.top  = (rect.top - 54) + 'px';
+      emojiPicker.style.left = Math.min(rect.left - 40, window.innerWidth - 250) + 'px';
+      emojiPicker.dataset.targetMsgId = msgId;
+    }
+
+    document.querySelectorAll('#msgEmojiPicker span').forEach(sp => {
+      sp.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const mid = parseInt(emojiPicker.dataset.targetMsgId);
+        const conv = conversations.find(c => c.id === currentConvId);
+        if (conv) { const m = conv.messages.find(x => x.id === mid); if (m) { m.reaction = sp.dataset.emoji; renderMessages(conv); }}
+        emojiPicker.style.display = 'none';
+      });
+    });
+
+    function startReply(msg) {
+      replyingTo = { id: msg.id, text: msg.type==='text' ? msg.text : msg.type==='voice' ? '🎤 Voice message' : '🖼️ Image' };
+      replyText.textContent = replyingTo.text;
+      replyBar.style.display = 'flex';
+      chatInput.focus();
+    }
+
+    replyCancel.addEventListener('click', () => { replyingTo=null; replyBar.style.display='none'; });
+
+    chatInput.addEventListener('input', updateInputControls);
+
+    function updateInputControls() {
+      const hasText   = chatInput.value.trim().length > 0;
+      const hasImages = pendingImages.length > 0;
+      if (hasText || hasImages) {
+        msgSendBtn.style.display = 'flex';
+        micBtn.style.display     = 'none';
+      } else {
+        msgSendBtn.style.display = 'none';
+        micBtn.style.display     = 'flex';
+      }
+    }
+
+    msgSendBtn.addEventListener('click', doSend);
+    chatInput.addEventListener('keydown', (e) => { if (e.key==='Enter' && !e.shiftKey) { e.preventDefault(); doSend(); }});
+
+    function doSend() {
+      const text = chatInput.value.trim();
+      const conv = conversations.find(c => c.id === currentConvId);
+      if (!conv) return;
+
+      if (pendingImages.length > 0) {
+        pendingImages.forEach(img => {
+          const m = { id: ++nextMsgId, mine:true, type:'image', url:img.url, time:nowTime(), replyTo: replyingTo ? replyingTo.text : null };
+          conv.messages.push(m); renderOneBubble(m);
+        });
+        pendingImages = []; imagePreviewBar.innerHTML = '';
+        imagePreviewBar.style.display = 'none'; cancelImgBtn.style.display = 'none';
+      }
+
+      if (text) {
+        const m = { id: ++nextMsgId, mine:true, type:'text', text, time:nowTime(), replyTo: replyingTo ? replyingTo.text : null };
+        conv.messages.push(m); renderOneBubble(m);
+        chatInput.value = '';
+        conv.preview = text;
+      }
+
+      replyingTo = null; replyBar.style.display = 'none';
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+      updateInputControls();
+    }
+
+    imageBtn.addEventListener('click', () => fileInput.click());
+    fileInput.addEventListener('change', () => {
+      Array.from(fileInput.files).forEach(f => {
+        const url = URL.createObjectURL(f);
+        pendingImages.push({ url });
+        const img = document.createElement('img');
+        img.src = url; img.className = 'msg-preview-thumb';
+        imagePreviewBar.appendChild(img);
+      });
+      if (pendingImages.length) { imagePreviewBar.style.display='flex'; cancelImgBtn.style.display='flex'; updateInputControls(); }
+      fileInput.value = '';
+    });
+
+    cancelImgBtn.addEventListener('click', () => {
+      pendingImages=[]; imagePreviewBar.innerHTML='';
+      imagePreviewBar.style.display='none'; cancelImgBtn.style.display='none';
+      updateInputControls();
+    });
+
+    stickerBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const rect = stickerBtn.getBoundingClientRect();
+      const showing = stickerPicker.style.display === 'block';
+      stickerPicker.style.display = showing ? 'none' : 'block';
+      stickerPicker.style.bottom  = (window.innerHeight - rect.top + 8) + 'px';
+      stickerPicker.style.right   = (window.innerWidth - rect.right + 0) + 'px';
+    });
+
+    document.querySelectorAll('.msg-sticker-item').forEach(it => {
+      it.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const conv = conversations.find(c => c.id === currentConvId);
+        if (!conv) return;
+        const m = { id: ++nextMsgId, mine:true, type:'sticker', sticker:it.dataset.sticker, time:nowTime() };
+        conv.messages.push(m); renderOneBubble(m);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+        stickerPicker.style.display = 'none';
+        conv.preview = it.dataset.sticker;
+      });
+    });
+
+    micBtn.addEventListener('click', async () => {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        startRec(stream);
+      } catch { alert('Mikrofon izni reddedildi.'); }
+    });
+
+    function startRec(stream) {
+      mediaRecorder = new MediaRecorder(stream);
+      audioChunks = []; recSeconds = 0; recPaused = false;
+      mediaRecorder.ondataavailable = (e) => { if (e.data.size>0) audioChunks.push(e.data); };
+      mediaRecorder.start(100);
+      normalInput.style.display = 'none';
+      voiceRecState.style.display = 'flex';
+      recInterval = setInterval(() => {
+        if (!recPaused) {
+          recSeconds++;
+          recTimer.textContent = Math.floor(recSeconds/60)+':'+String(recSeconds%60).padStart(2,'0');
+        }
+      }, 1000);
+    }
+
+    voicePauseBtn.addEventListener('click', () => {
+      if (!mediaRecorder) return;
+      if (mediaRecorder.state === 'recording') {
+        mediaRecorder.pause(); recPaused = true;
+        voicePauseIcon.innerHTML = '<polygon points="5 3 19 12 5 21 5 3"/>';
+      } else if (mediaRecorder.state === 'paused') {
+        mediaRecorder.resume(); recPaused = false;
+        voicePauseIcon.innerHTML = '<rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>';
+      }
+    });
+
+    voiceStopBtn.addEventListener('click', () => {
+      if (!mediaRecorder) return;
+      const dur = recTimer.textContent;
+      mediaRecorder.onstop = () => {
+        const blob = new Blob(audioChunks, { type:'audio/webm' });
+        const blobUrl = URL.createObjectURL(blob);
+        const conv = conversations.find(c => c.id === currentConvId);
+        if (conv) {
+          const m = { id:++nextMsgId, mine:true, type:'voice', blobUrl, dur, time:nowTime(), replyTo: replyingTo ? replyingTo.text : null };
+          conv.messages.push(m); renderOneBubble(m);
+          chatMessages.scrollTop = chatMessages.scrollHeight;
+          replyingTo = null; replyBar.style.display = 'none';
+          conv.preview = '🎤 Voice message';
+        }
+      };
+      mediaRecorder.stop(); mediaRecorder.stream.getTracks().forEach(t=>t.stop());
+      clearInterval(recInterval);
+      voiceRecState.style.display = 'none'; normalInput.style.display = 'flex';
+      updateInputControls();
+    });
+
+    voiceCancelBtn.addEventListener('click', () => {
+      if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+        mediaRecorder.stop(); mediaRecorder.stream.getTracks().forEach(t=>t.stop());
+      }
+      clearInterval(recInterval);
+      voiceRecState.style.display = 'none'; normalInput.style.display = 'flex';
+      recTimer.textContent = '0:00'; updateInputControls();
+    });
+
+    function nowTime() { const d=new Date(); return d.getHours()+':'+String(d.getMinutes()).padStart(2,'0'); }
+
+    updateInputControls();
+  })();
+
+  /* ============================================================ */
+  /*  LIKE NOTIFICATIONS SYSTEM                                    */
+  /* ============================================================ */
+  (function() {
+    const likeNotifBtn   = document.getElementById('likeNotifBtn');
+    const likeNotifPopup = document.getElementById('likeNotifPopup');
+    const likeNotifClose = document.getElementById('likeNotifClose');
+    const likeNotifBadge = document.getElementById('likeNotifBadge');
+    const likeHintBubble = document.getElementById('likeHintBubble');
+
+    // Count unread
+    function countUnread() {
+      return document.querySelectorAll('.like-notif-item.unread').length;
+    }
+
+    function updateBadge() {
+      const n = countUnread();
+      if (n > 0) {
+        likeNotifBadge.textContent = n > 9 ? '9+' : n;
+        likeNotifBadge.classList.remove('hidden');
+      } else {
+        likeNotifBadge.classList.add('hidden');
+      }
+    }
+    updateBadge();
+
+    // Move "New" items into "Today" section and remove "New" label
+    function mergeNewIntoToday() {
+      const scroll = document.getElementById('likeNotifScroll');
+      if (!scroll) return;
+
+      const labels = scroll.querySelectorAll('.like-notif-section-label');
+      let newLabel = null;
+      let todayLabel = null;
+      labels.forEach(l => {
+        if (l.textContent.trim() === 'New') newLabel = l;
+        if (l.textContent.trim() === 'Today') todayLabel = l;
+      });
+      if (!newLabel) return;
+
+      // Collect ALL items under "New" — visible and hidden
+      const newItems = [];
+      let el = newLabel.nextElementSibling;
+      while (el && !el.classList.contains('like-notif-section-label')) {
+        newItems.push(el);
+        el = el.nextElementSibling;
+      }
+
+      // Remove unread styling, make all visible, move to Today
+      newItems.forEach(item => {
+        item.classList.remove('unread');
+        item.removeAttribute('data-new-hidden');
+        item.style.display = '';
+      });
+
+      if (todayLabel) {
+        newItems.reverse().forEach(item => todayLabel.after(item));
+      }
+
+      newLabel.remove();
+    }
+
+    // Show hint bubble on page load after 1s, hide after 5s
+    setTimeout(() => {
+      const btnRect = likeNotifBtn.getBoundingClientRect();
+      likeHintBubble.style.top = (btnRect.bottom + 8) + 'px';
+      likeHintBubble.style.right = (window.innerWidth - btnRect.right - 4) + 'px';
+      likeHintBubble.style.left = 'auto';
+      likeHintBubble.classList.add('show');
+      setTimeout(() => {
+        likeHintBubble.classList.remove('show');
+        likeHintBubble.classList.add('hide');
+      }, 5000);
+    }, 1000);
+
+    // Toggle popup
+    likeNotifBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      // Close messages popups if open
+      const msgPopup = document.getElementById('msgInboxPopup');
+      if (msgPopup) msgPopup.classList.remove('open');
+      const chatPopup = document.getElementById('msgChatPopup');
+      if (chatPopup) chatPopup.classList.remove('open');
+
+      const isOpen = likeNotifPopup.classList.contains('open');
+
+      if (!isOpen) {
+        // Position popup under the button
+        const btnRect = likeNotifBtn.getBoundingClientRect();
+        likeNotifPopup.style.top  = (btnRect.bottom + 8) + 'px';
+        const popupRight = window.innerWidth - btnRect.right - 4;
+        likeNotifPopup.style.right = Math.max(8, popupRight) + 'px';
+        likeNotifPopup.style.left = 'auto';
+      }
+
+      likeNotifPopup.classList.toggle('open', !isOpen);
+
+      if (!isOpen) {
+        // Move "New" items into "Today" since user has now seen them
+        mergeNewIntoToday();
+        // Hide badge
+        likeNotifBadge.classList.add('hidden');
+        // Hide hint if showing
+        likeHintBubble.classList.remove('show');
+        likeHintBubble.classList.add('hide');
+      }
+    });
+
+    likeNotifClose.addEventListener('click', (e) => {
+      e.stopPropagation();
+      likeNotifPopup.classList.remove('open');
+    });
+
+    // Close on outside click
+    document.addEventListener('click', (e) => {
+      if (!likeNotifPopup.contains(e.target) && e.target !== likeNotifBtn && !likeNotifBtn.contains(e.target)) {
+        likeNotifPopup.classList.remove('open');
+      }
+    });
+
+    // Follow back toggle — clicking "Following" brings back "Follow back"
+    document.querySelectorAll('.lnt-follow-back-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (btn.classList.contains('lnt-followed')) {
+          // Unfollow → show Follow back again
+          btn.textContent = 'Follow back';
+          btn.classList.remove('lnt-followed');
+        } else {
+          // Follow
+          btn.textContent = 'Following';
+          btn.classList.add('lnt-followed');
+        }
+      });
+    });
+
+    // Post thumbnail click (placeholder)
+    document.querySelectorAll('.like-notif-post-thumb').forEach(thumb => {
+      thumb.addEventListener('click', (e) => {
+        e.stopPropagation();
+      });
+    });
+
+    // Like button toggle on comment notifications
+    document.querySelectorAll('.lnt-act-btn:not(.lnt-act-reply)').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (btn.classList.contains('lnt-liked')) {
+          btn.classList.remove('lnt-liked');
+          btn.textContent = 'Like';
+          btn.style.color = '';
+          btn.style.borderColor = '';
+          btn.style.background = '';
+        } else {
+          btn.classList.add('lnt-liked');
+          btn.textContent = 'Liked';
+          btn.style.color = '#ef4444';
+          btn.style.borderColor = 'rgba(239,68,68,0.4)';
+          btn.style.background = 'rgba(239,68,68,0.12)';
+        }
+      });
+    });
+
+    // Reply button (placeholder)
+    document.querySelectorAll('.lnt-act-reply').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        likeNotifPopup.classList.remove('open');
+      });
+    });
+  })();
+
+
+
+  /* ============================================================ */
+  /*  STORY ITEM CLICK — open story viewer page                    */
+  /* ============================================================ */
+  (function() {
+    // Story items (skip "Your story" which has no story index)
+    const storyItems = document.querySelectorAll('.story-item');
+    storyItems.forEach((item, idx) => {
+      // idx 0 = "Your story", skip navigation for it
+      if (idx === 0) return;
+      item.style.cursor = 'pointer';
+      item.addEventListener('click', () => {
+        // idx - 1 because idx 0 is "Your story"
+        window.location.href = 'story_viewer.html?story=' + (idx - 1);
+      });
+    });
+  })();
+
+  /* ============================================================ */
+  /*  STORIES SCROLL BEHAVIOR                                      */
+  /* ============================================================ */
+  const storiesCard = document.getElementById('storiesCard');
+  const storiesWrapper = document.getElementById('storiesWrapper');
+
+  if (storiesCard && storiesWrapper) {
+    let lastScrollY = window.scrollY;
+    let storiesVisible = true;
+    const HIDE_THRESHOLD = 100;
+
+    window.addEventListener('scroll', () => {
+      const scrollY = window.scrollY;
+      const scrollingDown = scrollY > lastScrollY;
+      if (scrollY > HIDE_THRESHOLD && scrollingDown && storiesVisible) {
+        storiesCard.classList.add('hidden-up');
+        storiesVisible = false;
+      } else if (scrollY <= HIDE_THRESHOLD && !storiesVisible) {
+        storiesCard.classList.remove('hidden-up');
+        storiesVisible = true;
+      } else if (!scrollingDown && scrollY <= HIDE_THRESHOLD && !storiesVisible) {
+        storiesCard.classList.remove('hidden-up');
+        storiesVisible = true;
+      }
+      lastScrollY = scrollY;
+    }, { passive: true });
+
+    let ticking = false;
+    document.addEventListener('scroll', () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const sy = window.scrollY;
+          if (sy > 80) {
+            if (!storiesCard.classList.contains('hidden-up')) storiesCard.classList.add('hidden-up');
+          } else {
+            if (storiesCard.classList.contains('hidden-up')) storiesCard.classList.remove('hidden-up');
+          }
+          ticking = false;
+        });
+        ticking = true;
+      }
+    }, { passive: true });
+  }
+
+  /* ============================================================ */
+  /*  LIKE BUTTON TOGGLE                                           */
+  /* ============================================================ */
+  function updateLikeBtnAppearance(btn) {
+    const svg = btn.querySelector('svg');
+    if (btn.classList.contains('liked')) {
+      svg.setAttribute('fill', 'currentColor');
+      svg.removeAttribute('stroke');
+      svg.removeAttribute('stroke-width');
+    } else {
+      svg.setAttribute('fill', 'none');
+      svg.setAttribute('stroke', 'currentColor');
+      svg.setAttribute('stroke-width', '2');
+    }
+  }
+
+  document.querySelectorAll('.post-action-btn.like-btn').forEach(btn => {
+    // Set initial SVG state
+    updateLikeBtnAppearance(btn);
+
+    btn.addEventListener('click', () => {
+      const isLiked = btn.classList.contains('liked');
+      if (isLiked) {
+        // Unlike
+        btn.classList.remove('liked');
+        btn.classList.remove('like-pop');
+        void btn.offsetWidth; // reflow
+        btn.classList.add('unlike-pop');
+        btn.addEventListener('animationend', () => btn.classList.remove('unlike-pop'), { once: true });
+      } else {
+        // Like
+        btn.classList.add('liked');
+        btn.classList.remove('unlike-pop');
+        void btn.offsetWidth;
+        btn.classList.add('like-pop');
+        btn.addEventListener('animationend', () => btn.classList.remove('like-pop'), { once: true });
+      }
+      updateLikeBtnAppearance(btn);
+    });
+  });
+
+  /* ============================================================ */
+  /*  DOUBLE-TAP HEART ANIMATION (Instagram style)                 */
+  /* ============================================================ */
+  const doubleTapDelay = 300; // ms
+
+  document.querySelectorAll('.post-card').forEach(card => {
+    let lastTap = 0;
+
+    card.addEventListener('click', (e) => {
+      // Don't trigger on buttons
+      if (e.target.closest('button') || e.target.closest('a')) return;
+
+      const now = Date.now();
+      const timeSinceLast = now - lastTap;
+
+      if (timeSinceLast < doubleTapDelay && timeSinceLast > 0) {
+        // Double tap!
+        const burst = card.querySelector('.heart-burst');
+        const likeBtn = card.querySelector('.like-btn');
+
+        // Trigger like if not already liked
+        if (likeBtn && !likeBtn.classList.contains('liked')) {
+          likeBtn.classList.add('liked');
+          updateLikeBtnAppearance(likeBtn);
+          likeBtn.classList.add('like-pop');
+          likeBtn.addEventListener('animationend', () => likeBtn.classList.remove('like-pop'), { once: true });
+        }
+
+        // Show burst animation
+        if (burst) {
+          burst.classList.remove('animate');
+          void burst.offsetWidth; // reflow
+          burst.classList.add('animate');
+          burst.addEventListener('animationend', () => burst.classList.remove('animate'), { once: true });
+        }
+
+        lastTap = 0;
+      } else {
+        lastTap = now;
+      }
+    });
+  });
+
+  /* ============================================================ */
+  /*  SEARCH PANEL — open/close, filter, remove, clear-all         */
+  /* ============================================================ */
+  (function () {
+    const navSearchBtn   = document.getElementById('navSearchBtn');
+    const panel          = document.getElementById('searchPanel');
+    const scrim          = document.getElementById('searchScrim');
+    const closeBtn       = document.getElementById('searchPanelClose');
+    const input          = document.getElementById('searchPanelInput');
+    const inputClear     = document.getElementById('searchInputClear');
+    const clearAllBtn    = document.getElementById('searchClearAll');
+    const subheaderLabel = document.getElementById('searchSubheaderLabel');
+    const listEl         = document.getElementById('searchResultsList');
+    const emptyEl        = document.getElementById('searchPanelEmpty');
+
+    if (!panel) return;
+
+    function openPanel(e) {
+      if (e) e.preventDefault();
+      panel.classList.add('open');
+      scrim.classList.add('open');
+      navSearchBtn.classList.add('active');
+      document.body.style.overflow = 'hidden';
+      setTimeout(() => input.focus(), 320);
+    }
+
+    function closePanel() {
+      panel.classList.remove('open');
+      scrim.classList.remove('open');
+      navSearchBtn.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    navSearchBtn.addEventListener('click', openPanel);
+    closeBtn.addEventListener('click', closePanel);
+    scrim.addEventListener('click', closePanel);
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && panel.classList.contains('open')) closePanel();
+    });
+
+    function refreshView() {
+      const q = input.value.trim().toLowerCase();
+      inputClear.classList.toggle('show', q.length > 0);
+      subheaderLabel.textContent = q ? 'Sonuçlar' : 'Son Aramalar';
+      clearAllBtn.style.display = q ? 'none' : '';
+
+      const items = listEl.querySelectorAll('.search-result-item');
+      let anyVisible = false;
+
+      items.forEach((item) => {
+        if (item.classList.contains('removed')) {
+          item.classList.add('hidden');
+          return;
+        }
+        const name = (item.dataset.name || '').toLowerCase();
+        const sub  = (item.dataset.sub  || '').toLowerCase();
+        const match = !q || name.includes(q) || sub.includes(q);
+        item.classList.toggle('hidden', !match);
+        if (match) anyVisible = true;
+      });
+
+      emptyEl.textContent = q ? 'Sonuç bulunamadı' : 'Son arama yok';
+      emptyEl.classList.toggle('show', !anyVisible);
+    }
+
+    input.addEventListener('input', refreshView);
+
+    inputClear.addEventListener('click', () => {
+      input.value = '';
+      refreshView();
+      input.focus();
+    });
+
+    clearAllBtn.addEventListener('click', () => {
+      listEl.querySelectorAll('.search-result-item').forEach((item) => {
+        item.classList.add('removed');
+      });
+      refreshView();
+    });
+
+    listEl.querySelectorAll('.search-result-remove').forEach((btn) => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const item = btn.closest('.search-result-item');
+        item.classList.add('removed');
+        refreshView();
+      });
+    });
+
+    listEl.querySelectorAll('.search-result-item').forEach((item) => {
+      item.addEventListener('click', () => {
+        const name = item.dataset.name || '';
+        input.value = name;
+        refreshView();
+      });
+    });
+
+    refreshView();
+  })();
+
+</script>
+</body>
+</html>
