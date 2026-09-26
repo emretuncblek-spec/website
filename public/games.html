@@ -2815,19 +2815,6 @@
     <!-- GAMES CONTENT -->
     <div class="games-area">
 
-      <!-- CATEGORIES -->
-      <div class="cat-scroll-wrap" id="catScrollWrap">
-        <button class="cat-arrow cat-arrow-left" id="catArrowLeft" aria-label="Sola kaydır">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
-        </button>
-        <div class="cat-row" id="catRow">
-          <button class="cat-pill active"><span class="cat-icon">👻</span>Horror</button><button class="cat-pill"><span class="cat-icon">⚔️</span>Action</button><button class="cat-pill"><span class="cat-icon">🧑‍🤝‍🧑</span>Online</button><button class="cat-pill"><span class="cat-icon">🎯</span>Fps</button><button class="cat-pill"><span class="cat-icon">🧩</span>Puzzle</button><button class="cat-pill"><span class="cat-icon">🏎️</span>Racing</button><button class="cat-pill"><span class="cat-icon">🗡️</span>RPG</button><button class="cat-pill"><span class="cat-icon">♟️</span>Strategy</button><button class="cat-pill"><span class="cat-icon">⚽</span>Sports</button><button class="cat-pill"><span class="cat-icon">🕹️</span>Simulation</button><button class="cat-pill"><span class="cat-icon">🌲</span>Adventure</button><button class="cat-pill"><span class="cat-icon">😌</span>Casual</button><button class="cat-pill"><span class="cat-icon">🎮</span>Indie</button><button class="cat-pill"><span class="cat-icon">🧟</span>Zombie</button><button class="cat-pill"><span class="cat-icon">🚀</span>Sci-Fi</button>
-        </div>
-        <button class="cat-arrow cat-arrow-right" id="catArrowRight" aria-label="Sağa kaydır">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
-        </button>
-      </div>
-
       <!-- NEWS -->
       <h2 class="section-title">NEWS</h2>
       <div class="news-card" id="newsCard">
@@ -4454,22 +4441,6 @@
         if (p && p.catch) p.catch(() => {});
       }, { passive: true });
     });
-
-    /* Category pill row: arrow scroll + active state */
-    const catRow = document.getElementById('catRow');
-    const arrowLeft = document.getElementById('catArrowLeft');
-    const arrowRight = document.getElementById('catArrowRight');
-    if (catRow && arrowLeft && arrowRight) {
-      const scrollAmount = 260;
-      arrowLeft.addEventListener('click', () => catRow.scrollBy({ left: -scrollAmount, behavior: 'smooth' }));
-      arrowRight.addEventListener('click', () => catRow.scrollBy({ left: scrollAmount, behavior: 'smooth' }));
-      catRow.querySelectorAll('.cat-pill').forEach((pill) => {
-        pill.addEventListener('click', () => {
-          catRow.querySelectorAll('.cat-pill').forEach(p => p.classList.remove('active'));
-          pill.classList.add('active');
-        });
-      });
-    }
 
     /* NEWS carousel: auto-advance every 7s, crossfade, dots navigation */
     const newsSlides = document.querySelectorAll('.news-slide');
