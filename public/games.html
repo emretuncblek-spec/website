@@ -707,12 +707,18 @@
     /* The sticky container — starts at top of right panel,
        stays fixed after a threshold, releases at top */
     .right-sticky {
-      position: sticky;
-      top: 24px;
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-    }
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  max-height: calc(100vh - 48px);
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+.right-sticky::-webkit-scrollbar { display: none; }
 
     .widget-card {
       background: var(--glass);
