@@ -2479,6 +2479,7 @@
       background: rgba(255,255,255,0.06);
     }
 
+    .news-info { cursor: pointer; }
     .news-info-title { font-size: 26px; font-weight: 900; line-height: 1.15; }
     .news-info-desc { font-size: 13.5px; color: var(--text-dim); line-height: 1.55; }
     .news-info-meta { display: flex; align-items: center; gap: 10px; margin-top: 8px; }
@@ -2521,21 +2522,114 @@
     }
     .discount-card-large { min-height: clamp(230px, 32vh, 320px); }
     .discount-card-small { flex: 1; min-height: clamp(105px, 15vh, 150px); }
+    .discount-card { cursor: pointer; }
 
     /* ---------- MONTHLY TOP 10 ---------- */
+    .top10-scroll-wrap {
+      position: relative;
+    }
     .top10-list {
       display: flex;
-      flex-direction: column;
-      gap: clamp(9px, 1.3vh, 14px);
+      gap: clamp(10px, 1.4vw, 16px);
+      overflow-x: auto;
+      overflow-y: hidden;
+      scroll-behavior: smooth;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+      padding: 2px 2px 4px;
     }
+    .top10-list::-webkit-scrollbar { display: none; }
+
     .top10-card {
       position: relative;
+      flex: 0 0 calc((100% - 2 * clamp(10px, 1.4vw, 16px)) / 3);
+      scroll-snap-align: start;
+      display: flex;
+      flex-direction: column;
+      cursor: pointer;
+    }
+
+    .top10-media {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 4 / 3;
       border-radius: 20px;
       overflow: hidden;
-      height: clamp(110px, 15vh, 145px);
       background: #05050a;
     }
-    .top10-info .card-meta { gap: 10px; }
+    .top10-media .rank-badge {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      z-index: 2;
+    }
+
+    .top10-body {
+      padding: clamp(8px, 1.2vh, 12px) 2px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .top10-title {
+      font-size: clamp(14px, 1.4vw, 17px);
+      font-weight: 800;
+      color: #fff;
+      line-height: 1.22;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .top10-meta-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .top10-meta-row .star-rating {
+      background: transparent;
+      border: none;
+      padding: 0;
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+      color: rgba(255,255,255,0.75);
+    }
+    .top10-meta-row .price-tag {
+      background: rgba(255,255,255,0.10);
+    }
+
+    .top10-arrow {
+      position: absolute;
+      /* center vertically on the image area only (card height minus the title/meta caption below it) */
+      top: calc((100% - 58px) / 2);
+      transform: translateY(-50%);
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(10,10,20,0.60);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid rgba(255,255,255,0.30);
+      color: #fff;
+      cursor: pointer;
+      z-index: 5;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.22s ease, background 0.2s ease;
+    }
+    .top10-arrow svg { width: 20px; height: 20px; }
+    .top10-arrow:hover { background: rgba(20,20,35,0.80); }
+    .top10-scroll-wrap:hover .top10-arrow { opacity: 1; pointer-events: auto; }
+    .top10-arrow-left { left: -8px; }
+    .top10-arrow-right { right: -8px; }
+
+    @media (max-width: 900px) {
+      .top10-card { flex: 0 0 calc((100% - 12px) / 2); }
+    }
+    @media (max-width: 520px) {
+      .top10-card { flex: 0 0 82%; }
+    }
 
     /* ---------- WHAT WE PLAYING ---------- */
     .playing-grid {
@@ -2556,6 +2650,7 @@
     }
     .playing-card-tall { min-height: clamp(250px, 34vh, 340px); }
     .playing-card-small { flex: 1; min-height: clamp(115px, 16vh, 160px); }
+    .playing-card { cursor: pointer; }
 
     /* Free up horizontal space progressively on narrower / scaled screens
        (e.g. 1920x1080 at 125% Windows scaling ≈ 1536px usable width) */
@@ -2913,128 +3008,147 @@
 
       <!-- MONTHLY TOP 10 -->
       <h2 class="section-title">Monthly Top 10</h2>
-      <div class="top10-list">
-        
-        <div class="top10-card hover-video">
-          <video id="topVid0" class="card-video" muted loop playsinline preload="metadata"><source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4#t=0.5" type="video/mp4"></video>
-          <div class="card-gradient"></div>
-          <div class="card-info top10-info">
-            <div class="card-title">Emberfall!</div>
-            <div class="card-meta">
+      <div class="top10-scroll-wrap">
+        <div class="top10-list" id="top10Track">
+
+        <div class="top10-card hover-video" data-game="Emberfall!">
+          <div class="top10-media">
+            <video id="topVid0" class="card-video" muted loop playsinline preload="metadata"><source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4#t=0.5" type="video/mp4"></video>
+            <span class="rank-badge">#1</span>
+          </div>
+          <div class="top10-body">
+            <div class="top10-title">Emberfall!</div>
+            <div class="top10-meta-row">
               <span class="star-rating">★ 3.5</span>
-              <span class="rank-badge">#1</span>
               <span class="price-tag">12€</span>
             </div>
           </div>
         </div>
-        <div class="top10-card hover-video">
-          <video id="topVid1" class="card-video" muted loop playsinline preload="metadata"><source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4#t=0.5" type="video/mp4"></video>
-          <div class="card-gradient"></div>
-          <div class="card-info top10-info">
-            <div class="card-title">Starlit Odyssey!</div>
-            <div class="card-meta">
+        <div class="top10-card hover-video" data-game="Starlit Odyssey!">
+          <div class="top10-media">
+            <video id="topVid1" class="card-video" muted loop playsinline preload="metadata"><source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4#t=0.5" type="video/mp4"></video>
+            <span class="rank-badge">#2</span>
+          </div>
+          <div class="top10-body">
+            <div class="top10-title">Starlit Odyssey!</div>
+            <div class="top10-meta-row">
               <span class="star-rating">★ 3.5</span>
-              <span class="rank-badge">#2</span>
               <span class="price-tag">8€</span>
             </div>
           </div>
         </div>
-        <div class="top10-card hover-video">
-          <video id="topVid2" class="card-video" muted loop playsinline preload="metadata"><source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackOnStreetAndDirt.mp4#t=0.5" type="video/mp4"></video>
-          <div class="card-gradient"></div>
-          <div class="card-info top10-info">
-            <div class="card-title">Crimson Horizon!</div>
-            <div class="card-meta">
+        <div class="top10-card hover-video" data-game="Crimson Horizon!">
+          <div class="top10-media">
+            <video id="topVid2" class="card-video" muted loop playsinline preload="metadata"><source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackOnStreetAndDirt.mp4#t=0.5" type="video/mp4"></video>
+            <span class="rank-badge">#3</span>
+          </div>
+          <div class="top10-body">
+            <div class="top10-title">Crimson Horizon!</div>
+            <div class="top10-meta-row">
               <span class="star-rating">★ 4.6</span>
-              <span class="rank-badge">#3</span>
               <span class="price-tag">2€</span>
             </div>
           </div>
         </div>
-        <div class="top10-card hover-video">
-          <video id="topVid3" class="card-video" muted loop playsinline preload="metadata"><source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4#t=0.5" type="video/mp4"></video>
-          <div class="card-gradient"></div>
-          <div class="card-info top10-info">
-            <div class="card-title">Nightshade Chronicles!</div>
-            <div class="card-meta">
+        <div class="top10-card hover-video" data-game="Nightshade Chronicles!">
+          <div class="top10-media">
+            <video id="topVid3" class="card-video" muted loop playsinline preload="metadata"><source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4#t=0.5" type="video/mp4"></video>
+            <span class="rank-badge">#4</span>
+          </div>
+          <div class="top10-body">
+            <div class="top10-title">Nightshade Chronicles!</div>
+            <div class="top10-meta-row">
               <span class="star-rating">★ 4.5</span>
-              <span class="rank-badge">#4</span>
               <span class="price-tag">5€</span>
             </div>
           </div>
         </div>
-        <div class="top10-card hover-video">
-          <video id="topVid4" class="card-video" muted loop playsinline preload="metadata"><source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/VolkswagenGTIReview.mp4#t=0.5" type="video/mp4"></video>
-          <div class="card-gradient"></div>
-          <div class="card-info top10-info">
-            <div class="card-title">Voidrunner!</div>
-            <div class="card-meta">
+        <div class="top10-card hover-video" data-game="Voidrunner!">
+          <div class="top10-media">
+            <video id="topVid4" class="card-video" muted loop playsinline preload="metadata"><source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/VolkswagenGTIReview.mp4#t=0.5" type="video/mp4"></video>
+            <span class="rank-badge">#5</span>
+          </div>
+          <div class="top10-body">
+            <div class="top10-title">Voidrunner!</div>
+            <div class="top10-meta-row">
               <span class="star-rating">★ 4.4</span>
-              <span class="rank-badge">#5</span>
               <span class="price-tag">10€</span>
             </div>
           </div>
         </div>
-        <div class="top10-card hover-video">
-          <video id="topVid5" class="card-video" muted loop playsinline preload="metadata"><source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4#t=0.5" type="video/mp4"></video>
-          <div class="card-gradient"></div>
-          <div class="card-info top10-info">
-            <div class="card-title">Solstice Arena!</div>
-            <div class="card-meta">
+        <div class="top10-card hover-video" data-game="Solstice Arena!">
+          <div class="top10-media">
+            <video id="topVid5" class="card-video" muted loop playsinline preload="metadata"><source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4#t=0.5" type="video/mp4"></video>
+            <span class="rank-badge">#6</span>
+          </div>
+          <div class="top10-body">
+            <div class="top10-title">Solstice Arena!</div>
+            <div class="top10-meta-row">
               <span class="star-rating">★ 3.6</span>
-              <span class="rank-badge">#6</span>
               <span class="price-tag">6€</span>
             </div>
           </div>
         </div>
-        <div class="top10-card hover-video">
-          <video id="topVid6" class="card-video" muted loop playsinline preload="metadata"><source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4#t=0.5" type="video/mp4"></video>
-          <div class="card-gradient"></div>
-          <div class="card-info top10-info">
-            <div class="card-title">Ashen Kingdoms!</div>
-            <div class="card-meta">
+        <div class="top10-card hover-video" data-game="Ashen Kingdoms!">
+          <div class="top10-media">
+            <video id="topVid6" class="card-video" muted loop playsinline preload="metadata"><source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4#t=0.5" type="video/mp4"></video>
+            <span class="rank-badge">#7</span>
+          </div>
+          <div class="top10-body">
+            <div class="top10-title">Ashen Kingdoms!</div>
+            <div class="top10-meta-row">
               <span class="star-rating">★ 4.8</span>
-              <span class="rank-badge">#7</span>
               <span class="price-tag">10€</span>
             </div>
           </div>
         </div>
-        <div class="top10-card hover-video">
-          <video id="topVid7" class="card-video" muted loop playsinline preload="metadata"><source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4#t=0.5" type="video/mp4"></video>
-          <div class="card-gradient"></div>
-          <div class="card-info top10-info">
-            <div class="card-title">Pixel Odyssey!</div>
-            <div class="card-meta">
+        <div class="top10-card hover-video" data-game="Pixel Odyssey!">
+          <div class="top10-media">
+            <video id="topVid7" class="card-video" muted loop playsinline preload="metadata"><source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4#t=0.5" type="video/mp4"></video>
+            <span class="rank-badge">#8</span>
+          </div>
+          <div class="top10-body">
+            <div class="top10-title">Pixel Odyssey!</div>
+            <div class="top10-meta-row">
               <span class="star-rating">★ 3.3</span>
-              <span class="rank-badge">#8</span>
               <span class="price-tag">12€</span>
             </div>
           </div>
         </div>
-        <div class="top10-card hover-video">
-          <video id="topVid8" class="card-video" muted loop playsinline preload="metadata"><source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4#t=0.5" type="video/mp4"></video>
-          <div class="card-gradient"></div>
-          <div class="card-info top10-info">
-            <div class="card-title">Runeblade Online!</div>
-            <div class="card-meta">
+        <div class="top10-card hover-video" data-game="Runeblade Online!">
+          <div class="top10-media">
+            <video id="topVid8" class="card-video" muted loop playsinline preload="metadata"><source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4#t=0.5" type="video/mp4"></video>
+            <span class="rank-badge">#9</span>
+          </div>
+          <div class="top10-body">
+            <div class="top10-title">Runeblade Online!</div>
+            <div class="top10-meta-row">
               <span class="star-rating">★ 3.3</span>
-              <span class="rank-badge">#9</span>
               <span class="price-tag">10€</span>
             </div>
           </div>
         </div>
-        <div class="top10-card hover-video">
-          <video id="topVid9" class="card-video" muted loop playsinline preload="metadata"><source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4#t=0.5" type="video/mp4"></video>
-          <div class="card-gradient"></div>
-          <div class="card-info top10-info">
-            <div class="card-title">Aetherium!</div>
-            <div class="card-meta">
+        <div class="top10-card hover-video" data-game="Aetherium!">
+          <div class="top10-media">
+            <video id="topVid9" class="card-video" muted loop playsinline preload="metadata"><source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4#t=0.5" type="video/mp4"></video>
+            <span class="rank-badge">#10</span>
+          </div>
+          <div class="top10-body">
+            <div class="top10-title">Aetherium!</div>
+            <div class="top10-meta-row">
               <span class="star-rating">★ 4.2</span>
-              <span class="rank-badge">#10</span>
               <span class="price-tag">2€</span>
             </div>
           </div>
         </div>
+
+        </div>
+        <button type="button" class="top10-arrow top10-arrow-left" id="top10ArrowLeft" aria-label="Önceki oyunlar">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+        </button>
+        <button type="button" class="top10-arrow top10-arrow-right" id="top10ArrowRight" aria-label="Sonraki oyunlar">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+        </button>
       </div>
 
       <!-- WHAT WE PLAYING -->
@@ -4448,6 +4562,30 @@
       }, { passive: true });
     });
 
+    /* MONTHLY TOP 10 carousel: left/right arrows (shown on hover) scroll through all 10 games */
+    const top10Track = document.getElementById('top10Track');
+    const top10ArrowLeft = document.getElementById('top10ArrowLeft');
+    const top10ArrowRight = document.getElementById('top10ArrowRight');
+    if (top10Track && top10ArrowLeft && top10ArrowRight) {
+      const scrollTop10 = (dir) => {
+        const amount = top10Track.clientWidth * 0.9 * dir;
+        top10Track.scrollBy({ left: amount, behavior: 'smooth' });
+      };
+      top10ArrowLeft.addEventListener('click', () => scrollTop10(-1));
+      top10ArrowRight.addEventListener('click', () => scrollTop10(1));
+    }
+
+    /* GAME CARDS clickable: discount, top10 and "what we playing" cards will later link to purchase pages */
+    document.querySelectorAll('.discount-card, .top10-card, .playing-card').forEach((card) => {
+      card.addEventListener('click', () => {
+        const title = card.dataset.game
+          || card.querySelector('.card-title, .top10-title')?.textContent?.trim()
+          || '';
+        // TODO: satın alma sayfası eklenince burada ilgili oyunun sayfasına yönlendirilecek
+        console.log('Oyun kartına tıklandı:', title);
+      });
+    });
+
     /* NEWS carousel: auto-advance every 7s, crossfade, dots navigation */
     const newsSlides = document.querySelectorAll('.news-slide');
     const newsDots = document.querySelectorAll('.news-dot');
@@ -4477,6 +4615,21 @@
           newsGoTo(parseInt(dot.dataset.idx, 10));
           newsStartLoop();
         });
+      });
+
+      /* Clicking the info text next to the video also opens the page */
+      document.querySelectorAll('#newsSlides .news-info').forEach((info) => {
+        info.addEventListener('click', () => {
+          const title = info.querySelector('.news-info-title')?.textContent?.trim() || '';
+          // TODO: sayfa eklenince burada ilgili habere/oyuna yönlendirilecek
+          console.log('Habere tıklandı:', title);
+        });
+      });
+
+      /* While the video is playing (hovered), pause the auto-advance loop; resume when it stops */
+      document.querySelectorAll('#newsSlides .news-video-wrap').forEach((wrap) => {
+        wrap.addEventListener('mouseenter', () => clearInterval(newsTimer));
+        wrap.addEventListener('mouseleave', () => newsStartLoop());
       });
 
       newsStartLoop();
