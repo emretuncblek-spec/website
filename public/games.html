@@ -4618,15 +4618,16 @@
       });
 
       /* Clicking the info text next to the video also opens the page */
-      document.querySelectorAll('#newsSlides .news-info').forEach((info) => {
-        info.addEventListener('click', () => {
-          const title = info.querySelector('.news-info-title')?.textContent?.trim() || '';
-          if (title === 'Earth Smp!') {
+document.querySelectorAll('#newsSlides .news-info').forEach((info) => {
+  info.addEventListener('click', () => {
+    const title = info.querySelector('.news-info-title')?.textContent?.trim() || '';
+    if (title === 'Earth Smp!') {
       window.location.href = 'earthsmp.html';
-          // TODO: sayfa eklenince burada ilgili habere/oyuna yönlendirilecek
-          console.log('Habere tıklandı:', title);
-        });
-      });
+      return;
+    }
+    console.log('Habere tıklandı:', title);
+  });
+});
 
       /* While the video is playing (hovered), pause the auto-advance loop; resume when it stops */
       document.querySelectorAll('#newsSlides .news-video-wrap').forEach((wrap) => {
