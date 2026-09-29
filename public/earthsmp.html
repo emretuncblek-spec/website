@@ -1899,9 +1899,42 @@
     .msg-chat-messages::-webkit-scrollbar-thumb, .like-notif-scroll::-webkit-scrollbar-thumb { background: rgba(30,50,90,.22); }
     .like-notif-scroll { scrollbar-color: rgba(30,50,90,.22) transparent; }
     .msg-conv-online-dot { border-color: #fff; }
+
+    /* ============================================================ */
+    /*  ANİMASYONLU AURA — index.html ile aynı boyut/konum/süre/hareket */
+    /*  (renkler açık temaya uyarlandı)                               */
+    /* ============================================================ */
+    .aura-layer { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+    .aura-orb { position: absolute; border-radius: 50%; will-change: transform, opacity; }
+    .aura-orb-1 { width: 600px; height: 600px; top: -150px; left: 5%;
+      background: radial-gradient(circle, rgba(80,130,255,0.50) 0%, transparent 70%); animation: aura1 9s ease-in-out infinite; }
+    .aura-orb-2 { width: 450px; height: 450px; bottom: 0; right: 5%;
+      background: radial-gradient(circle, rgba(140,110,255,0.40) 0%, transparent 70%); animation: aura2 12s ease-in-out infinite 3s; }
+    .aura-orb-3 { width: 350px; height: 350px; top: 40%; left: 38%;
+      background: radial-gradient(circle, rgba(70,170,255,0.30) 0%, transparent 70%); animation: aura3 15s ease-in-out infinite 6s; }
+    @keyframes aura1 {
+      0%,100% { opacity:0.45; transform:scale(1) translate(0,0); }
+      50%      { opacity:0.65; transform:scale(1.12) translate(18px,28px); }
+    }
+    @keyframes aura2 {
+      0%,100% { opacity:0.35; transform:scale(1) translate(0,0); }
+      50%      { opacity:0.52; transform:scale(1.10) translate(-22px,-18px); }
+    }
+    @keyframes aura3 {
+      0%,100% { opacity:0.20; transform:scale(1); }
+      50%      { opacity:0.36; transform:scale(1.14); }
+    }
+    @media (prefers-reduced-motion: reduce) { .aura-orb { animation: none; } }
   </style>
 </head>
 <body>
+
+<!-- Animated aura background -->
+<div class="aura-layer" aria-hidden="true">
+  <div class="aura-orb aura-orb-1"></div>
+  <div class="aura-orb aura-orb-2"></div>
+  <div class="aura-orb aura-orb-3"></div>
+</div>
 
 <div class="app-layout">
 
