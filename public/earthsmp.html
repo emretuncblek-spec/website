@@ -1925,6 +1925,119 @@
       50%      { opacity:0.36; transform:scale(1.14); }
     }
     @media (prefers-reduced-motion: reduce) { .aura-orb { animation: none; } }
+
+    /* GIF dünya */
+    .earth-gif { width: 100%; height: 100%; object-fit: contain; display: block; user-select: none; -webkit-user-drag: none; }
+
+    /* Mobil logo butonu + overlay: masaüstünde gizli */
+    .mobile-logo-btn, .sidebar-overlay { display: none; }
+
+    /* ============================================================ */
+    /*  MOBİL OPTİMİZASYON                                           */
+    /* ============================================================ */
+    @media (max-width: 820px) {
+      :root { --sidebar-w: 270px; }
+
+      .sidebar {
+        transform: translateX(-105%);
+        transition: transform .38s cubic-bezier(.22,1,.36,1);
+        z-index: 400;
+        width: var(--sidebar-w);
+        padding: 14px 12px;
+        height: 100vh; height: 100dvh;
+      }
+      .sidebar.open { transform: translateX(0); }
+      .sidebar-wallpaper { display: none; }
+      .sidebar-logo { margin-top: 6px; margin-bottom: 10px; cursor: pointer; }
+      .sidebar-nav-box {
+        overflow-y: auto;
+        background: linear-gradient(160deg, rgba(255,255,255,.9), rgba(232,240,252,.85));
+        box-shadow: 0 20px 60px rgba(40,70,130,.35), inset 0 1.5px 1px rgba(255,255,255,.95);
+        scrollbar-width: none;
+      }
+      .sidebar-nav-box::-webkit-scrollbar { display: none; }
+      .nav-item { padding: 11px 12px; font-size: 14.5px; }
+
+      .sidebar-overlay {
+        display: block; position: fixed; inset: 0; z-index: 350;
+        background: rgba(15,25,45,.38); backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px);
+        opacity: 0; pointer-events: none; transition: opacity .3s ease;
+      }
+      .sidebar-overlay.show { opacity: 1; pointer-events: auto; }
+
+      .mobile-logo-btn {
+        display: inline-flex; align-items: center; gap: 8px;
+        position: fixed; top: 14px; left: 14px; z-index: 60;
+        height: 42px; padding: 0 16px 0 10px; border-radius: 999px; cursor: pointer;
+        font-family: inherit; font-size: 16px; font-weight: 900; letter-spacing: -.3px; color: #0b1220;
+        background: linear-gradient(160deg, rgba(255,255,255,.85), rgba(255,255,255,.45));
+        backdrop-filter: blur(20px) saturate(180%); -webkit-backdrop-filter: blur(20px) saturate(180%);
+        border: 1px solid rgba(255,255,255,.9);
+        box-shadow: 0 8px 22px rgba(60,90,140,.2), inset 0 1.5px 1px rgba(255,255,255,.95);
+        -webkit-tap-highlight-color: transparent;
+      }
+      .mobile-logo-btn img { width: 24px; height: 24px; object-fit: contain; }
+      .mobile-logo-btn:active { transform: scale(.96); }
+
+      .earth-main { margin-left: 0; padding: 0 14px 40px; }
+
+      .right-topbar { top: 14px; right: 12px; gap: 7px; }
+      .top-icon-btn { width: 38px; height: 38px; }
+      .top-icon-btn svg { width: 17px; height: 17px; }
+
+      .hero { height: auto; padding-top: 76px; padding-bottom: 8px; }
+      .hero-left { width: 100%; }
+      .logo-wrap { width: min(100%, 360px); }
+      .hero h1 { font-size: 16px; line-height: 1.35; margin-top: 18px; }
+      .hero .desc { width: 100%; font-size: 13.5px; }
+      .status { margin-top: 18px; font-size: 13.5px; }
+      .hero-btns { margin-top: 18px; }
+      .hero-btns .btn { flex: 1; padding: 0 14px; }
+      .infos { flex-wrap: wrap; row-gap: 14px; margin-top: 22px; }
+      .info { padding: 2px 22px 2px 0; }
+      .info + .info { padding-left: 20px; }
+      .info.version { flex-basis: 100%; padding-left: 0; border-left: 0; }
+
+      .hero-visual { position: relative; top: 0; right: 0; width: 100%; height: 300px; margin-top: 14px; }
+      .feature-float { position: relative; top: auto; right: auto; width: 100%; margin: 6px 0 26px; }
+
+      .big-panel { border-radius: 26px; padding: 26px 16px 20px; }
+      .features { grid-template-columns: repeat(2, 1fr); row-gap: 26px; column-gap: 12px; }
+      .feat .circle { width: 70px; height: 70px; }
+      .feat .circle svg { width: 36px; height: 36px; }
+      .feat h3 { margin-top: 14px; white-space: normal; }
+      .feat p { max-width: none; }
+      .two-col { grid-template-columns: 1fr; gap: 22px; margin-top: 30px; }
+
+      .join-card { padding: 20px 14px; }
+      .tab { margin-left: 8px; }
+      .steps { margin: 26px 0 0 8px; }
+      .step p { max-width: none; }
+      .join-info { margin: 14px 8px 0; gap: 12px; flex-wrap: wrap; }
+      .copy-all { width: calc(100% - 16px); margin: 18px 8px 0; }
+      .discord p { max-width: none; }
+
+      .msg-inbox-popup, .msg-chat-popup, .like-notif-popup {
+        width: auto; left: 10px; right: 10px !important; top: 64px !important;
+        max-height: calc(100vh - 84px); max-height: calc(100dvh - 84px);
+      }
+      .msg-chat-popup { height: calc(100vh - 84px); height: calc(100dvh - 84px); }
+      .like-hint-bubble { display: none; }
+      .msg-bubble-wrap.theirs .msg-bubble-actions { right: -60px; }
+      .msg-bubble-wrap.mine .msg-bubble-actions { left: -60px; }
+
+      .ai-fab-wrap { bottom: 16px; right: 14px; }
+      .ai-fab { width: 50px; height: 50px; }
+      .ai-chat-panel { width: min(300px, calc(100vw - 28px)); }
+
+      .search-panel { width: 100%; max-width: 100vw; }
+      .copy-toast { bottom: 90px; }
+    }
+
+    @media (max-width: 380px) {
+      .hero-btns { flex-direction: column; }
+      .hero-visual { height: 260px; }
+    }
   </style>
 </head>
 <body>
@@ -1936,9 +2049,16 @@
   <div class="aura-orb aura-orb-3"></div>
 </div>
 
+<!-- Mobil: Nimes logosu (menüyü açar) + karartma -->
+<button class="mobile-logo-btn" id="mobileLogoBtn" aria-label="Menüyü aç" aria-expanded="false">
+  <img src="nimes.png" alt="Nimes">
+  <span>NIMES</span>
+</button>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
 <div class="app-layout">
 
-  <aside class="sidebar">
+  <aside class="sidebar" id="sidebar">
     <div class="sidebar-logo">
       <img src="nimes.png" alt="Nimes logo" class="sidebar-logo-mark">
       NIMES
@@ -2211,7 +2331,7 @@
       <!-- Dönen Minecraft dünyası (resim yok — tamamen kod ile üretiliyor) -->
       <div class="hero-visual" aria-hidden="true">
         <div class="earth-glow"></div>
-        <div class="earth-stage" id="earthStage"></div>
+        <img class="earth-gif" src="earth-smp-dunya.gif" alt="Earth SMP dünyası" draggable="false">
         <div class="cube-shadow"></div>
       </div>
 
@@ -2636,7 +2756,6 @@
 
 <div class="copy-toast" id="copyToast">Copied!</div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
   /* ============================================================ */
   /*  AI CHAT — Proxy üzerinden Groq                              */
@@ -3506,182 +3625,26 @@
   })();
 
   /* ============================================================ */
-  /*  EARTH SMP — 3B voxel dünya küpü (Three.js, düşük RAM)        */
-  /*  Görünüm aynı; gölge haritası kaldırıldı, piksel oranı ve     */
-  /*  FPS cihaza göre ayarlanır, görünmezken çizim durur.          */
+  /*  MOBİL — sol panel (Nimes logosuna basınca açılır)            */
   /* ============================================================ */
   (function () {
-    const wrap = document.getElementById('earthStage');
-    if (!wrap || !window.THREE) return;
-    const T = THREE, N = 30, half = (N - 1) / 2;
+    const sidebar = document.getElementById('sidebar');
+    const btn     = document.getElementById('mobileLogoBtn');
+    const overlay = document.getElementById('sidebarOverlay');
+    if (!sidebar || !btn) return;
+    const inner = sidebar.querySelector('.sidebar-logo');
 
-    const hash = (x, y, z) => { let n = Math.imul(x, 374761393) ^ Math.imul(y, 668265263) ^ Math.imul(z, 1274126177);
-      n = Math.imul(n ^ (n >>> 13), 1274126177); n ^= n >>> 16; return (n >>> 0) / 4294967296; };
-    const sm = t => t * t * (3 - 2 * t), lp = (a, b, t) => a + (b - a) * t;
-    function vn(x, y, z) {
-      const xi = Math.floor(x), yi = Math.floor(y), zi = Math.floor(z), xf = sm(x - xi), yf = sm(y - yi), zf = sm(z - zi);
-      return lp(lp(lp(hash(xi, yi, zi), hash(xi + 1, yi, zi), xf), lp(hash(xi, yi + 1, zi), hash(xi + 1, yi + 1, zi), xf), yf),
-                lp(lp(hash(xi, yi, zi + 1), hash(xi + 1, yi, zi + 1), xf), lp(hash(xi, yi + 1, zi + 1), hash(xi + 1, yi + 1, zi + 1), xf), yf), zf);
+    function setOpen(open) {
+      sidebar.classList.toggle('open', open);
+      overlay.classList.toggle('show', open);
+      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
     }
-    const fbm = (x, y, z) => vn(x, y, z) * .55 + vn(x * 2.1, y * 2.1, z * 2.1) * .3 + vn(x * 4.3, y * 4.3, z * 4.3) * .15;
-    const pick = (arr, r) => arr[Math.floor(r * arr.length) % arr.length];
-
-    // --- Dünya: yüzey voxelleri + yükseltiler + ağaçlar ---
-    const inst = [];   // [x, y, z, hex]
-    const put = (x, y, z, hex, r) => inst.push([x, y, z, hex, r]);
-    for (let i = 0; i < N; i++) for (let j = 0; j < N; j++) for (let k = 0; k < N; k++) {
-      if (i && j && k && i < N - 1 && j < N - 1 && k < N - 1) continue;      // sadece kabuk
-      const x = i - half, y = j - half, z = k - half, ax = Math.abs(x), ay = Math.abs(y), az = Math.abs(z), m = Math.max(ax, ay, az);
-      const n = [0, 0, 0]; if (ax === m) n[0] = Math.sign(x); else if (ay === m) n[1] = Math.sign(y); else n[2] = Math.sign(z);
-      const r = hash(i * 3, j * 5, k * 7), q = 1.8 / half;
-      const e = fbm(x * q + 7, y * q + 3, z * q + 11), wet = vn(x * q * 2 + 30, y * q * 2 + 5, z * q * 2 + 9);
-      if (e < .5) {                                                          // su
-        put(x, y, z, e < .4 ? pick(['#1b4aa3', '#1f52b0'], r) : pick(['#2d83e0', '#3a92ee', '#2b78d4'], r), r);
-        continue;
-      }
-      const h = Math.min(5, 1 + Math.floor((e - .5) * 9));
-      const top = h >= 5 ? pick(['#f5f8fb', '#e8eef4'], r) : h >= 4 ? pick(['#8d8d89', '#7f7f7b'], r)
-                : (h === 1 && e < .535) ? pick(['#e0cf86', '#d2bf74'], r)
-                : wet > .55 ? pick(['#3f8f2b', '#4a9c33'], r) : pick(['#6cc046', '#5fb03b', '#76c94d'], r);
-      const side = top[1] === 'e' || top[1] === 'd' ? '#cdb96f' : h >= 4 ? '#77777a' : '#8a5a32';
-      for (let L = 0; L <= h; L++) put(x + n[0] * L, y + n[1] * L, z + n[2] * L, L === h ? top : side, r);
-      // ağaç
-      const tan = n[0] ? [1, 2] : n[1] ? [0, 2] : [0, 1], c3 = [x, y, z];
-      if (h <= 2 && h >= 1 && top[1] !== 'e' && top[1] !== 'd' && r < .075 &&
-          Math.abs(c3[tan[0]]) <= half - 2 && Math.abs(c3[tan[1]]) <= half - 2) {
-        const at = (L, da, db, hex) => { const p = [x + n[0] * L, y + n[1] * L, z + n[2] * L]; p[tan[0]] += da; p[tan[1]] += db; put(p[0], p[1], p[2], hex, r); };
-        at(h + 1, 0, 0, '#6b4423'); at(h + 2, 0, 0, '#6b4423');
-        for (let da = -1; da <= 1; da++) for (let db = -1; db <= 1; db++) {
-          at(h + 3, da, db, pick(['#2f7d32', '#3b8f3a', '#276b2b'], hash(da + 9, db + 9, i + j)));
-          if (Math.abs(da) + Math.abs(db) < 2) at(h + 4, da, db, pick(['#348a36', '#2c7530'], hash(da + 3, db + 5, k)));
-        }
-      }
-    }
-
-    // blok dokusu (16x16 piksel gürültü + kenar)
-    const cv = document.createElement('canvas'); cv.width = cv.height = 16; const g = cv.getContext('2d');
-    for (let y = 0; y < 16; y++) for (let x = 0; x < 16; x++) { const v = 232 + ((hash(x, y, 5) * 24) | 0) - 12; g.fillStyle = 'rgb(' + v + ',' + v + ',' + v + ')'; g.fillRect(x, y, 1, 1); }
-    g.fillStyle = 'rgba(0,0,0,.14)'; g.fillRect(0, 0, 16, 1); g.fillRect(0, 0, 1, 16);
-    g.fillStyle = 'rgba(0,0,0,.26)'; g.fillRect(0, 15, 16, 1); g.fillRect(15, 0, 1, 16);
-    const tex = new T.CanvasTexture(cv); tex.magFilter = T.NearestFilter;
-
-    const geo = new T.BoxGeometry(1, 1, 1), mat = new T.MeshLambertMaterial({ map: tex, vertexColors: true });
-
-    // Tek parça geometri: sadece dışarıya bakan yüzler çizilir (iç/komşu yüzler atılır)
-    const vox = new Map();
-    inst.forEach(v => vox.set(v[0] + ',' + v[1] + ',' + v[2], v));
-    const FACES = [
-      { d: [ 1, 0, 0], c: [[.5,-.5,-.5],[.5,.5,-.5],[.5,.5,.5],[.5,-.5,.5]] },
-      { d: [-1, 0, 0], c: [[-.5,-.5,.5],[-.5,.5,.5],[-.5,.5,-.5],[-.5,-.5,-.5]] },
-      { d: [ 0, 1, 0], c: [[-.5,.5,-.5],[-.5,.5,.5],[.5,.5,.5],[.5,.5,-.5]] },
-      { d: [ 0,-1, 0], c: [[-.5,-.5,.5],[-.5,-.5,-.5],[.5,-.5,-.5],[.5,-.5,.5]] },
-      { d: [ 0, 0, 1], c: [[-.5,-.5,.5],[.5,-.5,.5],[.5,.5,.5],[-.5,.5,.5]] },
-      { d: [ 0, 0,-1], c: [[.5,-.5,-.5],[-.5,-.5,-.5],[-.5,.5,-.5],[.5,.5,-.5]] }
-    ];
-    const UV = [[0,0],[1,0],[1,1],[0,1]];
-    const pos = [], nor = [], uvs = [], col = [], idx = [];
-    const C = new T.Color();
-    vox.forEach(v => {
-      C.set(v[3]).multiplyScalar(.93 + v[4] * .14);
-      FACES.forEach(f => {
-        if (vox.has((v[0] + f.d[0]) + ',' + (v[1] + f.d[1]) + ',' + (v[2] + f.d[2]))) return;
-        const b = pos.length / 3;
-        for (let q = 0; q < 4; q++) {
-          pos.push(v[0] + f.c[q][0], v[1] + f.c[q][1], v[2] + f.c[q][2]);
-          nor.push(f.d[0], f.d[1], f.d[2]); uvs.push(UV[q][0], UV[q][1]); col.push(C.r, C.g, C.b);
-        }
-        idx.push(b, b + 1, b + 2, b, b + 2, b + 3);
-      });
-    });
-    const lg = new T.BufferGeometry();
-    lg.setAttribute('position', new T.Float32BufferAttribute(pos, 3));
-    lg.setAttribute('normal', new T.Float32BufferAttribute(nor, 3));
-    lg.setAttribute('uv', new T.Float32BufferAttribute(uvs, 2));
-    lg.setAttribute('color', new T.Float32BufferAttribute(col, 3));
-    lg.setIndex(new T.BufferAttribute(idx.length > 65535 || pos.length / 3 > 65535 ? new Uint32Array(idx) : new Uint16Array(idx), 1));
-    lg.computeBoundingSphere();
-    const land = new T.Mesh(lg, mat);
-    land.matrixAutoUpdate = false;
-    pos.length = nor.length = uvs.length = col.length = idx.length = 0; vox.clear();
-
-    const M = new T.Matrix4();
-
-    // --- Bulutlar: yüzeyin üstünde yüzen beyaz bloklar ---
-    const cl = [];
-    for (let c = 0; c < 11; c++) {
-      let d = [hash(c, 1, 7) * 2 - 1, hash(c, 2, 7) * 2 - 1, hash(c, 3, 7) * 2 - 1]; const ab = d.map(Math.abs), mx = Math.max.apply(null, ab) || 1;
-      d = d.map(v => v / mx * (half + 5)); const ai = ab.indexOf(Math.max.apply(null, ab)), ta = [0, 1, 2].filter(t => t !== ai);
-      let a = 0, b = 0; const cnt = 5 + ((hash(c, 4, 7) * 5) | 0);
-      for (let t = 0; t < cnt; t++) {
-        const p = d.slice(); p[ta[0]] += a * 2.4; p[ta[1]] += b * 2.4; if (t % 3 === 1) p[ai] += Math.sign(d[ai]) * 1.7; cl.push(p);
-        const r = hash(c, t, 11); if (r < .5) a += r < .25 ? 1 : -1; else b += r < .75 ? 1 : -1;
-      }
-    }
-    const clouds = new T.InstancedMesh(geo, new T.MeshLambertMaterial({ color: 0xffffff, emissive: 0x8fa3c4, emissiveIntensity: .22, transparent: true, opacity: .96 }), cl.length);
-    cl.forEach((p, idx) => { M.makeScale(2.3, 2.3, 2.3); M.setPosition(p[0], p[1], p[2]); clouds.setMatrixAt(idx, M); });
-
-    // Geometri/dizi verisi GPU'ya gittikten sonra CPU tarafında tutulmasın
-    inst.length = 0; cl.length = 0;
-
-    // --- Cihaz seviyesi ---
-    const dpr = window.devicePixelRatio || 1;
-    const coarse = window.matchMedia && matchMedia('(pointer: coarse)').matches;
-    const lowEnd = coarse || (navigator.deviceMemory && navigator.deviceMemory <= 4) ||
-                   (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4);
-    let pr = lowEnd ? Math.min(dpr, 1.25) : Math.min(dpr, 1.5);
-
-    // --- Sahne ---
-    let R;
-    try {
-      R = new T.WebGLRenderer({ antialias: pr < 1.5, alpha: true, powerPreference: 'low-power', stencil: false, depth: true });
-    } catch (e) { return; }      // WebGL yoksa sadece arka plan parıltısı kalır
-    R.setPixelRatio(pr);
-    R.info.autoReset = true;
-    wrap.appendChild(R.domElement);
-    const scene = new T.Scene(), cam = new T.PerspectiveCamera(30, 1, 60, 200); cam.position.set(0, 0, 120);
-    scene.add(new T.HemisphereLight(0xeaf4ff, 0x7f97bd, .78));
-    const sun = new T.DirectionalLight(0xfff0d2, .85); sun.position.set(46, 62, 58); scene.add(sun);
-    const pivot = new T.Group(), world = new T.Group(); pivot.rotation.set(.5, 0, -.1);
-    world.add(land, clouds); pivot.add(world); scene.add(pivot);
-    scene.matrixAutoUpdate = false;
-
-    let W = 0, H = 0;
-    function resize() {
-      const w = wrap.clientWidth || 470, h = wrap.clientHeight || 500;
-      if (w === W && h === H) return; W = w; H = h;
-      R.setSize(w, h); cam.aspect = w / h; cam.updateProjectionMatrix(); draw();
-    }
-    function draw() { R.render(scene, cam); }
-
-    const reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
-    let visible = true, running = false, last = 0, t = 0, acc = 0, n = 0;
-
-    function frame(now) {
-      if (!running) return;
-      requestAnimationFrame(frame);
-      const dt = Math.min((now - last) / 1000, .1); last = now; t += dt;
-      world.rotation.y = t * .24; pivot.position.y = Math.sin(t * .9) * 1.1;
-      draw();
-      // Otomatik kalite: kare süresi uzunsa çözünürlüğü yavaşça düşür (akıcılık öncelikli)
-      acc += dt; n++;
-      if (n === 45) {
-        if (acc / n > .024 && pr > .75) { pr = Math.max(.75, pr * .85); R.setPixelRatio(pr); R.setSize(W, H); }
-        acc = 0; n = 0;
-      }
-    }
-    function start() { if (running || reduce || !visible || document.hidden) return; running = true; acc = 0; n = 0; last = performance.now(); requestAnimationFrame(frame); }
-    function stop() { running = false; }
-
-    if ('ResizeObserver' in window) new ResizeObserver(resize).observe(wrap); else window.addEventListener('resize', resize);
-    if ('IntersectionObserver' in window) new IntersectionObserver(function (e) { visible = e[0].isIntersecting; visible ? start() : stop(); }).observe(wrap);
-    document.addEventListener('visibilitychange', function () { document.hidden ? stop() : start(); });
-    R.domElement.addEventListener('webglcontextlost', function (e) { e.preventDefault(); stop(); });
-    R.domElement.addEventListener('webglcontextrestored', function () { draw(); start(); });
-    window.addEventListener('pagehide', function () {
-      stop(); geo.dispose(); lg.dispose(); mat.dispose(); tex.dispose(); clouds.material.dispose(); clouds.dispose(); R.dispose();
-    });
-
-    resize(); start();
+    btn.addEventListener('click', (e) => { e.stopPropagation(); setOpen(!sidebar.classList.contains('open')); });
+    overlay.addEventListener('click', () => setOpen(false));
+    if (inner) inner.addEventListener('click', () => { if (window.innerWidth <= 820) setOpen(false); });
+    sidebar.querySelectorAll('.nav-item').forEach(a => a.addEventListener('click', () => { if (a.id !== 'navSearchBtn' || true) setOpen(false); }));
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') setOpen(false); });
+    window.addEventListener('resize', () => { if (window.innerWidth > 820) setOpen(false); });
   })();
 
 </script>
