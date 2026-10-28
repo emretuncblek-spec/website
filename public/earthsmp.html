@@ -2846,15 +2846,25 @@
         typing.remove();
 
         const reply = data && (
-  (data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content) ||
-  data.reply || data.message || data.content || data.response
-);
-if (reply && typeof reply === 'string') {
+          (data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content) ||
+          data.reply || data.message || data.content || data.response
+        );
+        if (reply && typeof reply === 'string') {
           chatHistory.push({ role: 'assistant', content: reply });
           appendMsg('assistant', reply);
         } else {
           chatHistory.pop();
-          appendMsg('assistant', 'Sunucu yanıt verdi ama beklenen formatta değil (' + res.status + '). Proxy adresini ve API anahtarını kontrol et.');
+          let why;
+          if (!data) {
+            why = /<html|<!doctype/i.test(raw)
+              ? 'Bu adres bir web sayfası döndürüyor (HTML), AI proxy’si değil. PROXY_URL yanlış servise işaret ediyor olabilir.'
+              : 'Cevap JSON değil: ' + raw.slice(0, 120);
+          } else if (data.error) {
+            why = 'Sunucu hata döndürdü: ' + (typeof data.error === 'string' ? data.error : (data.error.message || JSON.stringify(data.error))).slice(0, 160);
+          } else {
+            why = 'Beklenmeyen format: ' + JSON.stringify(data).slice(0, 160);
+          }
+          appendMsg('assistant', '⚠️ (' + res.status + ') ' + why);
         }
       } catch (err) {
         typing.remove();
