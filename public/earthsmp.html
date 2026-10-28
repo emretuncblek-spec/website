@@ -2845,8 +2845,11 @@
         console.log('AI response', res.status, data || raw.slice(0, 200));
         typing.remove();
 
-        if (data && data.choices && data.choices[0]) {
-          const reply = data.choices[0].message.content;
+        const reply = data && (
+  (data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content) ||
+  data.reply || data.message || data.content || data.response
+);
+if (reply && typeof reply === 'string') {
           chatHistory.push({ role: 'assistant', content: reply });
           appendMsg('assistant', reply);
         } else {
