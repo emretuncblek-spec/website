@@ -2040,6 +2040,120 @@
       .hero-btns { flex-direction: column; }
       .hero-visual { height: 260px; }
     }
+  
+    /* ============================================================ */
+    /*  MOBİL — LIQUID GLASS ALT BAR + ÜST BUTONLAR                  */
+    /*  (sadece max-width:820px; masaüstü etkilenmez)                */
+    /* ============================================================ */
+    .lg-bar { display: none; }
+
+    @media (max-width: 820px) {
+      /* Sol panel mobilde hiç açılmasın */
+      .sidebar, .sidebar-overlay { display: none !important; }
+
+      /* Üst sol: NIMES (büyütüldü, tıklayınca en üste kaydırır) */
+      .mobile-logo-btn { top: 14px; left: 14px; height: 48px; padding: 0 20px 0 12px; font-size: 18px; gap: 9px; }
+      .mobile-logo-btn img { width: 28px; height: 28px; }
+
+      /* Üst sağ: sadece kalp (büyütüldü) */
+      .right-topbar { top: 14px; right: 12px; }
+      .right-topbar > *:not(#likeNotifBtn) { display: none !important; }
+      .top-icon-btn { width: 48px; height: 48px; }
+      .top-icon-btn svg { width: 21px; height: 21px; }
+      .notif-count-badge { top: -4px; right: -4px; }
+
+      /* AI butonu: kalbin soluna, aynı hizada ve boyutta */
+      .ai-fab-wrap { top: 14px; bottom: auto; right: 68px; flex-direction: column; align-items: flex-end; gap: 0; }
+      .ai-fab { width: 48px; height: 48px; }
+      .ai-welcome-bubble { display: none !important; }
+      .ai-chat-panel { position: fixed; top: 72px; right: 12px; width: min(320px, calc(100vw - 24px)); transform-origin: top right; }
+      .lg-search-open .ai-fab-wrap { display: none; }
+
+      /* Popup'lar alt barın üstünde kalsın */
+      .msg-inbox-popup, .msg-chat-popup, .like-notif-popup {
+        top: 72px !important;
+        max-height: calc(100vh - 72px - 104px);
+        max-height: calc(100dvh - 72px - 104px - env(safe-area-inset-bottom));
+      }
+      .msg-chat-popup {
+        height: calc(100vh - 72px - 104px);
+        height: calc(100dvh - 72px - 104px - env(safe-area-inset-bottom));
+      }
+
+      /* İçerik alt barın altında kalmasın */
+      .earth-main { padding-bottom: calc(120px + env(safe-area-inset-bottom)); }
+      .hero { padding-top: 88px; }
+      .copy-toast { bottom: calc(108px + env(safe-area-inset-bottom)); }
+      .search-panel { padding-bottom: calc(104px + env(safe-area-inset-bottom)); }
+
+      /* ---------- Liquid glass alt bar ---------- */
+      .lg-bar {
+        display: block; position: fixed; z-index: 170;
+        left: 16px; right: 16px; bottom: calc(14px + env(safe-area-inset-bottom));
+        height: 66px; border-radius: 33px;
+        background:
+          radial-gradient(120% 140% at 20% 0%, rgba(255,255,255,.85), rgba(255,255,255,0) 60%),
+          linear-gradient(160deg, rgba(255,255,255,.55), rgba(226,236,252,.35));
+        backdrop-filter: blur(28px) saturate(180%) brightness(1.05);
+        -webkit-backdrop-filter: blur(28px) saturate(180%) brightness(1.05);
+        border: 1px solid rgba(255,255,255,.9);
+        box-shadow: 0 16px 40px rgba(60,90,150,.28), inset 0 1.5px 1px rgba(255,255,255,.95), inset 0 -1px 1px rgba(255,255,255,.5);
+        touch-action: none; -webkit-user-select: none; user-select: none;
+        -webkit-touch-callout: none; -webkit-tap-highlight-color: transparent;
+      }
+      .lg-inner { position: absolute; inset: 6px; }
+      .lg-tabs { position: absolute; inset: 0; display: grid; grid-template-columns: repeat(5, 1fr); }
+      .lg-tab, .lg-ctab {
+        display: flex; align-items: center; justify-content: center;
+        color: #2b3445; background: none; border: 0; padding: 0; margin: 0;
+        font: inherit; cursor: pointer; transition: color .2s;
+      }
+      .lg-tab svg, .lg-ctab svg { width: 26px; height: 26px; pointer-events: none; }
+      .lg-tab.on, .lg-ctab.on { color: #2f6bff; }
+
+      /* Hareketli baloncuk (seçili tab göstergesi) */
+      .lg-pill {
+        position: absolute; top: 0; left: 0; height: 100%; z-index: 2; pointer-events: none;
+        transition: transform .45s cubic-bezier(.34,1.35,.64,1);
+        will-change: transform;
+      }
+      .lg-lens-body {
+        position: absolute; inset: 0; border-radius: 999px; overflow: hidden;
+        background: rgba(255,255,255,.72);
+        box-shadow: 0 2px 8px rgba(60,90,150,.18), inset 0 1px 0 rgba(255,255,255,.95), inset 0 0 0 1px rgba(255,255,255,.6);
+        transform: scale(1);
+        transition: transform .38s cubic-bezier(.34,1.56,.64,1), background .25s, box-shadow .25s;
+      }
+      .lg-lens-body::after {
+        content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; opacity: 0;
+        box-shadow: inset 3px 0 7px rgba(255,60,90,.38), inset -3px 0 7px rgba(80,190,255,.38);
+        transition: opacity .25s;
+      }
+      .lg-clone {
+        position: absolute; top: 0; left: 0; height: 100%; display: grid; grid-template-columns: repeat(5, 1fr);
+        opacity: 0; will-change: transform;
+        transition: transform .45s cubic-bezier(.34,1.35,.64,1), opacity .2s;
+      }
+      /* Basılı tutunca: büyüyen, içindekileri büyüten cam balon */
+      .lg-bar.held .lg-lens-body {
+        transform: scale(1.42);
+        background:
+          radial-gradient(120% 140% at 30% 0%, rgba(255,255,255,.9), rgba(255,255,255,.2) 60%),
+          rgba(214,228,250,.55);
+        backdrop-filter: blur(10px) saturate(2) brightness(1.15);
+        -webkit-backdrop-filter: blur(10px) saturate(2) brightness(1.15);
+        box-shadow:
+          inset 0 2px 5px rgba(255,255,255,.95),
+          inset 0 -2px 6px rgba(120,160,255,.35),
+          inset 0 0 0 1.5px rgba(255,255,255,.7),
+          0 10px 30px rgba(60,90,150,.35),
+          0 0 22px rgba(47,107,255,.25);
+      }
+      .lg-bar.held .lg-lens-body::after { opacity: 1; }
+      .lg-bar.held .lg-clone { opacity: 1; }
+      .lg-bar.drag .lg-pill { transition: none; }
+      .lg-bar.drag .lg-clone { transition: opacity .2s; }
+    }
   </style>
 </head>
 <body>
@@ -2755,6 +2869,31 @@
   </button>
 </div>
 
+
+
+<!-- ==================== MOBİL LIQUID GLASS ALT BAR ==================== -->
+<nav class="lg-bar" id="lgBar" aria-label="Main navigation">
+  <div class="lg-inner" id="lgInner">
+    <div class="lg-tabs" id="lgTabs">
+      <button class="lg-tab on" type="button" data-tab="home" aria-label="Home">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>
+      </button>
+      <button class="lg-tab" type="button" data-tab="reels" aria-label="Reels">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+      </button>
+      <button class="lg-tab" type="button" data-tab="messages" aria-label="Messages">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      </button>
+      <button class="lg-tab" type="button" data-tab="search" aria-label="Search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      </button>
+      <button class="lg-tab" type="button" data-tab="profile" aria-label="Profile">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+      </button>
+    </div>
+    <div class="lg-pill" id="lgPill"><div class="lg-lens-body"><div class="lg-clone" id="lgClone" aria-hidden="true"></div></div></div>
+  </div>
+</nav>
 
 <div class="copy-toast" id="copyToast">Copied!</div>
 
@@ -3661,7 +3800,7 @@
       overlay.classList.toggle('show', open);
       btn.setAttribute('aria-expanded', open ? 'true' : 'false');
     }
-    btn.addEventListener('click', (e) => { e.stopPropagation(); setOpen(!sidebar.classList.contains('open')); });
+    btn.addEventListener('click', (e) => { e.stopPropagation(); window.scrollTo({ top: 0, behavior: 'smooth' }); });
     overlay.addEventListener('click', () => setOpen(false));
     if (inner) inner.addEventListener('click', () => { if (window.innerWidth <= 820) setOpen(false); });
     sidebar.querySelectorAll('.nav-item').forEach(a => a.addEventListener('click', () => { if (a.id !== 'navSearchBtn' || true) setOpen(false); }));
@@ -3669,6 +3808,164 @@
     window.addEventListener('resize', () => { if (window.innerWidth > 820) setOpen(false); });
   })();
 
+</script>
+
+<script>
+  /* ============================================================ */
+  /*  MOBİL LIQUID GLASS ALT BAR — basılı tut, baloncuk, sürükle   */
+  /* ============================================================ */
+  (function () {
+    const bar = document.getElementById('lgBar');
+    if (!bar) return;
+    const inner = document.getElementById('lgInner');
+    const tabsEl = document.getElementById('lgTabs');
+    const tabs = Array.from(tabsEl.querySelectorAll('.lg-tab'));
+    const pill = document.getElementById('lgPill');
+    const clone = document.getElementById('lgClone');
+    const N = tabs.length;
+    const HOLD_MS = 170;
+
+    clone.innerHTML = tabs.map((t, i) => '<span class="lg-ctab' + (i === 0 ? ' on' : '') + '">' + t.innerHTML + '</span>').join('');
+
+    let active = 0, held = false, timer = null, dragTimer = null;
+    let pid = null, startX = 0, startY = 0, curX = 0, hover = 0;
+    let W = 0, PW = 0;
+
+    function measure() {
+      W = inner.clientWidth; PW = W / N;
+      pill.style.width = PW + 'px';
+      clone.style.width = W + 'px';
+    }
+    function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
+    function idxAt(x) { return clamp(Math.floor(x / PW), 0, N - 1); }
+    function setPill(x) {
+      pill.style.transform = 'translate3d(' + x + 'px,0,0)';
+      clone.style.transform = 'translate3d(' + (-x) + 'px,0,0)';
+    }
+    function setHover(i) {
+      hover = i;
+      Array.from(clone.children).forEach((c, k) => c.classList.toggle('on', k === i));
+    }
+    function setActive(i) {
+      active = i;
+      tabs.forEach((t, k) => t.classList.toggle('on', k === i));
+      setHover(i);
+    }
+    function snapNoAnim() {
+      measure();
+      pill.style.transition = 'none'; clone.style.transition = 'none';
+      setPill(active * PW);
+      void pill.offsetWidth;
+      pill.style.transition = ''; clone.style.transition = '';
+    }
+
+    function closeOverlays() {
+      const sp = document.getElementById('searchPanel');
+      if (sp && sp.classList.contains('open')) document.getElementById('searchPanelClose').click();
+      ['likeNotifPopup', 'msgInboxPopup', 'msgChatPopup'].forEach(id => {
+        const el = document.getElementById(id); if (el) el.classList.remove('open');
+      });
+    }
+    const actions = [
+      () => { closeOverlays(); window.scrollTo({ top: 0, behavior: 'smooth' }); },
+      () => { closeOverlays(); location.href = 'reels.html'; },
+      () => { closeOverlays(); document.getElementById('msgInboxBtn').click(); },
+      () => { closeOverlays(); document.getElementById('navSearchBtn').click(); },
+      () => { closeOverlays(); location.href = 'profile.html'; }
+    ];
+
+    function select(i, run) {
+      measure();
+      setActive(i);
+      setPill(i * PW);
+      if (run) setTimeout(actions[i], 140);
+    }
+
+    function enterLens() {
+      if (held) return;
+      held = true;
+      bar.classList.add('held');
+      const x = clamp(curX - PW / 2, 0, W - PW);
+      setPill(x); setHover(idxAt(x + PW / 2));
+      dragTimer = setTimeout(() => bar.classList.add('drag'), 220);
+    }
+    function exitLens() {
+      clearTimeout(timer); clearTimeout(dragTimer);
+      held = false;
+      bar.classList.remove('held', 'drag');
+    }
+
+    bar.addEventListener('pointerdown', (e) => {
+      if (e.pointerType === 'mouse' && e.button !== 0) return;
+      measure();
+      pid = e.pointerId;
+      try { bar.setPointerCapture(pid); } catch (_) {}
+      const rect = inner.getBoundingClientRect();
+      startX = e.clientX; startY = e.clientY;
+      curX = e.clientX - rect.left;
+      held = false;
+      clearTimeout(timer);
+      timer = setTimeout(enterLens, HOLD_MS);
+    });
+
+    bar.addEventListener('pointermove', (e) => {
+      if (e.pointerId !== pid) return;
+      const rect = inner.getBoundingClientRect();
+      curX = e.clientX - rect.left;
+      if (!held && (Math.abs(e.clientX - startX) > 8 || Math.abs(e.clientY - startY) > 8)) {
+        clearTimeout(timer); enterLens();
+      }
+      if (held) {
+        const x = clamp(curX - PW / 2, 0, W - PW);
+        setPill(x);
+        const h = idxAt(x + PW / 2);
+        if (h !== hover) { setHover(h); if (navigator.vibrate) navigator.vibrate(6); }
+      }
+    });
+
+    function finish(e, cancelled) {
+      if (e.pointerId !== pid) return;
+      pid = null;
+      const wasHeld = held;
+      const rect = inner.getBoundingClientRect();
+      curX = e.clientX - rect.left;
+      let i;
+      if (wasHeld) i = idxAt(clamp(curX - PW / 2, 0, W - PW) + PW / 2);
+      else i = idxAt(curX);
+      exitLens();
+      try { bar.releasePointerCapture(e.pointerId); } catch (_) {}
+      if (cancelled) { select(active, false); return; }
+      select(i, true);
+    }
+    bar.addEventListener('pointerup', (e) => finish(e, false));
+    bar.addEventListener('pointercancel', (e) => finish(e, true));
+
+    // Eski click'ler dokümandaki "dışarı tıklayınca kapat" dinleyicilerini tetiklemesin
+    bar.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); });
+    bar.addEventListener('contextmenu', (e) => e.preventDefault());
+
+    // Klavye erişilebilirliği
+    tabs.forEach((t, i) => t.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); select(i, true); }
+    }));
+
+    // Panel kapanınca seçimi Home'a geri al
+    const sp = document.getElementById('searchPanel');
+    const mp = document.getElementById('msgInboxPopup');
+    const cp = document.getElementById('msgChatPopup');
+    function sync() {
+      const s = sp.classList.contains('open');
+      const m = mp.classList.contains('open') || cp.classList.contains('open');
+      document.body.classList.toggle('lg-search-open', s);
+      if (!s && !m && (active === 2 || active === 3)) select(0, false);
+    }
+    const mo = new MutationObserver(sync);
+    [sp, mp, cp].forEach(el => el && mo.observe(el, { attributes: true, attributeFilter: ['class'] }));
+
+    window.addEventListener('resize', snapNoAnim);
+    window.addEventListener('load', snapNoAnim);
+    snapNoAnim();
+  })();
 </script>
 </body>
 </html>
